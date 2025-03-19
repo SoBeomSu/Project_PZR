@@ -14,4 +14,14 @@ class PROJECT_PZR_API ASBS_GameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+
+public:
+	ASBS_GameMode();
+	virtual ~ASBS_GameMode() = default;
+
+	UFUNCTION(BlueprintPure,Category="Coins")
+	virtual int GetCoins() const;
+
+	UFUNCTION(BlueprintCallable,Category="Coins")
+	virtual void SetCoins(int NewCoins);
 };
