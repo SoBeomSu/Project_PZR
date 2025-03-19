@@ -4,47 +4,40 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "LaserMirror.generated.h"
+#include "StartLaserPoint.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API ALaserMirror : public AActor
+class PROJECT_PZR_API AStartLaserPoint : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ALaserMirror();
+	AStartLaserPoint();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
 
+	UPROPERTY(EditAnywhere)
+	class UStaticMeshComponent* LaserComp;
+	
+	UPROPERTY(EditAnywhere)
+	class UArrowComponent* LaserArrowComp;
 
 public:
-	UPROPERTY(EditAnywhere)
-	class UBoxComponent* BoxComp;
-
-	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* MirrorComp;
-
-	UPROPERTY(EditAnywhere)
-	class UArrowComponent* MirrorArrowComp;
-
-	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* BottomComp;
-
-
-public:
-	UPROPERTY(EditAnywhere, Category = "MirrorLaser")
+	UPROPERTY(EditAnywhere, Category = "StartLaser")
 	bool bStartLaser = false;
 
 public:
-	//다음 레이저 이여 발사하기
-	void NextLaserStart(const struct FHitResult& HitInfo , const FVector& InDir , const float& LaserLength);
+	UPROPERTY(EditAnywhere , Category = "StartLaser")
+	float LaserLength = 1000.0f;
+
+
 
 };
