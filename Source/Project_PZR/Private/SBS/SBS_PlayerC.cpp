@@ -32,3 +32,13 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
+void ASBS_PlayerC::Move(const struct FInputActionValue& Value)
+{
+
+}
+
+void ASBS_PlayerC::Turn(const struct FInputActionValue& Value)
+{
+
+}
+
