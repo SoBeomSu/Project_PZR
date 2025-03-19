@@ -4,6 +4,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
 
+#include "KJW/LaserRoom/EndLaserPoint.h"
 // Sets default values
 ALaserMirror::ALaserMirror()
 {
@@ -62,8 +63,8 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 	FVector SurfaceNormal = HitInfo.ImpactNormal;
 
 	FVector StartPoint = HitInfo.Location;
-	//FVector ReflectionVector = KHelper::GetReflectionVector(InDir, SurfaceNormal);
-	FVector ReflectionVector = InDir.MirrorByVector(SurfaceNormal);
+	FVector ReflectionVector = KHelper::GetReflectionVector(InDir, SurfaceNormal);
+	//FVector ReflectionVector = InDir.MirrorByVector(SurfaceNormal);
 	FVector EndPoint = StartPoint + (ReflectionVector * LaserLength);
 
 	FHitResult MirrorHitInfo;
@@ -81,9 +82,9 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 		{
 			Mirror->NextLaserStart(MirrorHitInfo, ReflectionVector, LaserLength);
 		}
-		else
+		else if(AEndLaserPoint* Goal = Cast<AEndLaserPoint>(MirrorHitInfo.GetActor()))
 		{
-
+			Goal->SetLaserSucceed(true);
 		}
 
 	}
