@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "KJW/KVRObjectInterface.h"
 #include "LaserMirror.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API ALaserMirror : public AActor
+class PROJECT_PZR_API ALaserMirror : public AActor , public IKVRObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -50,4 +51,19 @@ public:
 private:
 	UPROPERTY()
 	TWeakObjectPtr<class AEndLaserPoint> EndLaserPoint;
+
+public:
+	bool virtual IsGrab() override { return true; };
+	void virtual StartGrab(AActor* HandActor) override;
+	void virtual StopGrab(AActor* HandActor) override ;
+	void virtual RotObject(const FRotator AddRotator) override;
+
+
+private:
+	//레이저 이펙트
+	UPROPERTY(EditAnywhere, Category = "Laser_Effects")
+	class UNiagaraComponent* NiagaraComp;
+	void SetBeamEnd(FVector StartPoint, FVector EndPoint);
+
+
 };

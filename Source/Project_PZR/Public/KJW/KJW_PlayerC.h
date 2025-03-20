@@ -56,6 +56,14 @@ private:
 	void Move(const struct FInputActionValue& Value);
 	void Turn(const struct FInputActionValue& Value);
 
-
-
+//거울 오브젝트를 잡기 위한
+public :
+	//잡은 물체 저장
+	class IKVRObjectInterface* GrabObj;
+	//잡기 행동
+	void GrabStart();
+	void GrabEnd();
+	//잡은 물체를 회전 시키기 위한
+	void LRotGrabObj();
+	void RRotGrabObj();
 };

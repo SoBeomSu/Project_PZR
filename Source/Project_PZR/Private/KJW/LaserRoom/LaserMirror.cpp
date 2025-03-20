@@ -4,6 +4,10 @@
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
 
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
+
+
 #include "KJW/LaserRoom/EndLaserPoint.h"
 // Sets default values
 ALaserMirror::ALaserMirror()
@@ -42,6 +46,20 @@ ALaserMirror::ALaserMirror()
 	BottomComp->SetRelativeScale3D(FVector(0.5f, 0.2f, 0.2f));
 	BottomComp->SetRelativeRotation(FRotator(90.0f,0.0f, 0.0f));
 
+
+	NiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComp"));
+	NiagaraComp->SetupAttachment(GetRootComponent());
+
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystemAsset(
+		TEXT("/Script/Niagara.NiagaraSystem'/Game/A_Project/KJW/LaserRoom/Actor/NS_Beam.NS_Beam'")
+	);
+
+	if (NiagaraSystemAsset.Succeeded())
+	{
+		NiagaraComp->SetAsset(NiagaraSystemAsset.Object);
+	}
+
+	NiagaraComp->bAutoActivate = false;  // 처음엔 꺼둠, 필요할 때 실행
 }
 
 // Called when the game starts or when spawned
@@ -78,6 +96,8 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 		FVector Hitpoint = MirrorHitInfo.Location;
 		EndPoint = Hitpoint;
 
+		
+
 		if (ALaserMirror* Mirror = Cast<ALaserMirror>(MirrorHitInfo.GetActor()))
 		{
 			Mirror->NextLaserStart(MirrorHitInfo, ReflectionVector, LaserLength);
@@ -87,6 +107,8 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 			EndLaserPoint = Goal;
 			Goal->SetLaserSucceed(true);
 		}
+
+		SetBeamEnd(StartPoint, EndPoint);
 	}
 	
 	if (EndLaserPoint.IsValid() && !bHit)
@@ -103,6 +125,34 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 		DrawDebugLine(GetWorld(), StartPoint, StartPoint +  SurfaceNormal* 500.0f, FColor::Black);
 	}
 }
+
+void ALaserMirror::StartGrab(AActor* HandActor)
+{
+	// HandActor에 부착
+	AttachToActor(HandActor, FAttachmentTransformRules::KeepWorldTransform);
+}
+
+void ALaserMirror::StopGrab(AActor* HandActor)
+{
+	// HandActor로부터 분리
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+}
+
+void ALaserMirror::RotObject(const FRotator AddRotator)
+{
+	AddActorLocalRotation(AddRotator);
+}
+
+void ALaserMirror::SetBeamEnd(FVector StartPoint, FVector EndPoint)
+{
+	if (NiagaraComp)
+	{
+		NiagaraComp->Activate();
+		NiagaraComp->SetWorldLocation(StartPoint);
+		NiagaraComp->SetVectorParameter(FName("Beam End"), EndPoint);
+	}
+}
+
 
 
 

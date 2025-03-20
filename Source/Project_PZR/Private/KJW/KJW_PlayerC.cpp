@@ -8,6 +8,8 @@
 #include "InputMappingContext.h"
 #include "InputActionValue.h"
 
+#include "KJW/KVRObjectInterface.h"
+
 // Sets default values
 AKJW_PlayerC::AKJW_PlayerC()
 {
@@ -17,7 +19,7 @@ AKJW_PlayerC::AKJW_PlayerC()
 	VRCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("VRCamera"));
 	VRCamera->SetupAttachment(GetRootComponent());
 
-	static ConstructorHelpers::FObjectFinder<UInputMappingContext> IMCObj(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/A_Project/Input/IMC_VR.IMC_VR'"));
+	static ConstructorHelpers::FObjectFinder<UInputMappingContext> IMCObj(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/A_Project/KJW/IMC_VR_K.IMC_VR_K'"));
 	if (IMCObj.Succeeded())
 	{
 		IMC_VR = IMCObj.Object;
@@ -97,6 +99,12 @@ void AKJW_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ThisClass::Move);
 		EnhancedInputComponent->BindAction(IA_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Turn);
 
+		//물체 잡기
+		EnhancedInputComponent->BindAction(IA_VRMouse_R, ETriggerEvent::Started, this, &ThisClass::GrabStart);
+		EnhancedInputComponent->BindAction(IA_VRMouse_R, ETriggerEvent::Completed, this, &ThisClass::GrabEnd);
+		//물체 회전
+		EnhancedInputComponent->BindAction(IA_KeyQ, ETriggerEvent::Triggered, this, &ThisClass::LRotGrabObj);
+		EnhancedInputComponent->BindAction(IA_KeyE, ETriggerEvent::Triggered, this, &ThisClass::RRotGrabObj);
 	}
 }
 
@@ -119,5 +127,64 @@ void AKJW_PlayerC::Turn(const FInputActionValue& Value)
 
 	AddControllerPitchInput(Scale.Y);
 	AddControllerYawInput(Scale.X);
+}
+
+void AKJW_PlayerC::GrabStart()
+{
+	if (!VRCamera) return;
+	//이미 잡은 물체가 있다면
+	if (GrabObj) return;
+
+	// 카메라의 위치와 방향 가져오기
+	FVector StartLocation = VRCamera->GetComponentLocation();
+	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 1000.0f;
+
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // 자기 자신 무시
+
+	// 라인트레이스 실행
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
+
+	if (bHit)
+	{
+		AActor* HitActor = HitResult.GetActor();
+		if (HitActor)
+		{
+			// IKVRObjectInterface를 가진 오브젝트와 상호작용 시작
+			IKVRObjectInterface* GrabbableObject = Cast<IKVRObjectInterface>(HitActor);
+			if(GrabbableObject && GrabbableObject->IsGrab())
+			{
+				// 그랩 로직 (이 인터페이스를 통해 실제 그랩 기능 호출)
+				GrabbableObject->StartGrab(this);
+				GrabObj = GrabbableObject;
+			}
+		}
+	}
+
+}
+
+void AKJW_PlayerC::GrabEnd()
+{
+	if (!GrabObj) return;
+
+	GrabObj->StopGrab(this);
+	GrabObj = nullptr;
+
+}
+
+void AKJW_PlayerC::LRotGrabObj()
+{
+	if (!GrabObj) return;
+
+	FRotator AddLeftRot = FRotator(0.0f, -10.0f * 0.02f, 0.0f);
+	GrabObj->RotObject(AddLeftRot);
+}
+
+void AKJW_PlayerC::RRotGrabObj()
+{
+	if (!GrabObj) return;
+	FRotator AddRightRot = FRotator(0.0f, 10.0f * 0.02f, 0.0f);
+	GrabObj->RotObject(AddRightRot);
 }
 

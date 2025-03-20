@@ -36,7 +36,15 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere , Category = "StartLaser")
-	float LaserLength = 1000.0f;
+	float LaserLength = 1500.0f;
+
+
+private:
+	//레이저 이펙트
+	UPROPERTY(EditAnywhere, Category = "Laser_Effects")
+	class UNiagaraComponent* NiagaraComp;
+
+	void SetBeamEnd(FVector BeamEnd);
 
 
 
