@@ -6,6 +6,8 @@
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
 #include "SBS/SBS_PlayerFSM.h"
+#include "SBS/SBS_Animal.h"
+#include "SBS/SBS_AnimalFSM.h"
 
 // Sets default values
 ASBS_PlayerC::ASBS_PlayerC()
@@ -51,10 +53,10 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	{
 		InputSystem->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Move);
 		InputSystem->BindAction(IA_Turn, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Turn);
-		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Started, this, &ASBS_PlayerC::MouseRightButton);
-		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::MouseRightButton);
-		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Started, this, &ASBS_PlayerC::MouseLeftButton);
-		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::MouseLeftButton);
+		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Started, this, &ASBS_PlayerC::RMB_Start);
+		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::RMB_Complete);
+		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Started, this, &ASBS_PlayerC::LRB_Start);
+		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::LRB_Complete);
 
 	}
 }
@@ -73,14 +75,22 @@ void ASBS_PlayerC::Turn(const struct FInputActionValue& Value)
 	AddControllerPitchInput(Scale.Y); // 위아래
 }
 
-void ASBS_PlayerC::MouseRightButton(const struct FInputActionValue& Value)
+void ASBS_PlayerC::RMB_Start(const struct FInputActionValue& Value)
 {
 	if(bRightclick == false)
 	{
 		bRightclick = true;
 		UE_LOG(LogTemp, Warning, TEXT("Right Click Sucess"));
-		CameraLineTrace();
-
+		FHitResult RMB_HitResult = CameraLineTrace();
+		if (RMB_HitResult.GetActor()->GetActorNameOrLabel().Contains("Animal"))
+		{
+			ASBS_Animal* HitAnimal = Cast<ASBS_Animal>(RMB_HitResult.GetActor());
+			if (HitAnimal && HitAnimal->AnimalFSM) 
+			{
+				HitAnimal->AnimalFSM->SetState(ESBS_AnimalState::InAir);
+				AttachActor(HitAnimal);
+			}
+		}
 	}
 	else
 	{
@@ -88,12 +98,25 @@ void ASBS_PlayerC::MouseRightButton(const struct FInputActionValue& Value)
 	}
 }
 
-void ASBS_PlayerC::MouseLeftButton(const struct FInputActionValue& Value)
+void ASBS_PlayerC::RMB_Complete(const struct FInputActionValue& Value)
+{
+	if (GrabActor)
+	{
+	DetachActor(GrabActor);
+	}
+}
+
+void ASBS_PlayerC::LRB_Start(const struct FInputActionValue& Value)
 {
 
 }
 
-void ASBS_PlayerC::CameraLineTrace()
+void ASBS_PlayerC::LRB_Complete(const struct FInputActionValue& Value)
+{
+
+}
+
+FHitResult ASBS_PlayerC::CameraLineTrace()
 {
 	FVector StartPoint = VRCamera->GetComponentLocation();
 	FVector Endpoint = StartPoint + VRCamera->GetForwardVector() * 1000.0f;//10 미터
@@ -104,9 +127,21 @@ void ASBS_PlayerC::CameraLineTrace()
 
 	if (bHit)
 	{
+		FString HitActorname = HitInfo.GetActor()->GetActorNameOrLabel();
 		UE_LOG(LogTemp, Warning, TEXT("Hit Actor Name : %s"), *HitInfo.GetActor()->GetActorNameOrLabel());
 	}
-	//if(bHit && (Hitinfo.getName()))
+	return HitInfo;
+}
 
+void ASBS_PlayerC::AttachActor(AActor* actor)
+{
+	actor->AttachToActor(this,FAttachmentTransformRules::KeepWorldTransform);
+	GrabActor = actor;
+}
+
+void ASBS_PlayerC::DetachActor(AActor* actor)
+{
+	actor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	GrabActor = nullptr;
 }
 

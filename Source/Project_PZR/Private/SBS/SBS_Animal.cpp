@@ -2,6 +2,7 @@
 
 
 #include "SBS/SBS_Animal.h"
+#include "SBS/SBS_AnimalFSM.h"
 
 // Sets default values
 ASBS_Animal::ASBS_Animal()
@@ -11,6 +12,8 @@ ASBS_Animal::ASBS_Animal()
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetCollisionProfileName("GrapObject");
+
+	AnimalFSM = CreateDefaultSubobject<USBS_AnimalFSM>(TEXT("FSMcomp"));
 }
 
 // Called when the game starts or when spawned

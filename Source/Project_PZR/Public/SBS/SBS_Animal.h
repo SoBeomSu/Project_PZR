@@ -30,4 +30,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* StaticMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "FSM")
+	class USBS_AnimalFSM* AnimalFSM;
+
 };

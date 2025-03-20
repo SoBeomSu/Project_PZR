@@ -55,8 +55,14 @@ public:
 
 	void Move(const struct FInputActionValue& Value);
 	void Turn(const struct FInputActionValue& Value);
-	void MouseRightButton(const struct FInputActionValue& Value);
-	void MouseLeftButton(const struct FInputActionValue& Value);
+	void RMB_Start(const struct FInputActionValue& Value);
+	void RMB_Complete(const struct FInputActionValue& Value);
+	void LRB_Start(const struct FInputActionValue& Value);
+	void LRB_Complete(const struct FInputActionValue& Value);
 
-	void CameraLineTrace();
+	FHitResult CameraLineTrace();
+
+	AActor* GrabActor;
+	void AttachActor(AActor* actor);
+	void DetachActor(AActor* actor);
 };
