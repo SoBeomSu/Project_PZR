@@ -96,24 +96,35 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 		FVector Hitpoint = MirrorHitInfo.Location;
 		EndPoint = Hitpoint;
 
-		
-
 		if (ALaserMirror* Mirror = Cast<ALaserMirror>(MirrorHitInfo.GetActor()))
 		{
 			Mirror->NextLaserStart(MirrorHitInfo, ReflectionVector, LaserLength);
+			NextMirror = Mirror;
 		}
 		else if(AEndLaserPoint* Goal = Cast<AEndLaserPoint>(MirrorHitInfo.GetActor()))
 		{
 			EndLaserPoint = Goal;
-			Goal->SetLaserSucceed(true);
+			Goal->AddMirrorPoint(this);
+			
+			if (NextMirror)
+			{
+				NextMirror->ResetBeam();
+				NextMirror = nullptr;
+			}
 		}
-
-		SetBeamEnd(StartPoint, EndPoint);
 	}
-	
+
+	if (!bHit && NextMirror)
+	{
+		NextMirror->ResetBeam();
+		NextMirror = nullptr;
+	}
+
+
+	SetBeamEnd(StartPoint, EndPoint);
 	if (EndLaserPoint.IsValid() && !bHit)
 	{
-		EndLaserPoint->SetLaserSucceed(false);
+		EndLaserPoint->RemoveMirrorPoint(this);
 		EndLaserPoint = nullptr;
 	}
 	
@@ -147,9 +158,23 @@ void ALaserMirror::SetBeamEnd(FVector StartPoint, FVector EndPoint)
 {
 	if (NiagaraComp)
 	{
-		NiagaraComp->Activate();
+		if (!NiagaraComp->IsActive())
+		{
+			NiagaraComp->Activate();
+		}
 		NiagaraComp->SetWorldLocation(StartPoint);
 		NiagaraComp->SetVectorParameter(FName("Beam End"), EndPoint);
+	}
+}
+
+void ALaserMirror::ResetBeam()
+{
+	if (NiagaraComp)
+	{
+		if (NiagaraComp->IsActive())
+		{
+			NiagaraComp->DeactivateImmediate();
+		}
 	}
 }
 

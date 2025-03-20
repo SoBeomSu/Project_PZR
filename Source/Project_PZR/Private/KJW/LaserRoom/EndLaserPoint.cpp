@@ -43,19 +43,35 @@ void AEndLaserPoint::Tick(float DeltaTime)
 
 }
 
-void AEndLaserPoint::SetLaserSucceed(bool Succeed)
+void AEndLaserPoint::SetGoalMt()
 {
-	if (this->bSucceed == Succeed) return;
+	this->bSucceed = Mirrors.Num() == GoalCount ? true : false;
 
-	this->bSucceed = Succeed;
-	
 	// 현재 상태에 따라 적절한 머티리얼 선택
-	UMaterialInterface* NewMaterial = Succeed ? SuccessMaterial : FailMaterial;
-
+	UMaterialInterface* NewMaterial = this->bSucceed ? SuccessMaterial : FailMaterial;
 	if (NewMaterial)
 	{
 		MeshComp->SetMaterial(0, NewMaterial);
 	}
 }
+
+void AEndLaserPoint::AddMirrorPoint(ALaserMirror* LaserMirror)
+{
+	if (Mirrors.Contains(LaserMirror)) return;
+
+	Mirrors.Add(LaserMirror);
+
+	SetGoalMt();
+}
+
+void AEndLaserPoint::RemoveMirrorPoint(ALaserMirror* LaserMirror)
+{
+	if (!Mirrors.Contains(LaserMirror)) return;
+
+	Mirrors.Remove(LaserMirror);
+
+	SetGoalMt();
+}
+
 
 

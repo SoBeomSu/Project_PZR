@@ -40,11 +40,17 @@ public:
 
 
 private:
+	UPROPERTY()
+	class ALaserMirror* NextMirror;
+
+private:
 	//레이저 이펙트
 	UPROPERTY(EditAnywhere, Category = "Laser_Effects")
 	class UNiagaraComponent* NiagaraComp;
 
 	void SetBeamEnd(FVector BeamEnd);
+
+
 
 
 

@@ -38,6 +38,15 @@ public:
 	UMaterialInterface* FailMaterial;     
 
 	bool bSucceed = false;
-	void SetLaserSucceed(bool bSucceed);
+	void SetGoalMt();
+public:
+	UPROPERTY(EditAnywhere, Category = "End_Point")
+	int32 GoalCount = 1;
+	UPROPERTY(EditAnywhere, Category = "End_Point")
+	int32 CurGoalCount = 0;
+	void AddMirrorPoint(class ALaserMirror* LaserMirror);
+	void RemoveMirrorPoint(class ALaserMirror* LaserMirror);
+
+	TArray<class ALaserMirror*> Mirrors;
 
 };

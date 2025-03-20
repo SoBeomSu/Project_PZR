@@ -69,9 +69,15 @@ void AStartLaserPoint::Tick(float DeltaTime)
 
 		if (ALaserMirror* Mirror = Cast<ALaserMirror>(HitInfo.GetActor()))
 		{
-			Mirror->NextLaserStart(HitInfo,LaserDir, LaserLength);
+			Mirror->NextLaserStart(HitInfo, LaserDir, LaserLength);
+			NextMirror = Mirror;
 		}
+	}
 
+	if (!bHit && NextMirror)
+	{
+		NextMirror->ResetBeam();
+		NextMirror = nullptr;
 	}
 
 	SetBeamEnd(EndPoint);
@@ -80,7 +86,6 @@ void AStartLaserPoint::Tick(float DeltaTime)
 	{
 		//확인용 디버그 라인
 		DrawDebugLine(GetWorld(), LaserArrowComp->GetComponentLocation(), EndPoint, FColor::Red);
-
 	}
 
 }

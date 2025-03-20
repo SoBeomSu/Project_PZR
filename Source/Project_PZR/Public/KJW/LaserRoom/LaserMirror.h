@@ -44,6 +44,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "MirrorLaser")
 	bool bStartLaser = false;
 
+private:
+	UPROPERTY()
+	class ALaserMirror* NextMirror;
 public:
 	//다음 레이저 이여 발사하기
 	void NextLaserStart(const struct FHitResult& HitInfo , const FVector& InDir , const float& LaserLength);
@@ -63,7 +66,9 @@ private:
 	//레이저 이펙트
 	UPROPERTY(EditAnywhere, Category = "Laser_Effects")
 	class UNiagaraComponent* NiagaraComp;
+public:
 	void SetBeamEnd(FVector StartPoint, FVector EndPoint);
+	void ResetBeam();
 
 
 };
