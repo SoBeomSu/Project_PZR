@@ -137,7 +137,7 @@ void AKJW_PlayerC::GrabStart()
 
 	// 카메라의 위치와 방향 가져오기
 	FVector StartLocation = VRCamera->GetComponentLocation();
-	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 1000.0f;
+	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;

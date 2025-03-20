@@ -37,7 +37,14 @@ public:
 public:
 	UPROPERTY(EditAnywhere , Category = "StartLaser")
 	float LaserLength = 1500.0f;
+	
+	UPROPERTY(EditAnywhere, Category = "StartLaser")
+	float LaserDelay = 0.02f;
 
+	UPROPERTY(VisibleAnywhere, Category = "StartLaser")
+	float LaserDelayTimer = 0.00f;
+
+	void StartLaser();
 
 private:
 	UPROPERTY()

@@ -79,9 +79,9 @@ void ALaserMirror::Tick(float DeltaTime)
 void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDir, const float& LaserLength)
 {
 	FVector SurfaceNormal = HitInfo.ImpactNormal;
-
 	FVector StartPoint = HitInfo.Location;
 	FVector ReflectionVector = KHelper::GetReflectionVector(InDir, SurfaceNormal);
+	
 	//FVector ReflectionVector = InDir.MirrorByVector(SurfaceNormal);
 	FVector EndPoint = StartPoint + (ReflectionVector * LaserLength);
 
@@ -113,10 +113,9 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 			}
 		}
 	}
-
-	if (!bHit && NextMirror)
+	else if (!bHit && NextMirror)
 	{
-		NextMirror->ResetBeam();
+		NextMirror->CutOffLaser();
 		NextMirror = nullptr;
 	}
 
@@ -135,6 +134,23 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 		DrawDebugLine(GetWorld(), StartPoint, EndPoint, FColor::Red);
 		DrawDebugLine(GetWorld(), StartPoint, StartPoint +  SurfaceNormal* 500.0f, FColor::Black);
 	}
+}
+
+void ALaserMirror::CutOffLaser()
+{
+	if (NextMirror)
+	{
+		NextMirror->CutOffLaser();
+		NextMirror = nullptr;
+	}
+
+	if (EndLaserPoint.IsValid())
+	{
+		EndLaserPoint->RemoveMirrorPoint(this);
+		EndLaserPoint = nullptr;
+	}
+
+	ResetBeam();
 }
 
 void ALaserMirror::StartGrab(AActor* HandActor)
@@ -176,6 +192,8 @@ void ALaserMirror::ResetBeam()
 			NiagaraComp->DeactivateImmediate();
 		}
 	}
+
+	
 }
 
 

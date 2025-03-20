@@ -2,6 +2,8 @@
 
 #include "KJW/LaserRoom/EndLaserPoint.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
+#include "KJW/LaserRoom/Textboard.h"
 
 // Sets default values
 AEndLaserPoint::AEndLaserPoint()
@@ -21,6 +23,15 @@ AEndLaserPoint::AEndLaserPoint()
 
 	BoxComp->SetBoxExtent(FVector(50.0f, 6.5f, 50.0f));
 	MeshComp->SetRelativeScale3D(FVector(1.0f, 0.1f, 1.0f));
+
+	//UI Component
+	TextWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("TextWidget"));
+	TextWidget->SetupAttachment(RootComponent);
+	TextWidget->SetRelativeLocationAndRotation(FVector(0.0f, 6.0f, 0.0f), FRotator(0.0f, 90.0f, 0.0f));
+
+	ConstructorHelpers::FClassFinder<UTextboard> TextClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/A_Project/KJW/LaserRoom/UI/BPW_EndLaser.BPW_EndLaser_C'"));
+	if (TextClass.Succeeded()) TextWidget->SetWidgetClass(TextClass.Class);
+
 }
 
 
@@ -33,7 +44,12 @@ void AEndLaserPoint::BeginPlay()
 	{
 		MeshComp->SetMaterial(0, FailMaterial);
 	}
-	
+
+	if(UUserWidget* Widget = TextWidget->GetWidget())
+	{
+		Textboard = Cast<UTextboard>(Widget);
+		SetGoalText();
+	}
 }
 
 // Called every frame
@@ -41,6 +57,12 @@ void AEndLaserPoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AEndLaserPoint::SetGoalInfo()
+{
+	SetGoalText();
+	SetGoalMt();
 }
 
 void AEndLaserPoint::SetGoalMt()
@@ -61,7 +83,7 @@ void AEndLaserPoint::AddMirrorPoint(ALaserMirror* LaserMirror)
 
 	Mirrors.Add(LaserMirror);
 
-	SetGoalMt();
+	SetGoalInfo();
 }
 
 void AEndLaserPoint::RemoveMirrorPoint(ALaserMirror* LaserMirror)
@@ -70,7 +92,15 @@ void AEndLaserPoint::RemoveMirrorPoint(ALaserMirror* LaserMirror)
 
 	Mirrors.Remove(LaserMirror);
 
-	SetGoalMt();
+	SetGoalInfo();
+}
+
+void AEndLaserPoint::SetGoalText()
+{
+	if (!Textboard) return;
+	int32 num = GoalCount - Mirrors.Num();
+	Textboard->SetTextBlock((FText::AsNumber(num)));
+	
 }
 
 

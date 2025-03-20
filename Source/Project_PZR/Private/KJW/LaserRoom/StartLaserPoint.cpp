@@ -50,11 +50,23 @@ void AStartLaserPoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (LaserDelayTimer < LaserDelay)
+	{
+		LaserDelayTimer += DeltaTime;
+		return;
+	}
+
+	LaserDelayTimer = 0.0f;
+	StartLaser();
+
+}
+
+void AStartLaserPoint::StartLaser()
+{
 	FVector StartPoint = LaserArrowComp->GetComponentLocation();
 	FVector LaserDir = LaserArrowComp->GetForwardVector();
 	FVector EndPoint = StartPoint + (LaserDir * LaserLength);
 
-	
 
 	FHitResult HitInfo;
 	FCollisionQueryParams Params;
@@ -70,13 +82,18 @@ void AStartLaserPoint::Tick(float DeltaTime)
 		if (ALaserMirror* Mirror = Cast<ALaserMirror>(HitInfo.GetActor()))
 		{
 			Mirror->NextLaserStart(HitInfo, LaserDir, LaserLength);
+			if (NextMirror && Mirror != NextMirror)
+			{
+				NextMirror->CutOffLaser();
+			}
+
 			NextMirror = Mirror;
 		}
 	}
 
 	if (!bHit && NextMirror)
 	{
-		NextMirror->ResetBeam();
+		NextMirror->CutOffLaser();
 		NextMirror = nullptr;
 	}
 
@@ -87,7 +104,6 @@ void AStartLaserPoint::Tick(float DeltaTime)
 		//확인용 디버그 라인
 		DrawDebugLine(GetWorld(), LaserArrowComp->GetComponentLocation(), EndPoint, FColor::Red);
 	}
-
 }
 
 void AStartLaserPoint::SetBeamEnd(FVector BeamEnd)
