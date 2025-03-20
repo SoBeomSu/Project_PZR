@@ -28,6 +28,11 @@ AEndLaserPoint::AEndLaserPoint()
 void AEndLaserPoint::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (FailMaterial)
+	{
+		MeshComp->SetMaterial(0, FailMaterial);
+	}
 	
 }
 
@@ -40,8 +45,17 @@ void AEndLaserPoint::Tick(float DeltaTime)
 
 void AEndLaserPoint::SetLaserSucceed(bool Succeed)
 {
+	if (this->bSucceed == Succeed) return;
+
 	this->bSucceed = Succeed;
+	
+	// 현재 상태에 따라 적절한 머티리얼 선택
+	UMaterialInterface* NewMaterial = Succeed ? SuccessMaterial : FailMaterial;
 
-
+	if (NewMaterial)
+	{
+		MeshComp->SetMaterial(0, NewMaterial);
+	}
 }
+
 

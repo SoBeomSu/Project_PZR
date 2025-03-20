@@ -34,6 +34,30 @@ AKJW_PlayerC::AKJW_PlayerC()
 	{
 		IA_Mouse = MouseActionObj.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> Mouse_LActionObj(TEXT("/Script/EnhancedInput.InputAction'/Game/A_Project/Input/IA_VRMouse_L.IA_VRMouse_L'"));
+	if (Mouse_LActionObj.Succeeded())
+	{
+		IA_VRMouse_L = Mouse_LActionObj.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> Mouse_RActionObj(TEXT("/Script/EnhancedInput.InputAction'/Game/A_Project/Input/IA_VRMouse_R.IA_VRMouse_R'"));
+	if (Mouse_RActionObj.Succeeded())
+	{
+		IA_VRMouse_R = Mouse_RActionObj.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> KeyEActionObj(TEXT("/Script/EnhancedInput.InputAction'/Game/A_Project/KJW/IA_KeyE.IA_KeyE'"));
+	if (KeyEActionObj.Succeeded())
+	{
+		IA_KeyE = KeyEActionObj.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> KeyQActionObj(TEXT("/Script/EnhancedInput.InputAction'/Game/A_Project/KJW/IA_KeyQ.IA_KeyQ'"));
+	if (KeyQActionObj.Succeeded())
+	{
+		IA_KeyQ = KeyQActionObj.Object;
+	}
 }
 
 // Called when the game starts or when spawned

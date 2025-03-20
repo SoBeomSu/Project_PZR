@@ -47,4 +47,7 @@ public:
 	//다음 레이저 이여 발사하기
 	void NextLaserStart(const struct FHitResult& HitInfo , const FVector& InDir , const float& LaserLength);
 
+private:
+	UPROPERTY()
+	TWeakObjectPtr<class AEndLaserPoint> EndLaserPoint;
 };

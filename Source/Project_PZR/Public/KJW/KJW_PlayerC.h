@@ -40,11 +40,22 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "VR_input")
 	class UInputAction* IA_Mouse;
 
+	UPROPERTY(EditDefaultsOnly, Category = "VR_input")
+	class UInputAction* IA_VRMouse_L;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "VR_input")
+	class UInputAction* IA_VRMouse_R;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "VR_input")
+	class UInputAction* IA_KeyE;
 
+	UPROPERTY(EditDefaultsOnly, Category = "VR_input")
+	class UInputAction* IA_KeyQ;
 
 private:
 	void Move(const struct FInputActionValue& Value);
 	void Turn(const struct FInputActionValue& Value);
+
 
 
 };

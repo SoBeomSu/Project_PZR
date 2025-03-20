@@ -18,10 +18,11 @@ public:
 		FVector V = IncidentVector; // 입사 벡터
 		FVector N = SurfaceNormal;	// 노멀 벡터
 
+		//(V dot N)
 		float DotProduct = FVector::DotProduct(V, N);  // 1. V와 N의 내적 계산
-
+		//N * (V dot N)
 		FVector ProjectionOntoNormal = DotProduct * N; // 2. 노멀 방향 성분 찾기
-
+		// V - 2 * N * (V dot N)
 		FVector ReflectionVector = V - 2 * ProjectionOntoNormal; // 3. 반사 벡터 계산
 
 		

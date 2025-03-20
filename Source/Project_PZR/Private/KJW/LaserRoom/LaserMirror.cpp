@@ -84,10 +84,17 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 		}
 		else if(AEndLaserPoint* Goal = Cast<AEndLaserPoint>(MirrorHitInfo.GetActor()))
 		{
+			EndLaserPoint = Goal;
 			Goal->SetLaserSucceed(true);
 		}
-
 	}
+	
+	if (EndLaserPoint.IsValid() && !bHit)
+	{
+		EndLaserPoint->SetLaserSucceed(false);
+		EndLaserPoint = nullptr;
+	}
+	
 
 	if (bStartLaser)
 	{

@@ -23,13 +23,21 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* BoxComp;
 
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* MeshComp;
 
-	bool bSucceed = false;
+	// 성공 시 적용할 머티리얼
+	UPROPERTY(EditAnywhere, Category = "Laser")
+	UMaterialInterface* SuccessMaterial;  
+	// 실패 시 적용할 머티리얼
+	UPROPERTY(EditAnywhere, Category = "Laser")
+	UMaterialInterface* FailMaterial;     
 
+	bool bSucceed = false;
 	void SetLaserSucceed(bool bSucceed);
+
 };
