@@ -13,7 +13,7 @@
 ALaserMirror::ALaserMirror()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	
 	BoxComp = CreateDefaultSubobject<UBoxComponent>("BoxComp");
@@ -78,6 +78,8 @@ void ALaserMirror::Tick(float DeltaTime)
 
 void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDir, const float& LaserLength)
 {
+	
+
 	FVector SurfaceNormal = HitInfo.ImpactNormal;
 	FVector StartPoint = HitInfo.Location;
 	FVector ReflectionVector = KHelper::GetReflectionVector(InDir, SurfaceNormal);
@@ -138,12 +140,7 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 
 void ALaserMirror::CutOffLaser()
 {
-	if (NextMirror)
-	{
-		NextMirror->CutOffLaser();
-		NextMirror = nullptr;
-	}
-
+	
 	if (EndLaserPoint.IsValid())
 	{
 		EndLaserPoint->RemoveMirrorPoint(this);

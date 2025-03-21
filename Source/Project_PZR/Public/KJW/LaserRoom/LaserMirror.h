@@ -68,8 +68,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Laser_Effects")
 	class UNiagaraComponent* NiagaraComp;
 public:
+	//빔 이펙트를 그리는 함수
 	void SetBeamEnd(FVector StartPoint, FVector EndPoint);
 private:
+	//이펙트 지우는 함수
 	void ResetBeam();
 
 

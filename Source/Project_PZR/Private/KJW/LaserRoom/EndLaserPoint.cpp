@@ -4,6 +4,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "KJW/LaserRoom/Textboard.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "KJW/LaserRoom/LaserRoomGameMode.h"
 
 // Sets default values
 AEndLaserPoint::AEndLaserPoint()
@@ -40,16 +42,18 @@ void AEndLaserPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (FailMaterial)
+	LaserGamemode = Cast<ALaserRoomGameMode>(GetWorld()->GetAuthGameMode());
+	if (LaserGamemode)
 	{
-		MeshComp->SetMaterial(0, FailMaterial);
+		GoalCount = LaserGamemode->NeedLaser;
 	}
 
-	if(UUserWidget* Widget = TextWidget->GetWidget())
+	if (UUserWidget* Widget = TextWidget->GetWidget())
 	{
 		Textboard = Cast<UTextboard>(Widget);
 		SetGoalText();
 	}
+
 }
 
 // Called every frame
@@ -57,24 +61,44 @@ void AEndLaserPoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SetGoalMt(DeltaTime);
 }
 
 void AEndLaserPoint::SetGoalInfo()
 {
 	SetGoalText();
-	SetGoalMt();
 }
 
-void AEndLaserPoint::SetGoalMt()
+void AEndLaserPoint::SetGoalMt(const float& DeltaTime)
 {
-	this->bSucceed = Mirrors.Num() == GoalCount ? true : false;
+	bool bSucceed = Mirrors.Num() == GoalCount ? true : false;
 
-	// 현재 상태에 따라 적절한 머티리얼 선택
-	UMaterialInterface* NewMaterial = this->bSucceed ? SuccessMaterial : FailMaterial;
-	if (NewMaterial)
+	if (bSucceed)
 	{
-		MeshComp->SetMaterial(0, NewMaterial);
+		CurNeedTime += DeltaTime;
 	}
+	else
+	{
+		CurNeedTime -= DeltaTime;	
+	}
+	
+	CurNeedTime = FMath::Clamp(CurNeedTime , 0.0f, NeedTime);
+	
+	float Delta = CurNeedTime / NeedTime;
+	if (CurNeedTime > NeedTime) { Delta = 1.0f; }
+
+	FLinearColor InColor = FLinearColor::Black;
+	EmissiveScale = FMath::Lerp(1.0f, 10.0f, Delta);
+	InColor = FMath::Lerp(InColor, FLinearColor::White, Delta);
+
+	MeshComp->SetScalarParameterValueOnMaterials(TEXT("EmissiveScale"), EmissiveScale);
+	MeshComp->SetColorParameterValueOnMaterials(TEXT("Color"), InColor);
+
+	if(LaserGamemode && CurNeedTime >= NeedTime)
+	{
+		LaserGamemode->ChangeLaserGameState(ELaserGameState::CLEAR);
+	}
+
 }
 
 void AEndLaserPoint::AddMirrorPoint(ALaserMirror* LaserMirror)

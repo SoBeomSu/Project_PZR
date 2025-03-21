@@ -24,33 +24,42 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	void AddMirrorPoint(class ALaserMirror* LaserMirror);
+	void RemoveMirrorPoint(class ALaserMirror* LaserMirror);
+private:
+	//정보 갱신
+	void SetGoalInfo();
+	//성공에 따른 머티리얼 셋팅
+	void SetGoalMt(const float& DeltaTime);
+	//골 텍스트 갱신
+	void SetGoalText();
+public:
+
+	//현제 레이저가 들어오는 거울들
+	TArray<class ALaserMirror*> Mirrors;
+
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* BoxComp;
 
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* MeshComp;
-
 public:
-	// 성공 시 적용할 머티리얼
-	UPROPERTY(EditAnywhere, Category = "Laser")
-	UMaterialInterface* SuccessMaterial;  
-	// 실패 시 적용할 머티리얼
-	UPROPERTY(EditAnywhere, Category = "Laser")
-	UMaterialInterface* FailMaterial;     
-
-	bool bSucceed = false;
-	//정보 갱신
-	void SetGoalInfo();
-	//성공에 따른 머티리얼 셋팅
-	void SetGoalMt();
-	//목표 갯수
 	UPROPERTY(EditAnywhere, Category = "End_Point")
 	int32 GoalCount = 1;
+	UPROPERTY(EditAnywhere, Category = "Laser")
+	FColor BaseColor = FColor::Black;
+	UPROPERTY(EditAnywhere, Category = "Laser")
+	float EmissiveScale = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "Laser")
+	float MaxEmissiveScale = 10.0f;
+	UPROPERTY(EditAnywhere, Category = "Laser")
+	float NeedTime = 3.0f;
+	UPROPERTY(EditAnywhere, Category = "Laser")
+	float CurNeedTime = 0.0f;
 
-	void AddMirrorPoint(class ALaserMirror* LaserMirror);
-	void RemoveMirrorPoint(class ALaserMirror* LaserMirror);
-	//현제 레이저가 들어오는 거울들
-	TArray<class ALaserMirror*> Mirrors;
+private:
+
+	class ALaserRoomGameMode* LaserGamemode;
 
 public:
 	//UI
@@ -60,6 +69,6 @@ public:
 	UPROPERTY()
 	class UTextboard* Textboard;
 
-	void SetGoalText();
+	
 
 };

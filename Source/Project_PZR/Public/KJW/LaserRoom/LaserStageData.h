@@ -42,6 +42,9 @@ public:
 	int32 Stage = 0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LaserRoom")
+    int32 NeedLaser = 1;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LaserRoom")
     TArray<FLaserRoomActorData> LaserRoomActorDatas;
 		
 };
