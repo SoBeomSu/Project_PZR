@@ -24,8 +24,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void AddMirrorPoint(class ALaserMirror* LaserMirror);
-	void RemoveMirrorPoint(class ALaserMirror* LaserMirror);
+	void AddMirrorPoint(class AStartLaserPoint* StartLaserPoint);
+	void RemoveMirrorPoint(class AStartLaserPoint* StartLaserPoint);
 private:
 	//정보 갱신
 	void SetGoalInfo();
@@ -33,10 +33,10 @@ private:
 	void SetGoalMt(const float& DeltaTime);
 	//골 텍스트 갱신
 	void SetGoalText();
-public:
 
-	//현제 레이저가 들어오는 거울들
-	TArray<class ALaserMirror*> Mirrors;
+public:
+	//현제 레이저가 들어오는 시작 포인트
+	TArray<class AStartLaserPoint*> StartLasers;
 
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* BoxComp;

@@ -3,13 +3,13 @@
 
 #include "KJW/KJW_PlayerC.h"
 #include "Camera/CameraComponent.h"
+#include "Components/WidgetInteractionComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
 #include "InputActionValue.h"
 
 #include "KJW/KVRObjectInterface.h"
-
 // Sets default values
 AKJW_PlayerC::AKJW_PlayerC()
 {
@@ -60,6 +60,18 @@ AKJW_PlayerC::AKJW_PlayerC()
 	{
 		IA_KeyQ = KeyQActionObj.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> InteractWidgetActionObj(TEXT("/Script/EnhancedInput.InputAction'/Game/A_Project/KJW/IA_InteractWidget.IA_InteractWidget'"));
+	if (InteractWidgetActionObj.Succeeded())
+	{
+		IA_InteractWidget = InteractWidgetActionObj.Object;
+	}
+
+
+	// 위젯 상호작용 컴포넌트 생성
+	IneractionComp = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("IneractionComp"));
+	IneractionComp->SetupAttachment(RootComponent);
+	IneractionComp->bEnableHitTesting = true;
 }
 
 // Called when the game starts or when spawned
@@ -105,6 +117,9 @@ void AKJW_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		//물체 회전
 		EnhancedInputComponent->BindAction(IA_KeyQ, ETriggerEvent::Triggered, this, &ThisClass::LRotGrabObj);
 		EnhancedInputComponent->BindAction(IA_KeyE, ETriggerEvent::Triggered, this, &ThisClass::RRotGrabObj);
+		
+		//3D UI 클릭을 위한
+		EnhancedInputComponent->BindAction(IA_InteractWidget, ETriggerEvent::Completed, this, &ThisClass::InteractWidget);
 	}
 }
 
@@ -127,6 +142,31 @@ void AKJW_PlayerC::Turn(const FInputActionValue& Value)
 
 	AddControllerPitchInput(Scale.Y);
 	AddControllerYawInput(Scale.X);
+}
+
+void AKJW_PlayerC::InteractWidget()
+{
+	if (IneractionComp)
+	{		
+		if (IneractionComp->IsOverHitTestVisibleWidget())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("UI 위에 있음!"));
+		}
+
+		IneractionComp->PressPointerKey(EKeys::LeftMouseButton);
+		IneractionComp->ReleasePointerKey(EKeys::LeftMouseButton);
+	}
+}
+
+void AKJW_PlayerC::InteractWidgetHover()
+{
+	if (IneractionComp)
+	{
+		if (IneractionComp->IsOverHitTestVisibleWidget())
+		{
+
+		}
+	}
 }
 
 void AKJW_PlayerC::GrabStart()

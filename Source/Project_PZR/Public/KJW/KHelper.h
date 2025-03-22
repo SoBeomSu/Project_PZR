@@ -4,6 +4,17 @@
 
 #include "CoreMinimal.h"
 
+
+UENUM(BlueprintType)
+enum class ELaserGameState : uint8
+{
+	NONE UMETA(DisplayName = "None"),
+	START UMETA(DisplayName = "Start"),
+	INGAME UMETA(DisplayName = "InGame"),
+	CLEAR UMETA(DisplayName = "Clear"),
+	FINISH UMETA(DisplayName = "Finish"),
+};
+
  class PROJECT_PZR_API KHelper
 {
 public:

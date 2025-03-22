@@ -6,7 +6,7 @@
 #include "KJW/LaserRoom/Textboard.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "KJW/LaserRoom/LaserRoomGameMode.h"
-
+#include "KJW/LaserRoom/StartLaserPoint.h"
 // Sets default values
 AEndLaserPoint::AEndLaserPoint()
 {
@@ -64,6 +64,24 @@ void AEndLaserPoint::Tick(float DeltaTime)
 	SetGoalMt(DeltaTime);
 }
 
+void AEndLaserPoint::AddMirrorPoint(AStartLaserPoint* StartLaserPoint)
+{
+	if (StartLasers.Contains(StartLaserPoint)) return;
+
+	StartLasers.Add(StartLaserPoint);
+
+	SetGoalInfo();
+}
+
+void AEndLaserPoint::RemoveMirrorPoint(AStartLaserPoint* StartLaserPoint)
+{
+	if (!StartLasers.Contains(StartLaserPoint)) return;
+
+	StartLasers.Remove(StartLaserPoint);
+
+	SetGoalInfo();
+}
+
 void AEndLaserPoint::SetGoalInfo()
 {
 	SetGoalText();
@@ -71,7 +89,7 @@ void AEndLaserPoint::SetGoalInfo()
 
 void AEndLaserPoint::SetGoalMt(const float& DeltaTime)
 {
-	bool bSucceed = Mirrors.Num() == GoalCount ? true : false;
+	bool bSucceed = StartLasers.Num() == GoalCount ? true : false;
 
 	if (bSucceed)
 	{
@@ -98,31 +116,13 @@ void AEndLaserPoint::SetGoalMt(const float& DeltaTime)
 	{
 		LaserGamemode->ChangeLaserGameState(ELaserGameState::CLEAR);
 	}
-
 }
 
-void AEndLaserPoint::AddMirrorPoint(ALaserMirror* LaserMirror)
-{
-	if (Mirrors.Contains(LaserMirror)) return;
-
-	Mirrors.Add(LaserMirror);
-
-	SetGoalInfo();
-}
-
-void AEndLaserPoint::RemoveMirrorPoint(ALaserMirror* LaserMirror)
-{
-	if (!Mirrors.Contains(LaserMirror)) return;
-
-	Mirrors.Remove(LaserMirror);
-
-	SetGoalInfo();
-}
 
 void AEndLaserPoint::SetGoalText()
 {
 	if (!Textboard) return;
-	int32 num = GoalCount - Mirrors.Num();
+	int32 num = GoalCount - StartLasers.Num();
 	Textboard->SetTextBlock((FText::AsNumber(num)));
 	
 }

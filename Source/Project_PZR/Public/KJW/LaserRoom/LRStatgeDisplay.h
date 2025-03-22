@@ -4,34 +4,33 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Laser.generated.h"
+#include "LRStatgeDisplay.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API ALaser : public AActor
+class PROJECT_PZR_API ALRStatgeDisplay : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ALaser();
+	ALRStatgeDisplay();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	//빔 이펙트를 그리는 함수
-	void SetBeamEnd(FVector StartPoint, FVector EndPoint);
-	//이펙트 지우는 함수
-	void ResetBeam();
+	//현제 스테이지 상태를 띄우는
+	void SetStageInfo();
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = "Laser")
+	UPROPERTY(VisibleAnywhere, Category = "StatgeDisplay")
 	class USceneComponent* SceneComp;
 
-	//레이저 이펙트
-	UPROPERTY(VisibleAnywhere, Category = "Laser_Effects")
-	class UNiagaraComponent* NiagaraComp;
+	UPROPERTY(VisibleAnywhere, Category = "StatgeDisplay")
+	class UTextRenderComponent* TextComp;
 
+private:
+	class ALaserRoomGameMode* LRGM;
 
 };

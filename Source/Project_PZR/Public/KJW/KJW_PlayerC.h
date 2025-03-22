@@ -26,9 +26,18 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	void Move(const struct FInputActionValue& Value);
+	void Turn(const struct FInputActionValue& Value);
+
+	void InteractWidget();
+	void InteractWidgetHover();
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "VR")
 	class UCameraComponent* VRCamera;
+
+	UPROPERTY(VisibleAnywhere, Category = "VR")
+	class UWidgetInteractionComponent* IneractionComp;
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "VR_input")
@@ -52,9 +61,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "VR_input")
 	class UInputAction* IA_KeyQ;
 
-private:
-	void Move(const struct FInputActionValue& Value);
-	void Turn(const struct FInputActionValue& Value);
+	UPROPERTY(EditDefaultsOnly, Category = "VR_input")
+	class UInputAction* IA_InteractWidget;
+
 
 //거울 오브젝트를 잡기 위한
 public :

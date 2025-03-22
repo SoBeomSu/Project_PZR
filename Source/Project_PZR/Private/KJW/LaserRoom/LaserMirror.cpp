@@ -22,8 +22,7 @@ ALaserMirror::ALaserMirror()
 	MirrorComp = CreateDefaultSubobject<UStaticMeshComponent>("MirrorComp");
 	MirrorComp->SetupAttachment(RootComponent);
 
-	MirrorArrowComp = CreateDefaultSubobject<UArrowComponent>("MirrorArrowComp");
-	MirrorArrowComp->SetupAttachment(MirrorComp);
+
 
 	BottomComp = CreateDefaultSubobject<UStaticMeshComponent>("BottomComp");
 	BottomComp->SetupAttachment(RootComponent);
@@ -39,27 +38,10 @@ ALaserMirror::ALaserMirror()
 	MirrorComp->SetRelativeLocation(FVector(0.0f, 0.0f, 20.0f));
 	MirrorComp->SetRelativeScale3D(FVector(1.0f, 0.1f, 1.0f));
 
-	MirrorArrowComp->SetRelativeLocation(FVector(0.0f, 100.0f, 0.0f));
-	MirrorArrowComp->SetRelativeRotation(FRotator(0.0, 90.0f, 0.0f));
-
 	BottomComp->SetRelativeLocation(FVector(0.0f, 0.0f, -70.0f));
 	BottomComp->SetRelativeScale3D(FVector(0.5f, 0.2f, 0.2f));
 	BottomComp->SetRelativeRotation(FRotator(90.0f,0.0f, 0.0f));
 
-
-	NiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComp"));
-	NiagaraComp->SetupAttachment(GetRootComponent());
-
-	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystemAsset(
-		TEXT("/Script/Niagara.NiagaraSystem'/Game/A_Project/KJW/LaserRoom/Actor/NS_Beam.NS_Beam'")
-	);
-
-	if (NiagaraSystemAsset.Succeeded())
-	{
-		NiagaraComp->SetAsset(NiagaraSystemAsset.Object);
-	}
-
-	NiagaraComp->bAutoActivate = false;  // 처음엔 꺼둠, 필요할 때 실행
 }
 
 // Called when the game starts or when spawned
@@ -76,18 +58,24 @@ void ALaserMirror::Tick(float DeltaTime)
 
 }
 
-void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDir, const float& LaserLength)
-{
-	
 
+
+void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDir, const float& LaserLength, TArray<FVector>& Lines, bool& IsGoal)
+{
+	//1. 들어온 레이저의 반사 방향 구하기
 	FVector SurfaceNormal = HitInfo.ImpactNormal;
 	FVector StartPoint = HitInfo.Location;
 	FVector ReflectionVector = KHelper::GetReflectionVector(InDir, SurfaceNormal);
-	
+
+	//2. 최종 다음 레이저 위치 구하기
 	//FVector ReflectionVector = InDir.MirrorByVector(SurfaceNormal);
 	FVector EndPoint = StartPoint + (ReflectionVector * LaserLength);
 
+	//3.라인 트레이스로 다음 충돌체 확인
 	FHitResult MirrorHitInfo;
+	ALaserMirror* NextMirror = nullptr;
+	IsGoal = false;
+
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 	bool bHit = GetWorld()->LineTraceSingleByChannel(MirrorHitInfo, StartPoint, EndPoint, ECC_GameTraceChannel1
@@ -97,58 +85,30 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 	{
 		FVector Hitpoint = MirrorHitInfo.Location;
 		EndPoint = Hitpoint;
+		NextMirror = Cast<ALaserMirror>(MirrorHitInfo.GetActor());
 
-		if (ALaserMirror* Mirror = Cast<ALaserMirror>(MirrorHitInfo.GetActor()))
-		{
-			Mirror->NextLaserStart(MirrorHitInfo, ReflectionVector, LaserLength);
-			NextMirror = Mirror;
-		}
-		else if(AEndLaserPoint* Goal = Cast<AEndLaserPoint>(MirrorHitInfo.GetActor()))
-		{
-			EndLaserPoint = Goal;
-			Goal->AddMirrorPoint(this);
-			
-			if (NextMirror)
-			{
-				NextMirror->ResetBeam();
-				NextMirror = nullptr;
-			}
-		}
-	}
-	else if (!bHit && NextMirror)
-	{
-		NextMirror->CutOffLaser();
-		NextMirror = nullptr;
-	}
-
-
-	SetBeamEnd(StartPoint, EndPoint);
-	if (EndLaserPoint.IsValid() && !bHit)
-	{
-		EndLaserPoint->RemoveMirrorPoint(this);
-		EndLaserPoint = nullptr;
+		//만약 충돌체가 목표 지점이라면
+		AEndLaserPoint* Goal = Cast<AEndLaserPoint>(MirrorHitInfo.GetActor());
+		if (Goal) { IsGoal = true; }
+		
 	}
 	
+	Lines.Add(EndPoint);
 
-	if (bStartLaser)
+	if (NextMirror)
+	{
+		NextMirror->NextLaserStart(MirrorHitInfo, ReflectionVector, LaserLength, Lines, IsGoal);
+	}
+
+
+	if (bDrawLaser)
 	{
 		//확인용 디버그 라인
 		DrawDebugLine(GetWorld(), StartPoint, EndPoint, FColor::Red);
-		DrawDebugLine(GetWorld(), StartPoint, StartPoint +  SurfaceNormal* 500.0f, FColor::Black);
+		DrawDebugLine(GetWorld(), StartPoint, StartPoint + SurfaceNormal * 500.0f, FColor::Black);
 	}
 }
 
-void ALaserMirror::CutOffLaser()
-{
-	
-	if (EndLaserPoint.IsValid())
-	{
-		EndLaserPoint->RemoveMirrorPoint(this);
-		EndLaserPoint = nullptr;
-	}
-
-	ResetBeam();
-}
 
 void ALaserMirror::StartGrab(AActor* HandActor)
 {
@@ -167,31 +127,7 @@ void ALaserMirror::RotObject(const FRotator AddRotator)
 	AddActorLocalRotation(AddRotator);
 }
 
-void ALaserMirror::SetBeamEnd(FVector StartPoint, FVector EndPoint)
-{
-	if (NiagaraComp)
-	{
-		if (!NiagaraComp->IsActive())
-		{
-			NiagaraComp->Activate();
-		}
-		NiagaraComp->SetWorldLocation(StartPoint);
-		NiagaraComp->SetVectorParameter(FName("Beam End"), EndPoint);
-	}
-}
 
-void ALaserMirror::ResetBeam()
-{
-	if (NiagaraComp)
-	{
-		if (NiagaraComp->IsActive())
-		{
-			NiagaraComp->DeactivateImmediate();
-		}
-	}
-
-	
-}
 
 
 

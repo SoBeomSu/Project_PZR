@@ -3,6 +3,9 @@
 
 #include "KJW/LaserRoom/LaserRoomGameMode.h"
 #include "KJW/LaserRoom/LaserStageData.h"
+#include "KJW/LaserRoom/Laser.h"
+#include "KJW/LaserRoom/LRStatgeDisplay.h"
+
 
 ALaserRoomGameMode::ALaserRoomGameMode()
 {
@@ -37,22 +40,40 @@ void ALaserRoomGameMode::ChangeLaserGameState(ELaserGameState NewLaserGameState)
 		{
 			ResetStageActor();
 			Stage++;
+			SetDisplay();
 			SpawnStageActor();
+			LaserGameState = ELaserGameState::INGAME;
 		}
 		break;
 	}
 	case ELaserGameState::FINISH:
+	{
+		SetDisplay();
 		break;
+	}
 	default:
 		break;
 	}
+
+	UpdateStageDelegate.Broadcast(LaserGameState);
 }
 
 void ALaserRoomGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ChangeLaserGameState(ELaserGameState::START);
+	for (int i = 0; i < 10; ++i)
+	{
+		SpawnLaser();
+	}
+	
+
+	GetWorld()->GetTimerManager().SetTimer(LaserGameStateTimerHandle,
+		FTimerDelegate::CreateLambda([this]()
+			{
+				ChangeLaserGameState(ELaserGameState::START);
+			}), 2.0f, false);
+	
 }
 
 void ALaserRoomGameMode::SpawnStageActor()
@@ -101,4 +122,47 @@ void ALaserRoomGameMode::ResetStageActor()
 	}
 	
 	SpawnedActors.Empty();
+}
+
+void ALaserRoomGameMode::SpawnLaser()
+{
+	ensure(LaserClass);
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+
+	ALaser* NewLaser = GetWorld()->SpawnActor<ALaser>(LaserClass , FVector(-100.0f) , FRotator(0.0f), SpawnParams);
+	NewLaser->ResetBeam();
+
+	LaserPool.Enqueue(NewLaser);
+}
+
+ALaser* ALaserRoomGameMode::GetLaser()
+{
+	ALaser* Laser = nullptr;
+	if (LaserPool.IsEmpty())
+	{
+		SpawnLaser();
+	}
+
+	
+	LaserPool.Dequeue(Laser);
+	Laser->SetActorHiddenInGame(false);
+	
+	return Laser;
+}
+
+void ALaserRoomGameMode::ReturnLaser(ALaser* Laser)
+{
+	Laser->ResetBeam();
+	Laser->SetActorHiddenInGame(true);
+	LaserPool.Enqueue(Laser);
+}
+
+void ALaserRoomGameMode::SetDisplay()
+{
+	if (!Display) return;
+
+	Display->SetStageInfo();
 }
