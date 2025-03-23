@@ -26,6 +26,8 @@ public:
 	virtual void SetCoins(int NewCoins);
 	//TArray<A
 	bool bStartGame = false;
+	bool Phase2 = false;
 
 	void StartGame();
+	void GameOver();
 };

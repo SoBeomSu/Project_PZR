@@ -10,6 +10,7 @@ ASBS_GameStartButton::ASBS_GameStartButton()
 	PrimaryActorTick.bCanEverTick = true;
 	Pillar = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Pillar"));
 	Button = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Button"));
+	Button->SetupAttachment(Pillar);
 
 }
 
@@ -17,19 +18,27 @@ ASBS_GameStartButton::ASBS_GameStartButton()
 void ASBS_GameStartButton::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GameMode01 = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
 }
 
 // Called every frame
 void ASBS_GameStartButton::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	//if ((GameMode01->bStartGame)&&(!bworked))
+	//{
+	//	DelayTime+=DeltaTime;
+	//	if (DeltaTime > 2)
+	//	{
+	//		Lightswitch->SwitchOff();
+	//		bworked = true;
+	//	}
+	//}
 }
 
 void ASBS_GameStartButton::ButtonPressed()
 {
-	Button->SetRelativeLocation(FVector(0, 0, -20));
+	Button->SetRelativeLocation(FVector(0, 0, -10));
 	if (GameMode01)
 	{
 		GameMode01->StartGame();

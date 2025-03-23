@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/BoxComponent.h"
 #include "SBS_Animal.generated.h"
 
 UCLASS()
@@ -27,6 +28,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
+
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* BoxComp;
+
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* SkeletalMesh;
 

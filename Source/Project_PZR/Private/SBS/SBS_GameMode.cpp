@@ -25,3 +25,8 @@ void ASBS_GameMode::StartGame()
 	TArray<AActor*> FoundActors;
 //	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyActor::StaticClass(), FoundActors);
 }
+
+void ASBS_GameMode::GameOver()
+{
+
+}

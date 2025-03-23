@@ -47,10 +47,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_MouseRightButton;
 
-
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_MouseLeftButton;
-
+	class ASBS_GameMode* GameMode;
 	class ASBS_LightSwitch* LightSwitch;
 	ASBS_GameStartButton* StartButton;
 	

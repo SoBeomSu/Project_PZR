@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "SBS_GameMode.h"
+#include "SBS_LightSwitch.h"
 #include "SBS_GameStartButton.generated.h"
 
 UCLASS()
@@ -35,4 +36,8 @@ public:
 	void ButtonPressed();
 
 	ASBS_GameMode* GameMode01;
+	ASBS_LightSwitch* Lightswitch;
+
+	float DelayTime;
+	bool bworked = false;
 };
