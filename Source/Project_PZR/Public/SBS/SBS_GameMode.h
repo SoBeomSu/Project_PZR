@@ -24,8 +24,8 @@ public:
 
 	UFUNCTION(BlueprintCallable,Category="Coins")
 	virtual void SetCoins(int NewCoins);
-
-	bool bStartGame = flase;
+	//TArray<A
+	bool bStartGame = false;
 
 	void StartGame();
 };

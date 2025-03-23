@@ -105,6 +105,14 @@ void ASBS_PlayerC::RMB_Start(const struct FInputActionValue& Value)
 					GrabActor = LightSwitch;
 				}
 			}
+			if (HitActor->GetActorNameOrLabel().Contains("Button")) // 버튼이면
+			{
+				StartButton = Cast<ASBS_GameStartButton>(RMB_HitResult.GetActor());\
+				if (StartButton)
+				{
+					StartButton->ButtonPressed();
+				}
+			}
 		}
 	} 
 }

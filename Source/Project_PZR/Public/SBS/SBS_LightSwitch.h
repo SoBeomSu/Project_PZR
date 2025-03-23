@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/PointLightComponent.h"
 #include "SBS_WorldLightManager.h"
+#include "SBS_GameMode.h"
 #include "SBS_LightSwitch.generated.h"
 
 UCLASS()
@@ -34,6 +35,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	ASBS_WorldLightManager* WorldLight;
+
+	ASBS_GameMode* Gamemode;
 
 	float CurrentTime = 0;
 	bool bCanGrap = true;

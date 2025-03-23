@@ -8,6 +8,8 @@ ASBS_GameStartButton::ASBS_GameStartButton()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	Pillar = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Pillar"));
+	Button = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Button"));
 
 }
 
@@ -23,5 +25,14 @@ void ASBS_GameStartButton::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASBS_GameStartButton::ButtonPressed()
+{
+	Button->SetRelativeLocation(FVector(0, 0, -20));
+	if (GameMode01)
+	{
+		GameMode01->StartGame();
+	}
 }
 

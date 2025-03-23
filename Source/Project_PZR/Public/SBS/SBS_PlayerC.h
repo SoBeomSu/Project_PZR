@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "SBS_GameStartButton.h"
 #include "SBS_PlayerC.generated.h"
 
 
@@ -51,6 +52,7 @@ public:
 	class UInputAction* IA_MouseLeftButton;
 
 	class ASBS_LightSwitch* LightSwitch;
+	ASBS_GameStartButton* StartButton;
 	
 	bool bRightclick = false;
 	bool bLeftclick = false;
