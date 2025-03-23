@@ -10,28 +10,14 @@
 #include "Kismet/GameplayStatics.h"
 
 
-void ULRDisplay::SetDisplay(ELaserGameState LaserGameState)
-{
-	if (!LRGM) return;
-
-	int32 curStage = LRGM->GetCurentStage();
-
-	if (LaserGameState == ELaserGameState::FINISH)
-	{
-		MainTextBlock->SetText(FText::FromString("FINISH..."));
-	}
-	else
-	{
-		FString str = FString::Printf(TEXT("Stage - %d"), curStage);
-		MainTextBlock->SetText(FText::FromString(str));
-	}
-}
 
 void ULRDisplay::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	ToBackButton->OnClicked.AddDynamic(this, &ThisClass::ToBackFunc);
+
+	ToBackButton->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void ULRDisplay::ToBackFunc()
@@ -40,3 +26,21 @@ void ULRDisplay::ToBackFunc()
 	UGameplayStatics::OpenLevel(this, LevelName);
 }
 
+void ULRDisplay::SetDisplay(EKGameState LaserGameState)
+{
+	if (!LRGM) return;
+
+	int32 curStage = LRGM->GetCurentStage();
+
+	if (LaserGameState == EKGameState::FINISH)
+	{
+		MainTextBlock->SetText(FText::FromString("FINISH..."));
+		ToBackButton->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		FString str = FString::Printf(TEXT("Stage - %d"), curStage);
+		MainTextBlock->SetText(FText::FromString(str));
+		ToBackButton->SetVisibility(ESlateVisibility::Hidden);
+	}
+}

@@ -6,7 +6,7 @@
 
 
 UENUM(BlueprintType)
-enum class ELaserGameState : uint8
+enum class EKGameState : uint8
 {
 	NONE UMETA(DisplayName = "None"),
 	START UMETA(DisplayName = "Start"),

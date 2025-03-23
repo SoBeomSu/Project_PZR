@@ -13,7 +13,7 @@
 
 
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FUpdateDelegate, ELaserGameState);
+DECLARE_MULTICAST_DELEGATE_OneParam(FUpdateDelegate, EKGameState);
 
 UCLASS()
 class PROJECT_PZR_API ALaserRoomGameMode : public AGameModeBase
@@ -27,7 +27,7 @@ protected:
 
 public:
 	//게임 상태 변경
-	void ChangeLaserGameState(ELaserGameState NewLaserGameState);
+	void ChangeLaserGameState(EKGameState NewLaserGameState);
 	//현제 스테이지 액터 스폰
 	void SpawnStageActor();
 	//스폰된 액터 제거
@@ -47,7 +47,7 @@ private:
 	void SetDisplay();
 public:
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas")
-	ELaserGameState LaserGameState = ELaserGameState::NONE;
+	EKGameState LaserGameState = EKGameState::NONE;
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas")
 	int32 NeedLaser = 1;
 private:

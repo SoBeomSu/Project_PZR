@@ -114,7 +114,7 @@ void AEndLaserPoint::SetGoalMt(const float& DeltaTime)
 
 	if(LaserGamemode && CurNeedTime >= NeedTime)
 	{
-		LaserGamemode->ChangeLaserGameState(ELaserGameState::CLEAR);
+		LaserGamemode->ChangeLaserGameState(EKGameState::CLEAR);
 	}
 }
 

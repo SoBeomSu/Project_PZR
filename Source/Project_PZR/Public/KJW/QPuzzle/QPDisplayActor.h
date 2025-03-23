@@ -5,21 +5,24 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "KJW/KHelper.h"
-#include "LRDisplayActor.generated.h"
+#include "QPDisplayActor.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API ALRDisplayActor : public AActor
+class PROJECT_PZR_API AQPDisplayActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ALRDisplayActor();
+	AQPDisplayActor();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 
 private:
@@ -29,9 +32,12 @@ private:
 	class UWidgetComponent* WidgetComp;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
-	class ULRDisplay* LRDisplay;
+	class UQPDisplay* QPDisplay;
+
+	class AQPuzzleGameMode* QPGM = nullptr;
 
 private:
+
 	void SetDisplay(EKGameState LaserGameState);
 
 };

@@ -21,7 +21,7 @@ class PROJECT_PZR_API ULRDisplay : public UUserWidget
 	friend class ALRDisplayActor;
 
 public:
-	void SetDisplay(ELaserGameState LaserGameState);
+	void SetDisplay(EKGameState LaserGameState);
 private:
 	virtual void NativeConstruct() override;
 	UFUNCTION()
@@ -36,7 +36,6 @@ private:
 
 private:
 	class ALaserRoomGameMode* LRGM;
-
 
 
 };

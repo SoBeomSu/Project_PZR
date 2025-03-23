@@ -12,7 +12,7 @@ ALaserRoomGameMode::ALaserRoomGameMode()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void ALaserRoomGameMode::ChangeLaserGameState(ELaserGameState NewLaserGameState)
+void ALaserRoomGameMode::ChangeLaserGameState(EKGameState NewLaserGameState)
 {
 	if (LaserGameState == NewLaserGameState) { return; }
 	
@@ -20,20 +20,20 @@ void ALaserRoomGameMode::ChangeLaserGameState(ELaserGameState NewLaserGameState)
 
 	switch (LaserGameState)
 	{
-	case ELaserGameState::NONE:
+	case EKGameState::NONE:
 		break;
-	case ELaserGameState::START:
+	case EKGameState::START:
 	{
 		SpawnStageActor();
 		break;
 	}
-	case ELaserGameState::INGAME:
+	case EKGameState::INGAME:
 		break;
-	case ELaserGameState::CLEAR:
+	case EKGameState::CLEAR:
 	{
 		if (Stage == MaxStage)
 		{
-			ChangeLaserGameState(ELaserGameState::FINISH);
+			ChangeLaserGameState(EKGameState::FINISH);
 			return;
 		}
 		else
@@ -42,11 +42,11 @@ void ALaserRoomGameMode::ChangeLaserGameState(ELaserGameState NewLaserGameState)
 			Stage++;
 			SetDisplay();
 			SpawnStageActor();
-			LaserGameState = ELaserGameState::INGAME;
+			LaserGameState = EKGameState::INGAME;
 		}
 		break;
 	}
-	case ELaserGameState::FINISH:
+	case EKGameState::FINISH:
 	{
 		SetDisplay();
 		break;
@@ -71,7 +71,7 @@ void ALaserRoomGameMode::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(LaserGameStateTimerHandle,
 		FTimerDelegate::CreateLambda([this]()
 			{
-				ChangeLaserGameState(ELaserGameState::START);
+				ChangeLaserGameState(EKGameState::START);
 			}), 2.0f, false);
 	
 }

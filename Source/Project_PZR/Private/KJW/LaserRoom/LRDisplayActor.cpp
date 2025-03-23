@@ -41,7 +41,7 @@ void ALRDisplayActor::BeginPlay()
 	LRGM->UpdateStageDelegate.AddUObject(this, &ThisClass::SetDisplay);
 }
 
-void ALRDisplayActor::SetDisplay(ELaserGameState LaserGameState)
+void ALRDisplayActor::SetDisplay(EKGameState LaserGameState)
 {
 	if (!LRDisplay)return;
 	LRDisplay->SetDisplay(LaserGameState);

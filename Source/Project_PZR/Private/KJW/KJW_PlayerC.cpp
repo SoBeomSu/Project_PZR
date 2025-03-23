@@ -70,7 +70,7 @@ AKJW_PlayerC::AKJW_PlayerC()
 
 	// 위젯 상호작용 컴포넌트 생성
 	IneractionComp = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("IneractionComp"));
-	IneractionComp->SetupAttachment(RootComponent);
+	IneractionComp->SetupAttachment(VRCamera);
 	IneractionComp->bEnableHitTesting = true;
 }
 

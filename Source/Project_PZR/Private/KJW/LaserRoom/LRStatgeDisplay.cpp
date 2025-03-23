@@ -26,16 +26,14 @@ void ALRStatgeDisplay::BeginPlay()
 	LRGM = Cast<ALaserRoomGameMode>(GetWorld()->GetAuthGameMode());
 	LRGM->SetDisplayGmae(this);
 }
-
-
-
+ 
 void ALRStatgeDisplay::SetStageInfo()
 {
 	if (!LRGM) return;
 
 	int32 curStage = LRGM->GetCurentStage();
 
-	if (LRGM->LaserGameState == ELaserGameState::FINISH)
+	if (LRGM->LaserGameState == EKGameState::FINISH)
 	{
 		TextComp->SetText(FText::FromString("FINISH..."));
 	}
