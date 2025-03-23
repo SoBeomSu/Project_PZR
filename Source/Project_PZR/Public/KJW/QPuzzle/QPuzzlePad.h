@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "KJW/KHelper.h"
 #include "QPuzzlePad.generated.h"
 
 /**
@@ -19,7 +20,9 @@ public:
 
 private:
 	virtual void NativeConstruct() override;
-
+public:
+	void HideAllUI();
+	void SetPuzzle();
 private:
 	UFUNCTION()
 	void OnClickedA();
@@ -35,7 +38,12 @@ private:
 	UFUNCTION()
 	void OnClickedEnter();
 
+	UFUNCTION()
+	void OnClickedToLobby();
+
 	void OnClickedButtonFunc(int32 index);
+
+	void SetDisplay(EKGameState LaserGameState);
 
 private:
 	class AQPuzzleGameMode* QPGM;
@@ -58,6 +66,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	class UButton* EnterButton;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	class UButton* ToLobbyButton;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	class UTextBlock* ATextBlock;

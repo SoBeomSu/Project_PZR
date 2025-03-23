@@ -27,7 +27,7 @@ public:
 	void SetAnswerText(FText text);
 private:
 	void SetDisplay(EKGameState LaserGameState);
-
+	void SetAnswer(EKGameState LaserGameState);
 private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	class USceneComponent* SceneComp;

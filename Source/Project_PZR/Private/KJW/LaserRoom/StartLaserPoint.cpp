@@ -25,19 +25,7 @@ AStartLaserPoint::AStartLaserPoint()
 	LaserArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("LaserArrowComp"));
 	LaserArrowComp->SetupAttachment(RootComponent);
 
-	NiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComp"));
-	NiagaraComp->SetupAttachment(LaserArrowComp);
-
-	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystemAsset(
-		TEXT("/Script/Niagara.NiagaraSystem'/Game/A_Project/KJW/LaserRoom/Actor/NS_Beam.NS_Beam'")
-	);
-
-	if (NiagaraSystemAsset.Succeeded())
-	{
-		NiagaraComp->SetAsset(NiagaraSystemAsset.Object);
-	}
-
-	NiagaraComp->bAutoActivate = false;  // 처음엔 꺼둠, 필요할 때 실행
+	
 
 
 }
@@ -103,7 +91,6 @@ void AStartLaserPoint::StartSetLaser()
 		, Params);
 	
 	ALaserMirror* Mirror = nullptr;
-	
 	//2 - 1충돌이 있다면 -> 그것이 거울인지 확인 하기
 	if (bHit)
 	{
@@ -111,7 +98,6 @@ void AStartLaserPoint::StartSetLaser()
 		EndPoint = Hitpoint;	
 		Mirror = Cast<ALaserMirror>(HitInfo.GetActor());
 	}
-
 	Lines.Add(EndPoint);
 	//2 - 2만약 거울이라면 다음 레이저 쏘기
 	if (Mirror)

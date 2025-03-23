@@ -48,6 +48,8 @@ void AQPuzzleGameMode::ChangeLaserGameState(EKGameState NewLaserGameState)
 		break;
 	case EKGameState::CLEAR:
 	{
+		PuzzleCount++;
+		ClearAnswer();
 		if (GoalCount == PuzzleCount)
 		{
 			ChangeLaserGameState(EKGameState::FINISH);
@@ -82,6 +84,8 @@ bool AQPuzzleGameMode::ChangeQPuzzle()
 
 	int32 Rand = FMath::RandRange(0, QPuzzleIndex.Num() - 1);
 	CurQPuzzleData = QPuzzleDatas[Rand];
+
+	QPuzzleIndex.RemoveAt(Rand);
 
 	return true;
 }

@@ -26,6 +26,7 @@ public:
 private:
 	void HideAllDisplay();
 	void SetQPuzzle();
+	void SetScore();
 
 private:
 	class AQPuzzleGameMode* QPGM;
@@ -56,6 +57,15 @@ private:
 	class UTextBlock* AnswerTextBlock;
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	class UTextBlock* MyAnwserTextBlock;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	class UHorizontalBox* ScoreBox;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	class UTextBlock* CurScoreTextBlock;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	class UTextBlock* GoalScoreTextBlock;
 
 	TArray<class UTextBlock*> ChoiceTexts;
 

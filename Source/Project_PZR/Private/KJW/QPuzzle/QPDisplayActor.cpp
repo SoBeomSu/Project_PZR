@@ -40,6 +40,7 @@ void AQPDisplayActor::BeginPlay()
 	}
 
 	QPGM->UpdateStageDelegate.AddUObject(this, &ThisClass::SetDisplay);
+	QPGM->UpdateAnswerDelegate.AddUObject(this, &ThisClass::SetAnswer);
 
 }
 
@@ -58,5 +59,11 @@ void AQPDisplayActor::SetAnswerText(FText text)
 void AQPDisplayActor::SetDisplay(EKGameState LaserGameState)
 {
 	QPDisplay->SetDisplay(LaserGameState);
+}
+
+void AQPDisplayActor::SetAnswer(EKGameState LaserGameState)
+{
+	FText Answer = QPGM->GetAnswerText();
+	QPDisplay->SetAnswerText(Answer);
 }
 

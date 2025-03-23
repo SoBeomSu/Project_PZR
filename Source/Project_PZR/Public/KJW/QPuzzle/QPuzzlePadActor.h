@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "KJW/KHelper.h"
 #include "QPuzzlePadActor.generated.h"
 
 UCLASS()
@@ -18,7 +19,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+private:
+	void SetDisplay(EKGameState LaserGameState);
 private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	class UBoxComponent* BoxComp;

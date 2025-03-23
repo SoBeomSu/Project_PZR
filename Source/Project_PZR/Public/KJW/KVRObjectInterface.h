@@ -22,8 +22,6 @@ class PROJECT_PZR_API IKVRObjectInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-
-	
 	bool virtual IsGrab() { return false; };
 	void virtual StartGrab(AActor* HandActor) {};
 	void virtual StopGrab(AActor* HandActor) {};
