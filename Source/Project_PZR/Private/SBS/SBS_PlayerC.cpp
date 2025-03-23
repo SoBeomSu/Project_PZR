@@ -8,6 +8,7 @@
 #include "SBS/SBS_PlayerFSM.h"
 #include "SBS/SBS_Animal.h"
 #include "SBS/SBS_AnimalFSM.h"
+#include "SBS/SBS_LightSwitch.h"
 
 // Sets default values
 ASBS_PlayerC::ASBS_PlayerC()
@@ -65,7 +66,7 @@ void ASBS_PlayerC::Move(const struct FInputActionValue& Value)
 {
 	FVector2d Scale = Value.Get<FVector2d>();
 	FVector Direction = VRCamera->GetForwardVector() * Scale.X + VRCamera->GetRightVector() * Scale.Y;
-	AddMovementInput(Direction); // 이렇게 한번에 해주는게 좋다.
+	AddMovementInput(Direction, MoveSpeedVal); // 이렇게 한번에 해주는게 좋다.
 }
 
 void ASBS_PlayerC::Turn(const struct FInputActionValue& Value)
@@ -81,39 +82,61 @@ void ASBS_PlayerC::RMB_Start(const struct FInputActionValue& Value)
 	{
 		bRightclick = true;
 		UE_LOG(LogTemp, Warning, TEXT("Right Click Sucess"));
-		FHitResult RMB_HitResult = CameraLineTrace();
-		if (RMB_HitResult.GetActor()->GetActorNameOrLabel().Contains("Animal"))
+		FHitResult RMB_HitResult = CameraLineTrace(); // 라인트레이스를 쏜다
+		AActor* HitActor = RMB_HitResult.GetActor();
+		if (HitActor)
 		{
-			ASBS_Animal* HitAnimal = Cast<ASBS_Animal>(RMB_HitResult.GetActor());
-			if (HitAnimal && HitAnimal->AnimalFSM) 
+			if (HitActor->GetActorNameOrLabel().Contains("Animal")) // 잡은게 애니멀이면
 			{
-				HitAnimal->AnimalFSM->SetState(ESBS_AnimalState::InAir);
-				AttachActor(HitAnimal);
+				ASBS_Animal* HitAnimal = Cast<ASBS_Animal>(RMB_HitResult.GetActor());
+				if (HitAnimal && HitAnimal->AnimalFSM) 
+				{
+					HitAnimal->AnimalFSM->SetState(ESBS_AnimalState::InAir);
+					AttachActor(HitAnimal);
+				}
+			}
+			if (HitActor->GetActorNameOrLabel().Contains("Switch")) // 잡은게 스위치면
+			{
+				MoveSpeedVal = 0;
+				LightSwitch = Cast<ASBS_LightSwitch>(RMB_HitResult.GetActor());
+				if (LightSwitch)
+				{
+					LightSwitch->SetSwitchRotation(90);
+					GrabActor = LightSwitch;
+				}
 			}
 		}
-	}
-	else
-	{
-		bRightclick = false;
-	}
+	} 
 }
 
 void ASBS_PlayerC::RMB_Complete(const struct FInputActionValue& Value)
 {
 	if (GrabActor)
 	{
-	DetachActor(GrabActor);
+		ASBS_Animal* HitAnimal = Cast<ASBS_Animal>(GrabActor);
+		if (HitAnimal)
+		{
+			HitAnimal->AnimalFSM->SetState(ESBS_AnimalState::Idle);
+			DetachActor(GrabActor);
+		}
+		if (GrabActor == LightSwitch)
+		{
+			LightSwitch->StartReset();
+			GrabActor = nullptr;
+		}
 	}
+	MoveSpeedVal = 1;
+	bRightclick = false;
 }
 
 void ASBS_PlayerC::LRB_Start(const struct FInputActionValue& Value)
 {
-
+	bLeftclick = true;
 }
 
 void ASBS_PlayerC::LRB_Complete(const struct FInputActionValue& Value)
 {
-
+	bLeftclick = false;
 }
 
 FHitResult ASBS_PlayerC::CameraLineTrace()

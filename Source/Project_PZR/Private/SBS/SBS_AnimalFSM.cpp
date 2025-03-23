@@ -3,6 +3,8 @@
 
 #include "SBS/SBS_AnimalFSM.h"
 #include "SBS/SBS_Animal.h"
+#include "SBS/SBS_FirePit.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 USBS_AnimalFSM::USBS_AnimalFSM()
@@ -35,6 +37,8 @@ void USBS_AnimalFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	{
 	case ESBS_AnimalState::Idle: IdleState(); break;
 	case ESBS_AnimalState::Move: MoveState(); break;
+	case ESBS_AnimalState::InAir: InAir(); break;
+	case ESBS_AnimalState::Burning: Burning(); break;
 	}
 }
 
@@ -44,7 +48,7 @@ void USBS_AnimalFSM::IdleState()
 	if (CurrentTime >= StayTime)
 	{
 		CurrentTime = 0;
-		//SetState(ESBS_AnimalState::Move);
+		SetState(ESBS_AnimalState::Move);
 	}
 
 }
@@ -54,8 +58,18 @@ void USBS_AnimalFSM::MoveState()
 	if (Animal)
 	{
 		FVector CurrentAnimalLocation = Animal->GetActorLocation();
-		AnimalDir = Animal->GetActorForwardVector();
+		Firepit = Cast<ASBS_FirePit>(UGameplayStatics::GetActorOfClass(GetWorld(), ASBS_FirePit::StaticClass()));
+		if (Firepit)
+		{
+			AnimalDir = Firepit->GetActorLocation() - Animal->GetActorLocation();
+			AnimalDir.Z = 0;
+			AnimalDir.Normalize();
+		}
+		else
+			AnimalDir = Animal-> GetActorForwardVector();
+
 		Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir*AnimalSpeed*GetWorld()->GetDeltaSeconds());
+		Animal->SetActorRotation(AnimalDir.Rotation());
 	}
 }
 
@@ -66,6 +80,17 @@ void USBS_AnimalFSM::InAir()
 	if (CurrentTime > StayTime)
 	{
 		SetState(ESBS_AnimalState::Idle);
+	}
+}
+
+void USBS_AnimalFSM::Burning()
+{
+	int AnimalHealth = Animal->Health;
+	Firepit = Cast<ASBS_FirePit>(GetOwner());
+	CurrentTime = 0;
+	if (CurrentTime > BurnTime)
+	{
+		AnimalHealth -= Firepit->FireDamage;
 	}
 }
 

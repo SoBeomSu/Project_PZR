@@ -11,7 +11,8 @@ enum class ESBS_AnimalState
 {
 	Idle UMETA(DisplayName = "대기"),
 	Move UMETA(DisplayName = "이동"),
-	InAir UMETA(DisplayName = "잡힘")
+	InAir UMETA(DisplayName = "잡힘"),
+	Burning UMETA(DisplayName = "타는중")
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -34,6 +35,7 @@ public:
 public:
 
 	class ASBS_Animal* Animal;
+	class ASBS_FirePit* Firepit;
 
 	void SetState(ESBS_AnimalState Newstate)
 	{
@@ -44,9 +46,11 @@ public:
 	void IdleState();
 	void MoveState();
 	void InAir();
+	void Burning();
 
 	float CurrentTime;
 	float StayTime = 5;
+	float BurnTime = 1;
 
 	FVector AnimalDir;
 	float AnimalSpeed = 200;
