@@ -25,9 +25,11 @@ public:
 	UFUNCTION(BlueprintCallable,Category="Coins")
 	virtual void SetCoins(int NewCoins);
 	//TArray<A
+	UPROPERTY(EditAnywhere, BlueprintReadWrite);
 	bool bStartGame = false;
 	bool Phase2 = false;
 
 	void StartGame();
 	void GameOver();
+	void UpdateTimer();
 };

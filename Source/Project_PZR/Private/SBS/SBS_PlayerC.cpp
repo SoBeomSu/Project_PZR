@@ -168,11 +168,13 @@ void ASBS_PlayerC::AttachActor(AActor* actor)
 {
 	actor->AttachToActor(this,FAttachmentTransformRules::KeepWorldTransform);
 	GrabActor = actor;
+	UE_LOG(LogTemp, Warning, TEXT("Attach"));
 }
 
 void ASBS_PlayerC::DetachActor(AActor* actor)
 {
 	actor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	GrabActor = nullptr;
+	UE_LOG(LogTemp, Warning, TEXT("Detach"));
 }
 

@@ -15,7 +15,7 @@ ASBS_Animal::ASBS_Animal()
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	RootComponent=BoxComp;
 	BoxComp->SetCollisionProfileName("GrapObject");
-	BoxComp->UPrimitiveComponent::SetSimulatePhysics(false);
+	//BoxComp->UPrimitiveComponent::SetSimulatePhysics(false);
 
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("StaticMesh"));
 	SkeletalMesh->SetupAttachment(BoxComp);

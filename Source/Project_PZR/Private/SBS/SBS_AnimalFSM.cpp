@@ -27,7 +27,6 @@ void USBS_AnimalFSM::BeginPlay()
 	GameMode = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
 	Animal = Cast<ASBS_Animal>(GetOwner());
 
-	
 }
 
 
@@ -62,7 +61,7 @@ void USBS_AnimalFSM::Stay(float Deltatime)
 
 void USBS_AnimalFSM::IdleState()
 {
-	Animal->BoxComp->UPrimitiveComponent::SetSimulatePhysics(true);
+	//Animal->BoxComp->UPrimitiveComponent::SetSimulatePhysics(true);
 	Animal->SkeletalMesh->SetVisibility(true);
 	CurrentTime += GetWorld()->DeltaTimeSeconds;
 	if (CurrentTime >= StayTime)
@@ -70,7 +69,6 @@ void USBS_AnimalFSM::IdleState()
 		CurrentTime = 0;
 		SetState(ESBS_AnimalState::Move);
 	}
-
 }
 
 void USBS_AnimalFSM::MoveState()
@@ -89,28 +87,27 @@ void USBS_AnimalFSM::MoveState()
 			AnimalDir = Animal-> GetActorForwardVector();
 
 		Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir*AnimalSpeed*GetWorld()->GetDeltaSeconds());
-		Animal->SkeletalMesh->SetRelativeRotation(FRotator(-90, 0, AnimalDir.Rotation().Roll));
+		Animal->SetActorRotation(FRotator(0, AnimalDir.Rotation().Yaw, -90));
 	}
 }
 
 void USBS_AnimalFSM::InAir()
 {
-	CurrentTime =0;
-	CurrentTime += GetWorld()->DeltaTimeSeconds;
-	if (CurrentTime > StayTime)
-	{
-		SetState(ESBS_AnimalState::Idle);
-	}
+	//if (CurrentTime > StayTime)
+	//{
+	//	SetState(ESBS_AnimalState::Idle);
+	//}
 }
 
 void USBS_AnimalFSM::Burning()
 {
 	AnimalHealth = Animal->Health;
 	Firepit = Cast<ASBS_FirePit>(GetOwner());
-	CurrentTime = 0;
-	if (CurrentTime > BurnTime)
+	float CurrentTime2 = 0;
+	if (CurrentTime2 > BurnTime)
 	{
 		AnimalHealth -= Firepit->FireDamage;
+		CurrentTime2 = 0;
 		if (AnimalHealth <= 0)
 		{
 			SetState(ESBS_AnimalState::Dead);
