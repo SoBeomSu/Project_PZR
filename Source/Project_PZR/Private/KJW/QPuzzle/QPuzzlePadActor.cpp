@@ -54,11 +54,18 @@ void AQPuzzlePadActor::BeginPlay()
 		{
 			QPPad->QPGM = QPGM;
 		}
-		
+
+		QPGM->UpdateStageDelegate.AddUObject(this, &ThisClass::SetDisplay);
 	}
 
-	//QPGM->UpdateStageDelegate.AddUObject(this, &ThisClass::SetDisplay);
+
 	
+}
+
+void AQPuzzlePadActor::SetDisplay(EKGameState LaserGameState)
+{
+	QPPad->SetDisplay(LaserGameState);
+
 }
 
 

@@ -69,8 +69,9 @@ void UQPDisplay::SetQPuzzle()
 	AnswerTextBlock->SetVisibility(ESlateVisibility::Visible);
 	MainDescTextBlock->SetVisibility(ESlateVisibility::Visible);
 	SubDescTextBlock->SetVisibility(ESlateVisibility::Visible);
+	
 	MainDescTextBlock->SetText(data->MainDesc);
-	MainDescTextBlock->SetText(data->SubDesc);
+	SubDescTextBlock->SetText(data->SubDesc);
 
 	int32 ChoiseNum = data->ChoiceNumber;
 	for (int32 i = 0; i < ChoiseNum; ++i)

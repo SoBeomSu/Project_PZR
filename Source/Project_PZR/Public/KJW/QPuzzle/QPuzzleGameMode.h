@@ -38,12 +38,14 @@ public:
 
 public:
 	class UQPuzzleData* GetPuzzleData() { return CurQPuzzleData; }
+	FText GetAnswerText() { return CurAnswer; }
 
 private :
 	void InitPuzzleDatas();
 
 public:
 	FUpdateDelegate UpdateStageDelegate;
+
 	FUpdateDelegate UpdateAnswerDelegate;
 private:
 	EKGameState QPuzzleGameState = EKGameState::NONE;

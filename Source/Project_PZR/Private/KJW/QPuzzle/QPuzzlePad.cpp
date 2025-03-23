@@ -3,8 +3,10 @@
 
 #include "KJW/QPuzzle/QPuzzlePad.h"
 #include "KJW/QPuzzle/QPuzzleGameMode.h"
+#include "KJW/QPuzzle/QPuzzleData.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 
 void UQPuzzlePad::NativeConstruct()
 {
@@ -17,6 +19,43 @@ void UQPuzzlePad::NativeConstruct()
 
 	EnterButton->OnClicked.AddDynamic(this, &ThisClass::OnClickedEnter);
 	ClearButton->OnClicked.AddDynamic(this, &ThisClass::OnClickedClear);
+
+	ToLobbyButton->OnClicked.AddDynamic(this, &ThisClass::OnClickedToLobby);
+
+	TextBlocks.Add(ATextBlock);
+	TextBlocks.Add(BTextBlock);
+	TextBlocks.Add(CTextBlock);
+	TextBlocks.Add(DTextBlock);
+
+	Buttons.Add(AButton);
+	Buttons.Add(BButton);
+	Buttons.Add(CButton);
+	Buttons.Add(DButton);
+
+	ToLobbyButton->SetVisibility(ESlateVisibility::Collapsed);
+	HideAllUI();
+}
+
+void UQPuzzlePad::HideAllUI()
+{
+	for (UButton* Button : Buttons)
+		Button->SetVisibility(ESlateVisibility::Hidden);
+	
+}
+
+void UQPuzzlePad::SetPuzzle()
+{
+	if (!QPGM) return;
+	HideAllUI();
+	UQPuzzleData* data = QPGM->GetPuzzleData();
+
+	int32 num = data->ChoicesDescText.Num();
+	for (int32 i = 0; i < num; ++i)
+	{
+		Buttons[i]->SetVisibility(ESlateVisibility::Visible);
+		TextBlocks[i]->SetText(data->ChoicesDescText[i]);
+	}
+
 }
 
 void UQPuzzlePad::OnClickedA(){OnClickedButtonFunc(0);}
@@ -30,6 +69,19 @@ void UQPuzzlePad::OnClickedButtonFunc(int32 index)
 	if (!QPGM) return;
 	QPGM->SelectAnswer(index);
 }
+void UQPuzzlePad::SetDisplay(EKGameState LaserGameState)
+{
+	if (LaserGameState == EKGameState::START)
+	{
+		SetPuzzle();
+	}
+	else if (LaserGameState == EKGameState::FINISH)
+	{
+		EnterButton->SetVisibility(ESlateVisibility::Collapsed);
+		ClearButton->SetVisibility(ESlateVisibility::Collapsed);
+		ToLobbyButton->SetVisibility(ESlateVisibility::Visible);
+	}
+}
 void UQPuzzlePad::OnClickedClear()
 {
 	if (!QPGM) return;
@@ -40,5 +92,11 @@ void UQPuzzlePad::OnClickedEnter()
 {
 	if (!QPGM) return;
 	QPGM->CheckAnswer();
+}
+
+void UQPuzzlePad::OnClickedToLobby()
+{
+	FName LevelName = TEXT("TestLevel");
+	UGameplayStatics::OpenLevel(this, LevelName);
 }
 
