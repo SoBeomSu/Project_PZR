@@ -46,12 +46,18 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_MouseRightButton;
 
-	bool bRightclick = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_MouseLeftButton;
 
+	class ASBS_LightSwitch* LightSwitch;
+	
+	bool bRightclick = false;
 	bool bLeftclick = false;
+
+	AActor* GrabActor;
+	float MoveSpeedVal = 1;
+
 
 	void Move(const struct FInputActionValue& Value);
 	void Turn(const struct FInputActionValue& Value);
@@ -59,10 +65,8 @@ public:
 	void RMB_Complete(const struct FInputActionValue& Value);
 	void LRB_Start(const struct FInputActionValue& Value);
 	void LRB_Complete(const struct FInputActionValue& Value);
-
 	FHitResult CameraLineTrace();
 
-	AActor* GrabActor;
 	void AttachActor(AActor* actor);
 	void DetachActor(AActor* actor);
 };

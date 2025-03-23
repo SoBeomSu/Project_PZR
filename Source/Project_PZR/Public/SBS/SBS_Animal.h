@@ -28,9 +28,11 @@ public:
 
 public:
 	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* StaticMesh;
+	USkeletalMeshComponent* SkeletalMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "FSM")
 	class USBS_AnimalFSM* AnimalFSM;
+
+	int Health = 100;
 
 };

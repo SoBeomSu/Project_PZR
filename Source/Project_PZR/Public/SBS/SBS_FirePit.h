@@ -23,4 +23,23 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	UPROPERTY(EditDefaultsOnly)
+	class USphereComponent* SphereCollision;
+
+	UPROPERTY(EditDefaultsOnly)
+	class UNiagaraComponent* FireNiagara;
+
+	UPROPERTY(EditDefaultsOnly)
+	class UParticleSystemComponent* ParticleSystem;
+	
+	int FireDamage = 10;
+	void FireOverlap(UPrimitiveComponent* OverlappedComponent, 
+		AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult&
+		SweepResult);
+
+	void FireOverlapEnd(UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+
 };

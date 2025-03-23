@@ -3,6 +3,7 @@
 
 #include "SBS/SBS_Animal.h"
 #include "SBS/SBS_AnimalFSM.h"
+#include "Components/SkeletalMeshComponent.h"
 
 // Sets default values
 ASBS_Animal::ASBS_Animal()
@@ -10,8 +11,9 @@ ASBS_Animal::ASBS_Animal()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	StaticMesh->SetCollisionProfileName("GrapObject");
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("StaticMesh"));
+	SkeletalMesh->SetCollisionProfileName("GrapObject");
+	
 
 	AnimalFSM = CreateDefaultSubobject<USBS_AnimalFSM>(TEXT("FSMcomp"));
 }
@@ -27,7 +29,6 @@ void ASBS_Animal::BeginPlay()
 void ASBS_Animal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input

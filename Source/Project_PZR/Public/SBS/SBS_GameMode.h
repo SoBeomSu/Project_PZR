@@ -24,4 +24,8 @@ public:
 
 	UFUNCTION(BlueprintCallable,Category="Coins")
 	virtual void SetCoins(int NewCoins);
+
+	bool bStartGame = flase;
+
+	void StartGame();
 };
