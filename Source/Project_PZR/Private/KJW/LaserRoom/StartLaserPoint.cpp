@@ -91,7 +91,6 @@ void AStartLaserPoint::StartSetLaser()
 		, Params);
 	
 	ALaserMirror* Mirror = nullptr;
-	
 	//2 - 1충돌이 있다면 -> 그것이 거울인지 확인 하기
 	if (bHit)
 	{
@@ -99,7 +98,6 @@ void AStartLaserPoint::StartSetLaser()
 		EndPoint = Hitpoint;	
 		Mirror = Cast<ALaserMirror>(HitInfo.GetActor());
 	}
-
 	Lines.Add(EndPoint);
 	//2 - 2만약 거울이라면 다음 레이저 쏘기
 	if (Mirror)

@@ -36,7 +36,6 @@ public:
 		// V - 2 * N * (V dot N)
 		FVector ReflectionVector = V - 2 * ProjectionOntoNormal; // 3. 반사 벡터 계산
 
-		
 		return ReflectionVector;
 	}
 };

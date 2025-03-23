@@ -225,6 +225,7 @@ void AKJW_PlayerC::RRotGrabObj()
 {
 	if (!GrabObj) return;
 	FRotator AddRightRot = FRotator(0.0f, 10.0f * 0.02f, 0.0f);
+	
 	GrabObj->RotObject(AddRightRot);
 }
 
