@@ -119,11 +119,11 @@ void ASBS_PlayerC::RMB_Complete(const struct FInputActionValue& Value)
 			HitAnimal->AnimalFSM->SetState(ESBS_AnimalState::Idle);
 			DetachActor(GrabActor);
 		}
-		LightSwitch = Cast<ASBS_LightSwitch>(GrabActor);
+		//LightSwitch = Cast<ASBS_LightSwitch>(GrabActor);
 		if (GrabActor == LightSwitch)
 		{
 			LightSwitch->StartReset();
-			GrabActor = nullptr;
+		//	GrabActor = nullptr;
 		}
 	}
 	MoveSpeedVal = 1;

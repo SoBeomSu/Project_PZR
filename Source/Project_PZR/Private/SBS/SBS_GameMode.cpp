@@ -18,3 +18,8 @@ void ASBS_GameMode::SetCoins(int NewCoins)
 {
 	GetGameState< ASBS_GameState>()->CoinCount = NewCoins;
 }
+
+void ASBS_GameMode::StartGame()
+{
+	bStartGame = true;
+}

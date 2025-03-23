@@ -32,6 +32,7 @@ void ASBS_LightSwitch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	float SwitchXRot = GetActorRotation().Roll;
+	//if()
 	if (SwitchXRot < 50)
 	{
 		bCanGrap = true;
