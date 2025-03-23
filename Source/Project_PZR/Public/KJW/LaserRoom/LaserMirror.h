@@ -24,6 +24,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	//다음 레이저 이여 발사하기
+	void NextLaserStart(const struct FHitResult& HitInfo, const FVector& InDir, const float& LaserLength, TArray<FVector>& Lines , bool& IsGoal);
+
+public:
+	//플레이어와의 상호작용을 위한 함수
+	bool virtual IsGrab() override { return true; };
+	void virtual StartGrab(AActor* HandActor) override;
+	void virtual StopGrab(AActor* HandActor) override;
+	void virtual RotObject(const FRotator AddRotator) override;
 
 
 public:
@@ -34,36 +44,18 @@ public:
 	class UStaticMeshComponent* MirrorComp;
 
 	UPROPERTY(EditAnywhere)
-	class UArrowComponent* MirrorArrowComp;
-
-	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* BottomComp;
 
 
 public:
 	UPROPERTY(EditAnywhere, Category = "MirrorLaser")
-	bool bStartLaser = false;
+	bool bDrawLaser = false;
 
-public:
-	//다음 레이저 이여 발사하기
-	void NextLaserStart(const struct FHitResult& HitInfo , const FVector& InDir , const float& LaserLength);
 
 private:
 	UPROPERTY()
 	TWeakObjectPtr<class AEndLaserPoint> EndLaserPoint;
 
-public:
-	bool virtual IsGrab() override { return true; };
-	void virtual StartGrab(AActor* HandActor) override;
-	void virtual StopGrab(AActor* HandActor) override ;
-	void virtual RotObject(const FRotator AddRotator) override;
-
-
-private:
-	//레이저 이펙트
-	UPROPERTY(EditAnywhere, Category = "Laser_Effects")
-	class UNiagaraComponent* NiagaraComp;
-	void SetBeamEnd(FVector StartPoint, FVector EndPoint);
 
 
 };
