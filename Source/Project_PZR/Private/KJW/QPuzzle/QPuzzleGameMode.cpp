@@ -86,6 +86,32 @@ bool AQPuzzleGameMode::ChangeQPuzzle()
 	return true;
 }
 
+void AQPuzzleGameMode::SelectAnswer(int32 Index)
+{
+	if (!CurQPuzzleData) return;
+
+	CurAnswer = CurQPuzzleData->ChoicesDescText[Index];
+
+	UpdateAnswerDelegate.Broadcast(QPuzzleGameState);
+}
+
+
+void AQPuzzleGameMode::CheckAnswer()
+{
+	if (CurAnswer.EqualTo(CurQPuzzleData->Ansertext))
+	{
+		ChangeLaserGameState(EKGameState::CLEAR);
+	}
+
+	UpdateAnswerDelegate.Broadcast(QPuzzleGameState);
+}
+
+void AQPuzzleGameMode::ClearAnswer()
+{
+	CurAnswer = FText::FromString("");
+	UpdateAnswerDelegate.Broadcast(QPuzzleGameState);
+}
+
 void AQPuzzleGameMode::InitPuzzleDatas()
 {
 	if (QPuzzleDatas.IsEmpty()) return;

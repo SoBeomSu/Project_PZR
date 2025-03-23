@@ -27,9 +27,14 @@ protected:
 public:
 	//게임 상태 변경
 	void ChangeLaserGameState(EKGameState NewLaserGameState);
-	
 	//퍼즐 변경하기
 	bool ChangeQPuzzle();
+	//정답선택
+	void SelectAnswer(int32 Index);
+	//정답확인
+	void CheckAnswer();
+	//정답초기화
+	void ClearAnswer();
 
 public:
 	class UQPuzzleData* GetPuzzleData() { return CurQPuzzleData; }
@@ -39,6 +44,7 @@ private :
 
 public:
 	FUpdateDelegate UpdateStageDelegate;
+	FUpdateDelegate UpdateAnswerDelegate;
 private:
 	EKGameState QPuzzleGameState = EKGameState::NONE;
 
@@ -56,6 +62,8 @@ private:
 	UPROPERTY(EditAnywhere , Category = "QPuzzleData", meta = (AllowPrivateAccess = true))
 	int32 GoalCount = 0;
 
+	UPROPERTY(VisibleAnywhere)
+	FText CurAnswer;
 
 	FTimerHandle QPuzzleGameStateTimerHandle;
 

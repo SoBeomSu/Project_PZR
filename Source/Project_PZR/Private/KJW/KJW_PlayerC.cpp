@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "KJW/KJW_PlayerC.h"
@@ -68,7 +68,7 @@ AKJW_PlayerC::AKJW_PlayerC()
 	}
 
 
-	// À§Á¬ »óÈ£ÀÛ¿ë ÄÄÆ÷³ÍÆ® »ı¼º
+	// ìœ„ì ¯ ìƒí˜¸ì‘ìš© ì»´í¬ë„ŒíŠ¸ ìƒì„±
 	IneractionComp = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("IneractionComp"));
 	IneractionComp->SetupAttachment(VRCamera);
 	IneractionComp->bEnableHitTesting = true;
@@ -96,7 +96,7 @@ void AKJW_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	if (!Controller) { return; }
 	if (!IMC_VR) { return; }
 
-	// DefaultMappingContext »ı¼º
+	// DefaultMappingContext ìƒì„±
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -111,14 +111,14 @@ void AKJW_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ThisClass::Move);
 		EnhancedInputComponent->BindAction(IA_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Turn);
 
-		//¹°Ã¼ Àâ±â
+		//ë¬¼ì²´ ì¡ê¸°
 		EnhancedInputComponent->BindAction(IA_VRMouse_R, ETriggerEvent::Started, this, &ThisClass::GrabStart);
 		EnhancedInputComponent->BindAction(IA_VRMouse_R, ETriggerEvent::Completed, this, &ThisClass::GrabEnd);
-		//¹°Ã¼ È¸Àü
+		//ë¬¼ì²´ íšŒì „
 		EnhancedInputComponent->BindAction(IA_KeyQ, ETriggerEvent::Triggered, this, &ThisClass::LRotGrabObj);
 		EnhancedInputComponent->BindAction(IA_KeyE, ETriggerEvent::Triggered, this, &ThisClass::RRotGrabObj);
 		
-		//3D UI Å¬¸¯À» À§ÇÑ
+		//3D UI í´ë¦­ì„ ìœ„í•œ
 		EnhancedInputComponent->BindAction(IA_InteractWidget, ETriggerEvent::Completed, this, &ThisClass::InteractWidget);
 	}
 }
@@ -150,7 +150,7 @@ void AKJW_PlayerC::InteractWidget()
 	{		
 		if (IneractionComp->IsOverHitTestVisibleWidget())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("UI À§¿¡ ÀÖÀ½!"));
+			UE_LOG(LogTemp, Warning, TEXT("UI ìœ„ì— ìˆìŒ!"));
 		}
 
 		IneractionComp->PressPointerKey(EKeys::LeftMouseButton);
@@ -172,18 +172,18 @@ void AKJW_PlayerC::InteractWidgetHover()
 void AKJW_PlayerC::GrabStart()
 {
 	if (!VRCamera) return;
-	//ÀÌ¹Ì ÀâÀº ¹°Ã¼°¡ ÀÖ´Ù¸é
+	//ì´ë¯¸ ì¡ì€ ë¬¼ì²´ê°€ ìˆë‹¤ë©´
 	if (GrabObj) return;
 
-	// Ä«¸Ş¶óÀÇ À§Ä¡¿Í ¹æÇâ °¡Á®¿À±â
+	// ì¹´ë©”ë¼ì˜ ìœ„ì¹˜ì™€ ë°©í–¥ ê°€ì ¸ì˜¤ê¸°
 	FVector StartLocation = VRCamera->GetComponentLocation();
 	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this); // ÀÚ±â ÀÚ½Å ¹«½Ã
+	QueryParams.AddIgnoredActor(this); // ìê¸° ìì‹  ë¬´ì‹œ
 
-	// ¶óÀÎÆ®·¹ÀÌ½º ½ÇÇà
+	// ë¼ì¸íŠ¸ë ˆì´ìŠ¤ ì‹¤í–‰
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
 
 	if (bHit)
@@ -191,11 +191,11 @@ void AKJW_PlayerC::GrabStart()
 		AActor* HitActor = HitResult.GetActor();
 		if (HitActor)
 		{
-			// IKVRObjectInterface¸¦ °¡Áø ¿ÀºêÁ§Æ®¿Í »óÈ£ÀÛ¿ë ½ÃÀÛ
+			// IKVRObjectInterfaceë¥¼ ê°€ì§„ ì˜¤ë¸Œì íŠ¸ì™€ ìƒí˜¸ì‘ìš© ì‹œì‘
 			IKVRObjectInterface* GrabbableObject = Cast<IKVRObjectInterface>(HitActor);
 			if(GrabbableObject && GrabbableObject->IsGrab())
 			{
-				// ±×·¦ ·ÎÁ÷ (ÀÌ ÀÎÅÍÆäÀÌ½º¸¦ ÅëÇØ ½ÇÁ¦ ±×·¦ ±â´É È£Ãâ)
+				// ê·¸ë© ë¡œì§ (ì´ ì¸í„°í˜ì´ìŠ¤ë¥¼ í†µí•´ ì‹¤ì œ ê·¸ë© ê¸°ëŠ¥ í˜¸ì¶œ)
 				GrabbableObject->StartGrab(this);
 				GrabObj = GrabbableObject;
 			}
