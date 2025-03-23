@@ -19,7 +19,7 @@ ALaser::ALaser()
 	NiagaraComp->SetupAttachment(GetRootComponent());
 
 	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystemAsset(
-		TEXT("/Script/Niagara.NiagaraSystem'/Game/A_Project/KJW/LaserRoom/Actor/NS_Beam.NS_Beam'")
+		TEXT("/Script/Niagara.NiagaraSystem'/Game/A_Project/KJW/01_LaserRoom/Actor/NS_Beam.NS_Beam'")
 	);
 
 	if (NiagaraSystemAsset.Succeeded())

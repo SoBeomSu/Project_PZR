@@ -11,6 +11,7 @@ enum class EKGameState : uint8
 	NONE UMETA(DisplayName = "None"),
 	START UMETA(DisplayName = "Start"),
 	INGAME UMETA(DisplayName = "InGame"),
+	FAIL UMETA(DisplayName = "Fail"),
 	CLEAR UMETA(DisplayName = "Clear"),
 	FINISH UMETA(DisplayName = "Finish"),
 };

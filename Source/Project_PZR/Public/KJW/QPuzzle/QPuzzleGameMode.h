@@ -35,7 +35,8 @@ public:
 	void CheckAnswer();
 	//정답초기화
 	void ClearAnswer();
-
+	//정답 실패
+	void FailAnser();
 public:
 	class UQPuzzleData* GetPuzzleData() { return CurQPuzzleData; }
 	FText GetAnswerText() { return CurAnswer; }

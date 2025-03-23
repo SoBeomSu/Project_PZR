@@ -23,6 +23,7 @@ private:
 public:
 	void HideAllUI();
 	void SetPuzzle();
+
 private:
 	UFUNCTION()
 	void OnClickedA();
@@ -43,11 +44,15 @@ private:
 
 	void OnClickedButtonFunc(int32 index);
 
-	void SetDisplay(EKGameState LaserGameState);
+	void SetDisplay(EKGameState KGameState);
+
+	
 
 private:
 	class AQPuzzleGameMode* QPGM;
 	
+	bool bCheckAnwser = false;
+
 private:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	class UButton* AButton;
@@ -87,5 +92,5 @@ private:
 	TArray<class UButton*> Buttons;
 
 
-	
+	FTimerHandle ReturnbCheckAnwserTimer;
 };

@@ -8,6 +8,7 @@
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 
+
 void UQPuzzlePad::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -41,6 +42,7 @@ void UQPuzzlePad::HideAllUI()
 	for (UButton* Button : Buttons)
 		Button->SetVisibility(ESlateVisibility::Hidden);
 	
+
 }
 
 void UQPuzzlePad::SetPuzzle()
@@ -56,6 +58,7 @@ void UQPuzzlePad::SetPuzzle()
 		TextBlocks[i]->SetText(data->ChoicesDescText[i]);
 	}
 
+	bCheckAnwser = true;
 }
 
 void UQPuzzlePad::OnClickedA(){OnClickedButtonFunc(0);}
@@ -69,17 +72,30 @@ void UQPuzzlePad::OnClickedButtonFunc(int32 index)
 	if (!QPGM) return;
 	QPGM->SelectAnswer(index);
 }
-void UQPuzzlePad::SetDisplay(EKGameState LaserGameState)
+void UQPuzzlePad::SetDisplay(EKGameState KGameState)
 {
-	if (LaserGameState == EKGameState::START)
+	
+	if (KGameState == EKGameState::START)
 	{
 		SetPuzzle();
 	}
-	else if (LaserGameState == EKGameState::FINISH)
+	else if (KGameState == EKGameState::FINISH)
 	{
 		EnterButton->SetVisibility(ESlateVisibility::Collapsed);
 		ClearButton->SetVisibility(ESlateVisibility::Collapsed);
 		ToLobbyButton->SetVisibility(ESlateVisibility::Visible);
+	}
+	else if (KGameState == EKGameState::FAIL)
+	{
+		bCheckAnwser = false;
+		//ReturnbCheckAnwserTimer
+		EnterButton->SetVisibility(ESlateVisibility::Collapsed);
+		GetWorld()->GetTimerManager().SetTimer(ReturnbCheckAnwserTimer,
+			FTimerDelegate::CreateLambda([this]()
+				{
+					bCheckAnwser = true;
+					EnterButton->SetVisibility(ESlateVisibility::Visible);
+				}), 2.0f, false);
 	}
 }
 void UQPuzzlePad::OnClickedClear()
