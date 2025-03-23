@@ -24,7 +24,7 @@ ASBS_LightSwitch::ASBS_LightSwitch()
 void ASBS_LightSwitch::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Gamemode = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
 }
 
 // Called every frame
@@ -32,26 +32,28 @@ void ASBS_LightSwitch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	float SwitchXRot = GetActorRotation().Roll;
-	//if()
-	if (SwitchXRot < 50)
+	if(Gamemode->bStartGame)
 	{
-		bCanGrap = true;
-	}
-	if (FMath::IsNearlyEqual(SwitchXRot, 90, 1))
-	{
-		SwitchOn();
-		if (bIsOn)
+		if (SwitchXRot < 50)
 		{
-			CurrentTime += DeltaTime;
-			if (CurrentTime >= SwitchOffTime)
+			bCanGrap = true;
+		}
+		if (FMath::IsNearlyEqual(SwitchXRot, 90, 1))
+		{
+			SwitchOn();
+			if (bIsOn)
 			{
-				ResetRotation(DeltaTime);
+				CurrentTime += DeltaTime;
+				if (CurrentTime >= SwitchOffTime)
+				{
+					ResetRotation(DeltaTime);
+				}
 			}
 		}
-	}
-	else
-	{
-		ResetRotation(DeltaTime);
+		else
+		{
+			ResetRotation(DeltaTime);
+		}
 	}
 }
 

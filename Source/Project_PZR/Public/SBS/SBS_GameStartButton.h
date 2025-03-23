@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "SBS_GameMode.h"
 #include "SBS_GameStartButton.generated.h"
 
 UCLASS()
@@ -23,4 +24,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	class UStaticMeshComponent* Pillar;
+
+	UPROPERTY(EditDefaultsOnly)
+	class UStaticMeshComponent* Button;
+
+	void ButtonPressed();
+
+	ASBS_GameMode* GameMode01;
 };

@@ -22,4 +22,6 @@ void ASBS_GameMode::SetCoins(int NewCoins)
 void ASBS_GameMode::StartGame()
 {
 	bStartGame = true;
+	TArray<AActor*> FoundActors;
+//	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyActor::StaticClass(), FoundActors);
 }
