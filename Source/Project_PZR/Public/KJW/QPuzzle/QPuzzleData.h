@@ -43,6 +43,9 @@ public :
 	TArray<FText> ChoicesText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "QPuzzleData")
+	TArray<FText> ChoicesDescText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "QPuzzleData")
 	int32 AnserInt = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "QPuzzleData")

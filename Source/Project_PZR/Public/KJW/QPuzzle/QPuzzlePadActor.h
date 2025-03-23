@@ -4,40 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "KJW/KHelper.h"
-#include "QPDisplayActor.generated.h"
+#include "QPuzzlePadActor.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API AQPDisplayActor : public AActor
+class PROJECT_PZR_API AQPuzzlePadActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AQPDisplayActor();
+	AQPuzzlePadActor();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	
-	void SetAnswerText(FText text);
-private:
-	void SetDisplay(EKGameState LaserGameState);
-
 private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
-	class USceneComponent* SceneComp;
+	class UBoxComponent* BoxComp;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	class UStaticMeshComponent* MeshComp;
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	class UWidgetComponent* WidgetComp;
 
-	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
-	class UQPDisplay* QPDisplay;
 
+	class UQPuzzlePad* QPPad;
 	class AQPuzzleGameMode* QPGM = nullptr;
-
-
 };

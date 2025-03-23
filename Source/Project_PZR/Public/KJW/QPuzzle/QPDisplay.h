@@ -22,7 +22,7 @@ private:
 
 public: 
 	void SetDisplay(EKGameState LaserGameState);
-
+	void SetAnswerText(FText text);
 private:
 	void HideAllDisplay();
 	void SetQPuzzle();
@@ -51,6 +51,11 @@ private:
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	class UTextBlock* StateInfoTextBlock;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	class UTextBlock* AnswerTextBlock;
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	class UTextBlock* MyAnwserTextBlock;
 
 	TArray<class UTextBlock*> ChoiceTexts;
 

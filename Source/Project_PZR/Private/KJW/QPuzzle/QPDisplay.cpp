@@ -39,11 +39,19 @@ void UQPDisplay::SetDisplay(EKGameState LaserGameState)
 
 }
 
+void UQPDisplay::SetAnswerText(FText text)
+{
+	MyAnwserTextBlock->SetVisibility(ESlateVisibility::Visible);
+	MyAnwserTextBlock->SetText(text);
+}
+
 void UQPDisplay::HideAllDisplay()
 {
 	MainDescTextBlock->SetVisibility(ESlateVisibility::Hidden);
 	SubDescTextBlock->SetVisibility(ESlateVisibility::Hidden);
-	
+	MyAnwserTextBlock->SetVisibility(ESlateVisibility::Hidden);
+	AnswerTextBlock->SetVisibility(ESlateVisibility::Hidden);
+
 	for (UTextBlock* Choicetext : ChoiceTexts)
 		Choicetext->SetVisibility(ESlateVisibility::Hidden);
 	
@@ -58,6 +66,7 @@ void UQPDisplay::SetQPuzzle()
 	UQPuzzleData* data = QPGM->GetPuzzleData();
 	if (!data) return;
 
+	AnswerTextBlock->SetVisibility(ESlateVisibility::Visible);
 	MainDescTextBlock->SetVisibility(ESlateVisibility::Visible);
 	SubDescTextBlock->SetVisibility(ESlateVisibility::Visible);
 	MainDescTextBlock->SetText(data->MainDesc);

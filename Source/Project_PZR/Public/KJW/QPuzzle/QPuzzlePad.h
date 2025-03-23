@@ -13,5 +13,11 @@ UCLASS()
 class PROJECT_PZR_API UQPuzzlePad : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	friend class AQPuzzlePadActor;
+
+private:
+	class AQPuzzleGameMode* QPGM;
 	
 };

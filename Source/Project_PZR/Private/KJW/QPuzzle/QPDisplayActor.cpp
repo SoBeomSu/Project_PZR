@@ -47,7 +47,12 @@ void AQPDisplayActor::BeginPlay()
 void AQPDisplayActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+}
 
+void AQPDisplayActor::SetAnswerText(FText text)
+{
+	QPDisplay->SetAnswerText(text);
 }
 
 void AQPDisplayActor::SetDisplay(EKGameState LaserGameState)
