@@ -19,7 +19,7 @@ ALRDisplayActor::ALRDisplayActor()
 	WidgetComp->SetupAttachment(RootComponent);
 	WidgetComp->SetRelativeLocationAndRotation(FVector(0.0f), FRotator(0.0f, 90.0f, 0.0f));
 
-	ConstructorHelpers::FClassFinder<ULRDisplay> LRDisplayclass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/A_Project/KJW/LaserRoom/UI/BPW_LRDisplay.BPW_LRDisplay_C'"));
+	ConstructorHelpers::FClassFinder<ULRDisplay> LRDisplayclass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/A_Project/KJW/01_LaserRoom/UI/BPW_LRDisplay.BPW_LRDisplay_C'"));
 	if (LRDisplayclass.Succeeded()) WidgetComp->SetWidgetClass(LRDisplayclass.Class);
 
 }

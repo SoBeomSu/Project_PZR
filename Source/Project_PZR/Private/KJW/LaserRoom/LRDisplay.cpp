@@ -22,7 +22,7 @@ void ULRDisplay::NativeConstruct()
 
 void ULRDisplay::ToBackFunc()
 {
-	FName LevelName = TEXT("TestLevel");
+	FName LevelName = TEXT("TempLevel");
 	UGameplayStatics::OpenLevel(this, LevelName);
 }
 

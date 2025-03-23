@@ -31,7 +31,7 @@ AEndLaserPoint::AEndLaserPoint()
 	TextWidget->SetupAttachment(RootComponent);
 	TextWidget->SetRelativeLocationAndRotation(FVector(0.0f, 6.0f, 0.0f), FRotator(0.0f, 90.0f, 0.0f));
 
-	ConstructorHelpers::FClassFinder<UTextboard> TextClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/A_Project/KJW/LaserRoom/UI/BPW_EndLaser.BPW_EndLaser_C'"));
+	ConstructorHelpers::FClassFinder<UTextboard> TextClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/A_Project/KJW/01_LaserRoom/UI/BPW_EndLaser.BPW_EndLaser_C'"));
 	if (TextClass.Succeeded()) TextWidget->SetWidgetClass(TextClass.Class);
 
 }

@@ -96,7 +96,7 @@ void UQPuzzlePad::OnClickedEnter()
 
 void UQPuzzlePad::OnClickedToLobby()
 {
-	FName LevelName = TEXT("TestLevel");
+	FName LevelName = TEXT("TempLevel");
 	UGameplayStatics::OpenLevel(this, LevelName);
 }
 

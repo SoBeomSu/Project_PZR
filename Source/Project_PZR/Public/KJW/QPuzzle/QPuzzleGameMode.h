@@ -39,7 +39,8 @@ public:
 public:
 	class UQPuzzleData* GetPuzzleData() { return CurQPuzzleData; }
 	FText GetAnswerText() { return CurAnswer; }
-
+	int32 GetPuzzleCount() { return PuzzleCount; }
+	int32 GetGoalCount() { return GoalCount; }
 private :
 	void InitPuzzleDatas();
 

@@ -25,19 +25,7 @@ AStartLaserPoint::AStartLaserPoint()
 	LaserArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("LaserArrowComp"));
 	LaserArrowComp->SetupAttachment(RootComponent);
 
-	NiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComp"));
-	NiagaraComp->SetupAttachment(LaserArrowComp);
-
-	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystemAsset(
-		TEXT("/Script/Niagara.NiagaraSystem'/Game/A_Project/KJW/LaserRoom/Actor/NS_Beam.NS_Beam'")
-	);
-
-	if (NiagaraSystemAsset.Succeeded())
-	{
-		NiagaraComp->SetAsset(NiagaraSystemAsset.Object);
-	}
-
-	NiagaraComp->bAutoActivate = false;  // 처음엔 꺼둠, 필요할 때 실행
+	
 
 
 }

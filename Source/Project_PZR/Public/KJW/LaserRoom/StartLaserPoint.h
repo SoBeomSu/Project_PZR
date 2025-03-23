@@ -58,9 +58,6 @@ private:
 	class ALaserRoomGameMode* LRGM;
 
 private:
-	//레이저 이펙트
-	UPROPERTY(EditAnywhere, Category = "Laser_Effects")
-	class UNiagaraComponent* NiagaraComp;
 	//사용하고 있는 레이저
 	TArray<class ALaser*> Lasers;
 	//레이저 좌표 저장

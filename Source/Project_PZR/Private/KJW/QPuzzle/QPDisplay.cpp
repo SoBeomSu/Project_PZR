@@ -4,7 +4,7 @@
 #include "KJW/QPuzzle/QPuzzleData.h"
 
 #include "Components/TextBlock.h"
-
+#include "Components/HorizontalBox.h"
 
 
 void UQPDisplay::NativeConstruct()
@@ -16,20 +16,23 @@ void UQPDisplay::NativeConstruct()
 	ChoiceTexts.Add(CTextBlock);
 	ChoiceTexts.Add(DTextBlock);
 
-	HideAllDisplay();
 
+	
+	HideAllDisplay();
 	StateInfoTextBlock->SetVisibility(ESlateVisibility::Visible);
 	StateInfoTextBlock->SetText(FText::FromString("Ready..."));
+
 }
 
 void UQPDisplay::SetDisplay(EKGameState LaserGameState)
 {
 	HideAllDisplay();
 
+	
 	if (LaserGameState == EKGameState::START)
 	{
-		SetQPuzzle();
-		
+		SetScore();
+		SetQPuzzle();	
 	}
 	else if (LaserGameState == EKGameState::FINISH)
 	{
@@ -51,12 +54,11 @@ void UQPDisplay::HideAllDisplay()
 	SubDescTextBlock->SetVisibility(ESlateVisibility::Hidden);
 	MyAnwserTextBlock->SetVisibility(ESlateVisibility::Hidden);
 	AnswerTextBlock->SetVisibility(ESlateVisibility::Hidden);
+	ScoreBox->SetVisibility(ESlateVisibility::Hidden);
+	StateInfoTextBlock->SetVisibility(ESlateVisibility::Hidden);
 
 	for (UTextBlock* Choicetext : ChoiceTexts)
 		Choicetext->SetVisibility(ESlateVisibility::Hidden);
-	
-	StateInfoTextBlock->SetVisibility(ESlateVisibility::Hidden);
-	
 }
 
 void UQPDisplay::SetQPuzzle()
@@ -69,7 +71,7 @@ void UQPDisplay::SetQPuzzle()
 	AnswerTextBlock->SetVisibility(ESlateVisibility::Visible);
 	MainDescTextBlock->SetVisibility(ESlateVisibility::Visible);
 	SubDescTextBlock->SetVisibility(ESlateVisibility::Visible);
-	
+	ScoreBox->SetVisibility(ESlateVisibility::Visible);
 	MainDescTextBlock->SetText(data->MainDesc);
 	SubDescTextBlock->SetText(data->SubDesc);
 
@@ -81,5 +83,18 @@ void UQPDisplay::SetQPuzzle()
 		ChoiseText->SetText(data->ChoicesText[i]);
 	}
 
+
+}
+
+void UQPDisplay::SetScore()
+{
+	if (!QPGM)	 return;
+
+	ScoreBox->SetVisibility(ESlateVisibility::Visible);
+	int32 CurCount = QPGM->GetPuzzleCount();
+	int32 GoalCount = QPGM->GetGoalCount();
+
+	CurScoreTextBlock->SetText(FText::AsNumber(CurCount));
+	GoalScoreTextBlock->SetText(FText::AsNumber(GoalCount));
 
 }
