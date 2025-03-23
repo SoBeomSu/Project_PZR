@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/PointLightComponent.h"
+#include "SBS_WorldLightManager.h"
 #include "SBS_LightSwitch.generated.h"
 
 UCLASS()
@@ -29,13 +30,14 @@ public:
 	class UStaticMeshComponent* SwitchMesh;
 
 	UPROPERTY(EditAnywhere)
-	class UPointLightComponent* PointLight;
+	class USpotLightComponent* SpotLight;
+
+	UPROPERTY(EditAnywhere)
+	ASBS_WorldLightManager* WorldLight;
 
 	float CurrentTime = 0;
-
 	bool bCanGrap = true;
 	bool bIsOn = false;
-
 	float ResetTime = 0;
 	float StartAngle = 0;
 	bool bIsResetting = false;

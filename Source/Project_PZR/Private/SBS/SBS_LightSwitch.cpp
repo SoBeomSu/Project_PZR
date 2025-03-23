@@ -3,6 +3,8 @@
 
 #include "SBS/SBS_LightSwitch.h"
 #include "Components/PointLightComponent.h"
+#include "Components/SpotLightComponent.h"
+#include "SBS/SBS_WorldLightManager.h"
 
 // Sets default values
 ASBS_LightSwitch::ASBS_LightSwitch()
@@ -10,12 +12,12 @@ ASBS_LightSwitch::ASBS_LightSwitch()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SwitchMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Switch"));
-	PointLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLight"));
+	SpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("PointLight"));
 
 	SwitchMesh->SetupAttachment(RootComponent);
 	SwitchMesh->SetMobility(EComponentMobility::Movable);
-	PointLight->SetupAttachment(RootComponent);
-	PointLight->SetVisibility(false);
+	SpotLight->SetupAttachment(RootComponent);
+	SpotLight->SetVisibility(false);
 }
 
 // Called when the game starts or when spawned
@@ -96,13 +98,23 @@ void ASBS_LightSwitch::SwitchOn()
 	this->SetActorRotation(FRotator(0,0,90));
 	bIsOn =true;
 	bCanGrap = false;
-	PointLight->SetVisibility(true);
+	SpotLight->SetVisibility(false);
+	//WorldLight = Cast<ASBS_WorldLightManager>(GetOwner());
+	if (WorldLight)
+	{
+		WorldLight->SpotLight->SetVisibility(true);
+	}
 
 }
 void ASBS_LightSwitch::SwitchOff()
 {
 	//ºÒ²ô±â
 	bIsOn = false;
-	PointLight->SetVisibility(false);
+	SpotLight->SetVisibility(true);
+	//WorldLight = Cast<ASBS_WorldLightManager>(GetOwner());
+	if (WorldLight)
+	{
+		WorldLight->SpotLight->SetVisibility(false);
+	}
 }
 
