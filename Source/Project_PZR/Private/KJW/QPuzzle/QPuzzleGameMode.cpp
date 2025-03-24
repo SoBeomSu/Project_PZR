@@ -82,10 +82,13 @@ bool AQPuzzleGameMode::ChangeQPuzzle()
 	if (QPuzzleIndex.IsEmpty()) return false;
 	if (GoalCount == PuzzleCount) return false;
 
-	int32 Rand = FMath::RandRange(0, QPuzzleIndex.Num() - 1);
-	CurQPuzzleData = QPuzzleDatas[Rand];
+	int32 Rand = FMath::RandRange(0, QPuzzleIndex.Num() -1);
+	int32 QIndex = QPuzzleIndex[Rand];
 
 	QPuzzleIndex.RemoveAt(Rand);
+	UE_LOG(LogTemp, Warning, TEXT("%d"), QIndex);
+	CurQPuzzleData = QPuzzleDatas[QIndex];
+
 
 	return true;
 }
@@ -105,6 +108,11 @@ void AQPuzzleGameMode::CheckAnswer()
 	if (CurAnswer.EqualTo(CurQPuzzleData->Ansertext))
 	{
 		ChangeLaserGameState(EKGameState::CLEAR);
+	}
+	else
+	{
+		UpdateAnswerDelegate.Broadcast(EKGameState::FAIL);
+		return;
 	}
 
 	UpdateAnswerDelegate.Broadcast(QPuzzleGameState);

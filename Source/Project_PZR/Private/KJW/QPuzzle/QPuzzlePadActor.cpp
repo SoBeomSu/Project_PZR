@@ -56,10 +56,27 @@ void AQPuzzlePadActor::BeginPlay()
 		}
 
 		QPGM->UpdateStageDelegate.AddUObject(this, &ThisClass::SetDisplay);
+		QPGM->UpdateAnswerDelegate.AddUObject(this, &ThisClass::UpdateAnswerDisplay);
 	}
 
 
 	
+}
+
+void AQPuzzlePadActor::StartGrab(AActor* HandActor)
+{
+		// HandActor¿¡ ºÎÂø
+		AttachToActor(HandActor, FAttachmentTransformRules::KeepWorldTransform);
+}
+
+void AQPuzzlePadActor::StopGrab(AActor* HandActor)
+{
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+}
+
+void AQPuzzlePadActor::RotObject(const FRotator AddRotator)
+{
+	AddActorLocalRotation(AddRotator);
 }
 
 void AQPuzzlePadActor::SetDisplay(EKGameState LaserGameState)
@@ -68,4 +85,8 @@ void AQPuzzlePadActor::SetDisplay(EKGameState LaserGameState)
 
 }
 
+void AQPuzzlePadActor::UpdateAnswerDisplay(EKGameState LaserGameState)
+{
+	QPPad->SetDisplay(LaserGameState);
+}
 
