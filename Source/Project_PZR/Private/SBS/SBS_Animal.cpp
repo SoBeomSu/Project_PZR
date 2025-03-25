@@ -43,8 +43,4 @@ void ASBS_Animal::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
-void ASBS_Animal::StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
-{
-	
-}	
 

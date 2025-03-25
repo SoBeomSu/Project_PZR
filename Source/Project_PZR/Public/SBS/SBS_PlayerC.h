@@ -29,8 +29,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	UPROPERTY(EditDefaultsOnly)
-	class UCameraComponent* VRCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "FSMcomp")
 	class USBS_PlayerFSM* playerFSM;

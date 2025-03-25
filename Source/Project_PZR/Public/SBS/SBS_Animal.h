@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Components/BoxComponent.h"
+#include "KJW/KVRObjectInterface.h"
+
 #include "SBS_Animal.generated.h"
 
 UCLASS()
