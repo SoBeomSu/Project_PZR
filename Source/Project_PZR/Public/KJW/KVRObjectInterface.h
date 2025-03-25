@@ -44,24 +44,24 @@ class PROJECT_PZR_API IKVRObjectInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	bool virtual IsGrab() { return false; };
+	virtual bool  IsGrab() { return false; };
 	
-	void virtual StartGrab(AActor* HandActor) {};
-	void virtual StopGrab(AActor* HandActor) {};
-	void virtual RotObject(const FRotator AddRotator) {};
+	virtual void  StartGrab(AActor* HandActor) {};
+	virtual void  StopGrab(AActor* HandActor) {};
+	virtual void  RotObject(const FRotator AddRotator) {};
 
 	//손으로 오브젝트 잡기 시작
 	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) {};
 	//손으로 오브젝트 잡기 종료
 	virtual void StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight) {};
 	//오브젝트 들고 있을때
-	void virtual Grabbing(class UMotionControllerComponent* MontionComp, bool IsRight) {};
+	virtual void  Grabbing(class UMotionControllerComponent* MontionComp, bool IsRight) {};
 	//컨트롤러를 통해 오브젝트 회전
-	void virtual RotObject(class UMotionControllerComponent* MontionComp , bool IsRight , const FRotator AddRotator) {};
+	virtual void  RotObject(class UMotionControllerComponent* MontionComp , bool IsRight , const FRotator AddRotator) {};
 	//VR버튼이 눌렀을 때 호출
-	void virtual OnButtonPressed(EVRButton VRButton) {};
+	virtual void  OnButtonPressed(EVRButton VRButton) {};
 	//VR버튼이 떼어졌을 때 호출
-	void virtual OnButtonReleased(EVRButton VRButton) {};
+	virtual void  OnButtonReleased(EVRButton VRButton) {};
 
 
 };
