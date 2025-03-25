@@ -5,6 +5,7 @@
 #include "SBS/SBS_AnimalFSM.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "MotionControllerComponent.h"
 
 // Sets default values
 ASBS_Animal::ASBS_Animal()
@@ -44,3 +45,21 @@ void ASBS_Animal::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 }
 
 
+void ASBS_Animal::StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	AnimalFSM->SetState(ESBS_AnimalState::InAir);
+	this->AttachToComponent(MontionComp, FAttachmentTransformRules::KeepWorldTransform);
+	UE_LOG(LogTemp, Warning, TEXT("Animal Grab"));
+}
+
+void ASBS_Animal::StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	AnimalFSM->SetState(ESBS_AnimalState::Idle);
+	this->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	UE_LOG(LogTemp, Warning, TEXT("Animal Release"));
+}
+
+void ASBS_Animal::Grabbing(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+
+}

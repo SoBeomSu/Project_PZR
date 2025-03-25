@@ -122,17 +122,5 @@ void USBS_AnimalFSM::Dead()
 	
 }
 
-void USBS_AnimalFSM::StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
-{
-	SetState(ESBS_AnimalState::InAir);
-	Animal->AttachToComponent(MontionComp, FAttachmentTransformRules::KeepWorldTransform);
-	UE_LOG(LogTemp, Warning, TEXT("Animal Grab"));
-}
 
-void USBS_AnimalFSM::StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
-{
-	SetState(ESBS_AnimalState::Idle);
-	Animal->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	UE_LOG(LogTemp, Warning, TEXT("Animal Release"));
-}
 

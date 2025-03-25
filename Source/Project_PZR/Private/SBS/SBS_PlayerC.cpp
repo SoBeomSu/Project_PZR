@@ -77,6 +77,7 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void ASBS_PlayerC::GrabStart()
 {
+	UE_LOG(LogTemp, Warning, TEXT("click success"));
 	if (!VRCamera) return;
 	//이미 잡은 물체가 있다면
 	if (GrabObj) return;
@@ -88,12 +89,14 @@ void ASBS_PlayerC::GrabStart()
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this); // 자기 자신 무시
-
+	//DrawDebugLine(GetWorld(),StartLocation,EndLocation,FColor::Red);
 	// 라인트레이스 실행
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
 
 	if (bHit)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Trae Hit"));
+
 		AActor* HitActor = HitResult.GetActor();
 		if (HitActor)
 		{
@@ -104,6 +107,7 @@ void ASBS_PlayerC::GrabStart()
 				// 그랩 로직 (이 인터페이스를 통해 실제 그랩 기능 호출)
 				GrabbableObject->StartGrab(RightHand, true);
 				GrabObj = GrabbableObject;
+				UE_LOG(LogTemp, Warning, TEXT("grab sucess"));
 			}
 		}
 	}
@@ -134,57 +138,44 @@ void ASBS_PlayerC::Turn(const struct FInputActionValue& Value)
 
 void ASBS_PlayerC::RMB_Start(const struct FInputActionValue& Value)
 {
-	if(bRightclick == false)
-	{
-		bRightclick = true;
-		UE_LOG(LogTemp, Warning, TEXT("Right Click Sucess"));
-		FHitResult RMB_HitResult = CameraLineTrace(); // 라인트레이스를 쏜다
-		AActor* HitActor = RMB_HitResult.GetActor();
-		if (HitActor)
-		{
-			if (HitActor->GetActorNameOrLabel().Contains("Switch")) // 잡은게 스위치면
-			{
-				MoveSpeedVal = 0;
-				LightSwitch = Cast<ASBS_LightSwitch>(RMB_HitResult.GetActor());
-				if (LightSwitch && LightSwitch->bCanGrap)
-				{
-					LightSwitch->SetSwitchRotation(90);
-					GrabActor = LightSwitch;
-					UE_LOG(LogTemp, Warning, TEXT("Light Work"));
-
-				}
-			}
-			if (HitActor->GetActorNameOrLabel().Contains("Button")) // 버튼이면
-			{
-				StartButton = Cast<ASBS_GameStartButton>(RMB_HitResult.GetActor());\
-				if (StartButton)
-				{
-					StartButton->ButtonPressed();
-				}
-			}
-		}
-	} 
+	//if(bRightclick == false)
+	//{
+	//	bRightclick = true;
+	//	UE_LOG(LogTemp, Warning, TEXT("Right Click Sucess"));
+	//	FHitResult RMB_HitResult = CameraLineTrace(); // 라인트레이스를 쏜다
+	//	AActor* HitActor = RMB_HitResult.GetActor();
+	//	if (HitActor)
+	//	{
+	//		if (HitActor->GetActorNameOrLabel().Contains("Switch")) // 잡은게 //스위치면
+	//		{
+	//			MoveSpeedVal = 0;
+	//		}
+	//		if (HitActor->GetActorNameOrLabel().Contains("Button")) // 버튼이면
+	//		{
+	//			StartButton = Cast<ASBS_GameStartButton>/(RMB_HitResult.GetActor/());
+	//			if (StartButton)
+	//			{
+	//				StartButton->ButtonPressed();
+	//			}
+	//		}
+	//	}
+	//} 
 }
 
 void ASBS_PlayerC::RMB_Complete(const struct FInputActionValue& Value)
 {
-	if (GrabActor)
-	{
-		ASBS_Animal* HitAnimal = Cast<ASBS_Animal>(GrabActor);
-		if (HitAnimal)
-		{
-			HitAnimal->AnimalFSM->SetState(ESBS_AnimalState::Idle);
-			DetachActor(GrabActor);
-		}
-		//LightSwitch = Cast<ASBS_LightSwitch>(GrabActor);
-		if (GrabActor == LightSwitch && GameMode->bStartGame)
-		{
-			LightSwitch->StartReset();
-		//	GrabActor = nullptr;
-		}
-	}
-	MoveSpeedVal = 1;
-	bRightclick = false;
+	//if (GrabActor)
+	//{
+	//
+	//	//LightSwitch = Cast<ASBS_LightSwitch>(GrabActor);
+	//	if (GrabActor == LightSwitch && GameMode->bStartGame)
+	//	{
+	//		LightSwitch->StartReset();
+	//	//	GrabActor = nullptr;
+	//	}
+	//}
+	//MoveSpeedVal = 1;
+	//bRightclick = false;
 }
 
 void ASBS_PlayerC::LRB_Start(const struct FInputActionValue& Value)
@@ -219,12 +210,5 @@ void ASBS_PlayerC::AttachActor(AActor* actor)
 	actor->AttachToActor(this,FAttachmentTransformRules::KeepWorldTransform);
 	GrabActor = actor;
 	UE_LOG(LogTemp, Warning, TEXT("Attach"));
-}
-
-void ASBS_PlayerC::DetachActor(AActor* actor)
-{
-	actor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	GrabActor = nullptr;
-	UE_LOG(LogTemp, Warning, TEXT("Detach"));
 }
 

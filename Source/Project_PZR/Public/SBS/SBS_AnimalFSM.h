@@ -66,16 +66,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "FSM")
 	ESBS_AnimalState mState = ESBS_AnimalState::Stay;
 
-	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
-	//손으로 오브젝트 잡기 종료
-	virtual void StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
-	//오브젝트 들고 있을때
-	virtual void  Grabbing(class UMotionControllerComponent* MontionComp, bool IsRight) override;
-	//컨트롤러를 통해 오브젝트 회전
-	virtual void  RotObject(class UMotionControllerComponent* MontionComp, bool IsRight, const FRotator AddRotator) override;
-	//VR버튼이 눌렀을 때 호출
-	virtual void  OnButtonPressed(EVRButton VRButton) override;
-	//VR버튼이 떼어졌을 때 호출
-	virtual void  OnButtonReleased(EVRButton VRButton) override;
+
+
+
 
 };

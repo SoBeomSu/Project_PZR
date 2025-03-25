@@ -9,7 +9,7 @@
 #include "SBS_GameStartButton.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API ASBS_GameStartButton : public AActor
+class PROJECT_PZR_API ASBS_GameStartButton : public AActor, public IKVRObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -40,4 +40,6 @@ public:
 
 	float DelayTime;
 	bool bworked = false;
+	virtual bool  IsGrab() override { return true; };
+	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
 };
