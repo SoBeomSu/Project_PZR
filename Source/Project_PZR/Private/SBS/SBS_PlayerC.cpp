@@ -17,7 +17,6 @@ ASBS_PlayerC::ASBS_PlayerC()
 	PrimaryActorTick.bCanEverTick = true;
 	VRCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("VRCamera"));
 	VRCamera->SetupAttachment(RootComponent);
-
 	playerFSM = CreateDefaultSubobject<USBS_PlayerFSM>(TEXT("FSMcomp"));
 }
 
@@ -25,7 +24,7 @@ ASBS_PlayerC::ASBS_PlayerC()
 void ASBS_PlayerC::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GameMode = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
 }
 
 // Called every frame
@@ -128,7 +127,7 @@ void ASBS_PlayerC::RMB_Complete(const struct FInputActionValue& Value)
 			DetachActor(GrabActor);
 		}
 		//LightSwitch = Cast<ASBS_LightSwitch>(GrabActor);
-		if (GrabActor == LightSwitch)
+		if (GrabActor == LightSwitch && GameMode->bStartGame)
 		{
 			LightSwitch->StartReset();
 		//	GrabActor = nullptr;
@@ -169,11 +168,13 @@ void ASBS_PlayerC::AttachActor(AActor* actor)
 {
 	actor->AttachToActor(this,FAttachmentTransformRules::KeepWorldTransform);
 	GrabActor = actor;
+	UE_LOG(LogTemp, Warning, TEXT("Attach"));
 }
 
 void ASBS_PlayerC::DetachActor(AActor* actor)
 {
 	actor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	GrabActor = nullptr;
+	UE_LOG(LogTemp, Warning, TEXT("Detach"));
 }
 

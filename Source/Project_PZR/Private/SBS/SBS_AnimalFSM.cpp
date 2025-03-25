@@ -5,6 +5,7 @@
 #include "SBS/SBS_Animal.h"
 #include "SBS/SBS_FirePit.h"
 #include "Kismet/GameplayStatics.h"
+#include "SBS/SBS_GameMode.h"
 
 // Sets default values for this component's properties
 USBS_AnimalFSM::USBS_AnimalFSM()
@@ -23,7 +24,9 @@ void USBS_AnimalFSM::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	GameMode = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
 	Animal = Cast<ASBS_Animal>(GetOwner());
+
 }
 
 
@@ -35,22 +38,37 @@ void USBS_AnimalFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 	switch (mState)
 	{
+	case ESBS_AnimalState::Stay: Stay(DeltaTime); break;
 	case ESBS_AnimalState::Idle: IdleState(); break;
 	case ESBS_AnimalState::Move: MoveState(); break;
 	case ESBS_AnimalState::InAir: InAir(); break;
 	case ESBS_AnimalState::Burning: Burning(); break;
+	case ESBS_AnimalState::Dead: Dead(); break;
+	}
+}
+
+void USBS_AnimalFSM::Stay(float Deltatime)
+{
+	if(GameMode->Phase2)
+	{
+		CurrentTime += Deltatime;
+		if(CurrentTime > 3)
+		{
+			SetState(ESBS_AnimalState::Idle);
+		}
 	}
 }
 
 void USBS_AnimalFSM::IdleState()
 {
+	//Animal->BoxComp->UPrimitiveComponent::SetSimulatePhysics(true);
+	Animal->SkeletalMesh->SetVisibility(true);
 	CurrentTime += GetWorld()->DeltaTimeSeconds;
 	if (CurrentTime >= StayTime)
 	{
 		CurrentTime = 0;
 		SetState(ESBS_AnimalState::Move);
 	}
-
 }
 
 void USBS_AnimalFSM::MoveState()
@@ -69,28 +87,37 @@ void USBS_AnimalFSM::MoveState()
 			AnimalDir = Animal-> GetActorForwardVector();
 
 		Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir*AnimalSpeed*GetWorld()->GetDeltaSeconds());
-		Animal->SetActorRotation(AnimalDir.Rotation());
+		Animal->SetActorRotation(FRotator(0, AnimalDir.Rotation().Yaw, -90));
 	}
 }
 
 void USBS_AnimalFSM::InAir()
 {
-	CurrentTime =0;
-	CurrentTime += GetWorld()->DeltaTimeSeconds;
-	if (CurrentTime > StayTime)
-	{
-		SetState(ESBS_AnimalState::Idle);
-	}
+	//if (CurrentTime > StayTime)
+	//{
+	//	SetState(ESBS_AnimalState::Idle);
+	//}
 }
 
 void USBS_AnimalFSM::Burning()
 {
-	int AnimalHealth = Animal->Health;
+	AnimalHealth = Animal->Health;
 	Firepit = Cast<ASBS_FirePit>(GetOwner());
-	CurrentTime = 0;
-	if (CurrentTime > BurnTime)
+	float CurrentTime2 = 0;
+	if (CurrentTime2 > BurnTime)
 	{
 		AnimalHealth -= Firepit->FireDamage;
+		CurrentTime2 = 0;
+		if (AnimalHealth <= 0)
+		{
+			SetState(ESBS_AnimalState::Dead);
+			GameMode->GameOver();
+		}
 	}
+}
+
+void USBS_AnimalFSM::Dead()
+{
+	
 }
 

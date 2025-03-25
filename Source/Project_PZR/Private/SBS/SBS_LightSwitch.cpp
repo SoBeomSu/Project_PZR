@@ -34,7 +34,13 @@ void ASBS_LightSwitch::Tick(float DeltaTime)
 	float SwitchXRot = GetActorRotation().Roll;
 	if(Gamemode->bStartGame)
 	{
-		if (SwitchXRot < 50)
+		if(OpeningDone == false)
+		{
+			SwitchOff(); 
+			OpeningDone = true;
+		}
+
+		if (SwitchXRot < 50 && OpeningDone == true)
 		{
 			bCanGrap = true;
 		}
@@ -76,21 +82,19 @@ void ASBS_LightSwitch::ResetRotation(float Deltatime)
 	if (bIsResetting)
 	{
 		ResetTime += Deltatime;
-		float LerpAlpha = ResetTime/ResetDuration;
+		LerpAlpha = ResetTime/ResetDuration;
 		float NewAngle = FMath::Lerp(StartAngle, 0, LerpAlpha);
 		this->SetActorRotation(FRotator(0,0,NewAngle));
 		if (ResetTime >= ResetDuration)
 		{
 			bIsResetting = false;
 			CurrentTime = 0;
-			this->SetActorRotation(FRotator(0, 0, 0));
 			SwitchOff();
 		}
 	}
 	else if (CurrentTime >= SwitchOffTime && bIsOn)
 	{
 		bIsResetting = true;
-		ResetTime = 0.0f;
 		StartAngle = this->GetActorRotation().Roll;
 	}
 }
@@ -101,6 +105,7 @@ void ASBS_LightSwitch::SwitchOn()
 	this->SetActorRotation(FRotator(0,0,90));
 	bIsOn =true;
 	bCanGrap = false;
+	Gamemode->Phase2 = true;
 	SpotLight->SetVisibility(false);
 	//WorldLight = Cast<ASBS_WorldLightManager>(GetOwner());
 	if (WorldLight)
@@ -113,7 +118,11 @@ void ASBS_LightSwitch::SwitchOff()
 {
 	//ºÒ²ô±â
 	bIsOn = false;
+	this->SetActorRotation(FRotator(0, 0, 0));
 	SpotLight->SetVisibility(true);
+	LerpAlpha = 0;
+	ResetTime = 0.0f;
+
 	//WorldLight = Cast<ASBS_WorldLightManager>(GetOwner());
 	if (WorldLight)
 	{

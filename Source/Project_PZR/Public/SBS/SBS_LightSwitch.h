@@ -37,14 +37,14 @@ public:
 	ASBS_WorldLightManager* WorldLight;
 
 	ASBS_GameMode* Gamemode;
-
+	float LerpAlpha = 0;
 	float CurrentTime = 0;
 	bool bCanGrap = true;
 	bool bIsOn = false;
 	float ResetTime = 0;
 	float StartAngle = 0;
 	bool bIsResetting = false;
-
+	bool OpeningDone = false;
 	UPROPERTY(EditDefaultsOnly)
 	float SwitchOffTime = 5;
 	UPROPERTY(EditDefaultsOnly)

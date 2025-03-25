@@ -4,6 +4,7 @@
 #include "SBS/SBS_Animal.h"
 #include "SBS/SBS_AnimalFSM.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 ASBS_Animal::ASBS_Animal()
@@ -11,10 +12,14 @@ ASBS_Animal::ASBS_Animal()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("StaticMesh"));
-	SkeletalMesh->SetCollisionProfileName("GrapObject");
-	
+	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	RootComponent=BoxComp;
+	BoxComp->SetCollisionProfileName("GrapObject");
+	//BoxComp->UPrimitiveComponent::SetSimulatePhysics(false);
 
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("StaticMesh"));
+	SkeletalMesh->SetupAttachment(BoxComp);
+	SkeletalMesh->SetVisibility(false);
 	AnimalFSM = CreateDefaultSubobject<USBS_AnimalFSM>(TEXT("FSMcomp"));
 }
 
