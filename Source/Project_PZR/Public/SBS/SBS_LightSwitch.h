@@ -7,10 +7,11 @@
 #include "Components/PointLightComponent.h"
 #include "SBS_WorldLightManager.h"
 #include "SBS_GameMode.h"
+#include "KJW/KVRObjectInterface.h"
 #include "SBS_LightSwitch.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API ASBS_LightSwitch : public AActor
+class PROJECT_PZR_API ASBS_LightSwitch : public AActor,public IKVRObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -29,6 +30,10 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly)
 	class UStaticMeshComponent* SwitchMesh;
+
+	UPROPERTY(EditDefaultsOnly)
+	class UBoxComponent* BoxCollision;
+
 
 	UPROPERTY(EditAnywhere)
 	class USpotLightComponent* SpotLight;
@@ -56,4 +61,6 @@ public:
 	void ResetRotation(float Deltatime);
 	void SwitchOn();
 	void SwitchOff();
+
+
 };

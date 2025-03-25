@@ -5,12 +5,15 @@
 #include "Components/PointLightComponent.h"
 #include "Components/SpotLightComponent.h"
 #include "SBS/SBS_WorldLightManager.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 ASBS_LightSwitch::ASBS_LightSwitch()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+	RootComponent = BoxCollision;
 	SwitchMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Switch"));
 	SpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("PointLight"));
 
@@ -31,7 +34,7 @@ void ASBS_LightSwitch::BeginPlay()
 void ASBS_LightSwitch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	float SwitchXRot = GetActorRotation().Roll;
+	float SwitchXRot = SwitchMesh->GetRelativeRotation().Roll;
 	if(Gamemode->bStartGame)
 	{
 		if(OpeningDone == false)
@@ -65,15 +68,17 @@ void ASBS_LightSwitch::Tick(float DeltaTime)
 
 void ASBS_LightSwitch::SetSwitchRotation(float SwitchRotate)
 {
-	this->SetActorRotation(FRotator(0, 0, SwitchRotate));
+	SwitchMesh->SetRelativeRotation(FRotator(0, 0, SwitchRotate));
+	StartReset();
 }
 
 
 void ASBS_LightSwitch::StartReset()
 {
 	bIsResetting = true;
-	//ResetTime = 0;
-	StartAngle = this->GetActorRotation().Roll;
+	ResetTime = 0;
+	StartAngle = SwitchMesh->GetRelativeRotation().Roll;
+	CurrentTime = 0;
 	UE_LOG(LogTemp, Log, TEXT("StarAngle: %f"), StartAngle);
 }
 
@@ -84,7 +89,7 @@ void ASBS_LightSwitch::ResetRotation(float Deltatime)
 		ResetTime += Deltatime;
 		LerpAlpha = ResetTime/ResetDuration;
 		float NewAngle = FMath::Lerp(StartAngle, 0, LerpAlpha);
-		this->SetActorRotation(FRotator(0,0,NewAngle));
+		SwitchMesh->SetRelativeRotation(FRotator(0,0,NewAngle));
 		if (ResetTime >= ResetDuration)
 		{
 			bIsResetting = false;
@@ -95,14 +100,14 @@ void ASBS_LightSwitch::ResetRotation(float Deltatime)
 	else if (CurrentTime >= SwitchOffTime && bIsOn)
 	{
 		bIsResetting = true;
-		StartAngle = this->GetActorRotation().Roll;
+		StartAngle = SwitchMesh->GetRelativeRotation().Roll;
 	}
 }
 
 void ASBS_LightSwitch::SwitchOn()
 {
 	//불을 키는 작동
-	this->SetActorRotation(FRotator(0,0,90));
+	SwitchMesh->SetRelativeRotation(FRotator(0,0,90));
 	bIsOn =true;
 	bCanGrap = false;
 	Gamemode->Phase2 = true;
@@ -118,7 +123,7 @@ void ASBS_LightSwitch::SwitchOff()
 {
 	//불끄기
 	bIsOn = false;
-	this->SetActorRotation(FRotator(0, 0, 0));
+	SwitchMesh->SetRelativeRotation(FRotator(0, 0, 0));
 	SpotLight->SetVisibility(true);
 	LerpAlpha = 0;
 	ResetTime = 0.0f;
