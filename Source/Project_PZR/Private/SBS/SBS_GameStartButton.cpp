@@ -45,3 +45,8 @@ void ASBS_GameStartButton::ButtonPressed()
 	}
 }
 
+void ASBS_GameStartButton::StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	ButtonPressed();
+}
+

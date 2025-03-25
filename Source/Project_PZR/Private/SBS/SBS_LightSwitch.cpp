@@ -135,3 +135,20 @@ void ASBS_LightSwitch::SwitchOff()
 	}
 }
 
+void ASBS_LightSwitch::StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	SwitchOn();
+	//SetSwitchRotation(90);
+	UE_LOG(LogTemp, Warning, TEXT("Light On"));
+}
+
+void ASBS_LightSwitch::StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+
+}
+
+void ASBS_LightSwitch::Grabbing(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+
+}
+

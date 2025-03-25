@@ -6,6 +6,7 @@
 #include "SBS/SBS_FirePit.h"
 #include "Kismet/GameplayStatics.h"
 #include "SBS/SBS_GameMode.h"
+#include "MotionControllerComponent.h"
 
 // Sets default values for this component's properties
 USBS_AnimalFSM::USBS_AnimalFSM()
@@ -120,4 +121,6 @@ void USBS_AnimalFSM::Dead()
 {
 	
 }
+
+
 

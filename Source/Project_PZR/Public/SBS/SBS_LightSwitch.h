@@ -62,5 +62,8 @@ public:
 	void SwitchOn();
 	void SwitchOff();
 
-
+	virtual bool IsGrab() override { return true; };
+	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
+	virtual void StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
+	virtual void  Grabbing(class UMotionControllerComponent* MontionComp, bool IsRight) override;
 };

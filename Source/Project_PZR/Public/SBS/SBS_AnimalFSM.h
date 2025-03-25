@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "KJW/KVRObjectInterface.h"
 #include "SBS_AnimalFSM.generated.h"
 
 UENUM()
@@ -18,7 +19,7 @@ enum class ESBS_AnimalState
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class PROJECT_PZR_API USBS_AnimalFSM : public UActorComponent
+class PROJECT_PZR_API USBS_AnimalFSM : public UActorComponent, public IKVRObjectInterface
 {
 	GENERATED_BODY()
 
@@ -64,4 +65,9 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "FSM")
 	ESBS_AnimalState mState = ESBS_AnimalState::Stay;
+
+
+
+
+
 };
