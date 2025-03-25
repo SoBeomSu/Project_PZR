@@ -30,6 +30,10 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class UStaticMeshComponent* SwitchMesh;
 
+	UPROPERTY(EditDefaultsOnly)
+	class UBoxComponent* BoxCollision;
+
+
 	UPROPERTY(EditAnywhere)
 	class USpotLightComponent* SpotLight;
 

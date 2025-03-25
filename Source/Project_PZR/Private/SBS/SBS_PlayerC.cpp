@@ -98,10 +98,12 @@ void ASBS_PlayerC::RMB_Start(const struct FInputActionValue& Value)
 			{
 				MoveSpeedVal = 0;
 				LightSwitch = Cast<ASBS_LightSwitch>(RMB_HitResult.GetActor());
-				if (LightSwitch)
+				if (LightSwitch && LightSwitch->bCanGrap)
 				{
 					LightSwitch->SetSwitchRotation(90);
 					GrabActor = LightSwitch;
+					UE_LOG(LogTemp, Warning, TEXT("Light Work"));
+
 				}
 			}
 			if (HitActor->GetActorNameOrLabel().Contains("Button")) // 버튼이면
