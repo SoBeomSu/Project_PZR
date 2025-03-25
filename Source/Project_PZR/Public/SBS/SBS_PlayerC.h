@@ -49,6 +49,20 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_MouseLeftButton;
+
+	UPROPERTY(VisibleAnywhere)
+	class UCameraComponent* VRCamera;
+	//모션컨트롤러 등록
+	UPROPERTY(VisibleAnyWhere, Category = "MotionController")
+	class UMotionControllerComponent* LeftHand;
+	UPROPERTY(VisibleAnyWhere, Category = "MotionController")
+	class UMotionControllerComponent* RightHand;
+	UPROPERTY(VisibleAnyWhere, Category = "MotionController")
+	class UMotionControllerComponent* RightAim;
+
+
+
+
 	class ASBS_GameMode* GameMode;
 	class ASBS_LightSwitch* LightSwitch;
 	ASBS_GameStartButton* StartButton;

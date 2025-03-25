@@ -62,8 +62,5 @@ public:
 	void SwitchOn();
 	void SwitchOff();
 
-	bool virtual IsGrab() override { return true; };
-	void virtual StartGrab(AActor* HandActor) override;
-	void virtual StopGrab(AActor* HandActor) override;
-	void virtual RotObject(const FRotator AddRotator) override;
+
 };

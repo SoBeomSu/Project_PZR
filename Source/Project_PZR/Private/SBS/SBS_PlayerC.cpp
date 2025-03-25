@@ -9,6 +9,7 @@
 #include "SBS/SBS_Animal.h"
 #include "SBS/SBS_AnimalFSM.h"
 #include "SBS/SBS_LightSwitch.h"
+#include "MotionControllerComponent.h"
 
 // Sets default values
 ASBS_PlayerC::ASBS_PlayerC()
@@ -18,6 +19,18 @@ ASBS_PlayerC::ASBS_PlayerC()
 	VRCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("VRCamera"));
 	VRCamera->SetupAttachment(RootComponent);
 	playerFSM = CreateDefaultSubobject<USBS_PlayerFSM>(TEXT("FSMcomp"));
+
+	LeftHand = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("LeftHand"));
+	LeftHand->SetupAttachment(RootComponent);
+	LeftHand->SetTrackingMotionSource(TEXT("Left"));
+	RightHand = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("RightHand"));
+	RightHand->SetupAttachment(RootComponent);
+	RightHand->SetTrackingMotionSource(TEXT("Right"));
+
+	RightAim = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("RightAim"));
+	RightAim->SetupAttachment(RootComponent);
+	RightAim->SetTrackingMotionSource(TEXT("RightAim"));
+
 }
 
 // Called when the game starts or when spawned
@@ -53,11 +66,12 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	{
 		InputSystem->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Move);
 		InputSystem->BindAction(IA_Turn, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Turn);
-		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Started, this, &ASBS_PlayerC::RMB_Start);
-		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::RMB_Complete);
+		//InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Started, this, &ASBS_PlayerC::RMB_Start);
+		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart);
+		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd);
+
 		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Started, this, &ASBS_PlayerC::LRB_Start);
 		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::LRB_Complete);
-
 	}
 }
 
@@ -88,12 +102,20 @@ void ASBS_PlayerC::GrabStart()
 			if (GrabbableObject && GrabbableObject->IsGrab())
 			{
 				// 그랩 로직 (이 인터페이스를 통해 실제 그랩 기능 호출)
-				GrabbableObject->StartGrab(this);
+				GrabbableObject->StartGrab(RightHand, true);
 				GrabObj = GrabbableObject;
 			}
 		}
 	}
 
+}
+
+void ASBS_PlayerC::GrabEnd()
+{
+	if (!GrabObj) return;
+
+	GrabObj->StopGrab(RightHand, true);
+	GrabObj = nullptr;
 }
 
 void ASBS_PlayerC::Move(const struct FInputActionValue& Value)

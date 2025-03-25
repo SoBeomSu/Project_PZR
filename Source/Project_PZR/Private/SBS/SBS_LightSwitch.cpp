@@ -135,18 +135,3 @@ void ASBS_LightSwitch::SwitchOff()
 	}
 }
 
-void ASBS_LightSwitch::StartGrab(AActor* HandActor)
-{
-
-}
-
-void ASBS_LightSwitch::StopGrab(AActor* HandActor)
-{
-
-}
-
-void ASBS_LightSwitch::RotObject(const FRotator AddRotator)
-{
-
-}
-
