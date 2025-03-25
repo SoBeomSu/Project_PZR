@@ -63,4 +63,15 @@ public:
 	void SwitchOff();
 
 
+	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) {};
+
+	virtual void StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight) {};
+
+	virtual void  Grabbing(class UMotionControllerComponent* MontionComp, bool IsRight) {};
+
+	virtual void  RotObject(class UMotionControllerComponent* MontionComp, bool IsRight, const FRotator AddRotator) {};
+	//VR버튼이 눌렀을 때 호출
+	virtual void  OnButtonPressed(EVRButton VRButton) {};
+	//VR버튼이 떼어졌을 때 호출
+	virtual void  OnButtonReleased(EVRButton VRButton) {};
 };

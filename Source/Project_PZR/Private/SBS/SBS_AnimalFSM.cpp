@@ -6,6 +6,7 @@
 #include "SBS/SBS_FirePit.h"
 #include "Kismet/GameplayStatics.h"
 #include "SBS/SBS_GameMode.h"
+#include "MotionControllerComponent.h"
 
 // Sets default values for this component's properties
 USBS_AnimalFSM::USBS_AnimalFSM()
@@ -119,5 +120,19 @@ void USBS_AnimalFSM::Burning()
 void USBS_AnimalFSM::Dead()
 {
 	
+}
+
+void USBS_AnimalFSM::StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	SetState(ESBS_AnimalState::InAir);
+	Animal->AttachToComponent(MontionComp, FAttachmentTransformRules::KeepWorldTransform);
+	UE_LOG(LogTemp, Warning, TEXT("Animal Grab"));
+}
+
+void USBS_AnimalFSM::StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	SetState(ESBS_AnimalState::Idle);
+	Animal->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	UE_LOG(LogTemp, Warning, TEXT("Animal Release"));
 }
 

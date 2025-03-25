@@ -142,15 +142,6 @@ void ASBS_PlayerC::RMB_Start(const struct FInputActionValue& Value)
 		AActor* HitActor = RMB_HitResult.GetActor();
 		if (HitActor)
 		{
-			if (HitActor->GetActorNameOrLabel().Contains("Animal")) // 잡은게 애니멀이면
-			{
-				ASBS_Animal* HitAnimal = Cast<ASBS_Animal>(RMB_HitResult.GetActor());
-				if (HitAnimal && HitAnimal->AnimalFSM) 
-				{
-					HitAnimal->AnimalFSM->SetState(ESBS_AnimalState::InAir);
-					AttachActor(HitAnimal);
-				}
-			}
 			if (HitActor->GetActorNameOrLabel().Contains("Switch")) // 잡은게 스위치면
 			{
 				MoveSpeedVal = 0;
