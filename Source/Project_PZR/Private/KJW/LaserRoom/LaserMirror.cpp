@@ -3,6 +3,8 @@
 #include "KJW/KHelper.h"
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
+#include "MotionControllerComponent.h"
+
 
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
@@ -125,6 +127,22 @@ void ALaserMirror::StopGrab(AActor* HandActor)
 void ALaserMirror::RotObject(const FRotator AddRotator)
 {
 	AddActorLocalRotation(AddRotator);
+}
+
+void ALaserMirror::StartGrab(UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	BoxComp->SetSimulatePhysics(false);
+	BoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	BoxComp->AttachToComponent(MontionComp, FAttachmentTransformRules::KeepWorldTransform);
+
+	SetActorLocation(MontionComp->GetComponentLocation());
+}
+
+void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	BoxComp->SetSimulatePhysics(true);
+	BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	BoxComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 }
 
 

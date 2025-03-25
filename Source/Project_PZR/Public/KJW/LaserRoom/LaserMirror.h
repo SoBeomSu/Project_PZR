@@ -30,12 +30,16 @@ public:
 
 public:
 	//플레이어와의 상호작용을 위한 함수
-	bool virtual IsGrab() override { return true; };
-	void virtual StartGrab(AActor* HandActor) override;
-	void virtual StopGrab(AActor* HandActor) override;
-	void virtual RotObject(const FRotator AddRotator) override;
+	virtual bool IsGrab() override { return true; };
+	virtual void StartGrab(AActor* HandActor) override;
+	virtual void StopGrab(AActor* HandActor) override;
+	virtual void RotObject(const FRotator AddRotator) override;
 
-
+	//손으로 오브젝트 잡기 시작
+	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
+	//손으로 오브젝트 잡기 종료
+	virtual void StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
+	
 public:
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* BoxComp;
