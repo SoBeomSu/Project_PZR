@@ -47,6 +47,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_MouseLeftButton;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	class UInputAction* IA_PressA;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	class UInputAction* IA_PressX;
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* VRCamera;
@@ -72,15 +76,16 @@ public:
 	float MoveSpeedVal = 1;
 
 	class IKVRObjectInterface* GrabObj;
-	void GrabStart();
-	void GrabEnd();
+	void GrabStart_R();
+	void GrabEnd_R();
+	void GrabStart_L();
+	void GrabEnd_L();
+	void PressA();
+	void PressX();
 
 	void Move(const struct FInputActionValue& Value);
 	void Turn(const struct FInputActionValue& Value);
-	void RMB_Start(const struct FInputActionValue& Value);
-	void RMB_Complete(const struct FInputActionValue& Value);
-	void LRB_Start(const struct FInputActionValue& Value);
-	void LRB_Complete(const struct FInputActionValue& Value);
+
 	FHitResult CameraLineTrace();
 
 	void AttachActor(AActor* actor);

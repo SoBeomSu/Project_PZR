@@ -66,16 +66,21 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	{
 		InputSystem->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Move);
 		InputSystem->BindAction(IA_Turn, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Turn);
-		//InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Started, this, &ASBS_PlayerC::RMB_Start);
-		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart);
-		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd);
+		
+		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_R); // 마우스 우클릭 + 오른쪽 트리거
+		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_R);
 
-		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Started, this, &ASBS_PlayerC::LRB_Start);
-		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::LRB_Complete);
+		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_L); //마우스 왼클릭 + 왼쪽 트리거
+		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_L);
+
+		InputSystem->BindAction(IA_PressA, ETriggerEvent::Triggered, this, &ASBS_PlayerC::PressA); // A 버튼
+		InputSystem->BindAction(IA_PressX, ETriggerEvent::Triggered, this, &ASBS_PlayerC::PressX); // X 버튼
+
+		
 	}
 }
 
-void ASBS_PlayerC::GrabStart()
+void ASBS_PlayerC::GrabStart_R()
 {
 	UE_LOG(LogTemp, Warning, TEXT("click success"));
 	if (!VRCamera) return;
@@ -114,12 +119,32 @@ void ASBS_PlayerC::GrabStart()
 
 }
 
-void ASBS_PlayerC::GrabEnd()
+void ASBS_PlayerC::GrabEnd_R()
 {
 	if (!GrabObj) return;
 
 	GrabObj->StopGrab(RightHand, true);
 	GrabObj = nullptr;
+}
+
+void ASBS_PlayerC::GrabStart_L()
+{
+
+}
+
+void ASBS_PlayerC::GrabEnd_L()
+{
+
+}
+
+void ASBS_PlayerC::PressA()
+{
+
+}
+
+void ASBS_PlayerC::PressX()
+{
+
 }
 
 void ASBS_PlayerC::Move(const struct FInputActionValue& Value)
@@ -134,58 +159,6 @@ void ASBS_PlayerC::Turn(const struct FInputActionValue& Value)
 	FVector2d Scale = Value.Get<FVector2d>();
 	AddControllerYawInput(Scale.X); // 좌우
 	AddControllerPitchInput(Scale.Y); // 위아래
-}
-
-void ASBS_PlayerC::RMB_Start(const struct FInputActionValue& Value)
-{
-	//if(bRightclick == false)
-	//{
-	//	bRightclick = true;
-	//	UE_LOG(LogTemp, Warning, TEXT("Right Click Sucess"));
-	//	FHitResult RMB_HitResult = CameraLineTrace(); // 라인트레이스를 쏜다
-	//	AActor* HitActor = RMB_HitResult.GetActor();
-	//	if (HitActor)
-	//	{
-	//		if (HitActor->GetActorNameOrLabel().Contains("Switch")) // 잡은게 //스위치면
-	//		{
-	//			MoveSpeedVal = 0;
-	//		}
-	//		if (HitActor->GetActorNameOrLabel().Contains("Button")) // 버튼이면
-	//		{
-	//			StartButton = Cast<ASBS_GameStartButton>/(RMB_HitResult.GetActor/());
-	//			if (StartButton)
-	//			{
-	//				StartButton->ButtonPressed();
-	//			}
-	//		}
-	//	}
-	//} 
-}
-
-void ASBS_PlayerC::RMB_Complete(const struct FInputActionValue& Value)
-{
-	//if (GrabActor)
-	//{
-	//
-	//	//LightSwitch = Cast<ASBS_LightSwitch>(GrabActor);
-	//	if (GrabActor == LightSwitch && GameMode->bStartGame)
-	//	{
-	//		LightSwitch->StartReset();
-	//	//	GrabActor = nullptr;
-	//	}
-	//}
-	//MoveSpeedVal = 1;
-	//bRightclick = false;
-}
-
-void ASBS_PlayerC::LRB_Start(const struct FInputActionValue& Value)
-{
-	bLeftclick = true;
-}
-
-void ASBS_PlayerC::LRB_Complete(const struct FInputActionValue& Value)
-{
-	bLeftclick = false;
 }
 
 FHitResult ASBS_PlayerC::CameraLineTrace()
