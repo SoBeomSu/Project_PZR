@@ -44,6 +44,8 @@ ALaserMirror::ALaserMirror()
 	BottomComp->SetRelativeScale3D(FVector(0.5f, 0.2f, 0.2f));
 	BottomComp->SetRelativeRotation(FRotator(90.0f,0.0f, 0.0f));
 
+	BoxComp->SetSimulatePhysics(true);
+	BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 // Called when the game starts or when spawned
@@ -111,38 +113,118 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 	}
 }
 
+//
+//void ALaserMirror::StartGrab(AActor* HandActor)
+//{
+//	// HandActor에 부착
+//	AttachToActor(HandActor, FAttachmentTransformRules::KeepWorldTransform);
+//}
+//
+//void ALaserMirror::StopGrab(AActor* HandActor)
+//{
+//	// HandActor로부터 분리
+//	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+//}
+//
+//void ALaserMirror::RotObject(const FRotator AddRotator)
+//{
+//	AddActorLocalRotation(AddRotator);
+//}
 
-void ALaserMirror::StartGrab(AActor* HandActor)
+bool ALaserMirror::IsGrab()
 {
-	// HandActor에 부착
-	AttachToActor(HandActor, FAttachmentTransformRules::KeepWorldTransform);
-}
-
-void ALaserMirror::StopGrab(AActor* HandActor)
-{
-	// HandActor로부터 분리
-	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-}
-
-void ALaserMirror::RotObject(const FRotator AddRotator)
-{
-	AddActorLocalRotation(AddRotator);
+	return !IsGrabbing;
 }
 
 void ALaserMirror::StartGrab(UMotionControllerComponent* MontionComp, bool IsRight)
 {
+	//물리 및 콜리전 끄기
 	BoxComp->SetSimulatePhysics(false);
 	BoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	//잡을려는 MotionController에게 붙이기
 	BoxComp->AttachToComponent(MontionComp, FAttachmentTransformRules::KeepWorldTransform);
-
+	//위치 손안으로
 	SetActorLocation(MontionComp->GetComponentLocation());
+	IsGrabbing = true;
+	
+	//스케일 축소 시키기
+	if (!MoveToHandTimerHandle.IsValid())
+	{
+		HandComp = MontionComp;
+		MoveToHandTimer = 0.0f;
+		GetWorldTimerManager().SetTimer(MoveToHandTimerHandle, this,&ThisClass::MoveToHand, MoveToHandDeltatime, true);
+	}
+
 }
 
 void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRight)
 {
+	IsGrabbing = false;
 	BoxComp->SetSimulatePhysics(true);
 	BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	BoxComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	
+	
+	if (MoveToHandTimerHandle.IsValid())
+	{
+		GetWorldTimerManager().ClearTimer(MoveToHandTimerHandle);
+	}
+	//스케일 원상복구
+	if (!MoveToPlaceTimerHandle.IsValid())
+	{
+		HandComp = nullptr;
+		GetWorldTimerManager().SetTimer(MoveToPlaceTimerHandle, this, &ThisClass::MoveToPlace, MoveToHandDeltatime, true);
+	}
+
+
+}
+
+void ALaserMirror::MoveToHand()
+{
+	MoveToHandTimer += MoveToHandDeltatime;
+	if (MoveToHandTimer > MoveToHandTime)
+	{
+		GetWorldTimerManager().ClearTimer(MoveToHandTimerHandle);
+	}
+	else
+	{
+		float percent = MoveToHandTimer / MoveToHandTime;
+		//easeOutQuint
+		if (bEaseOutQuint)
+		{
+			percent =  1 - FMath::Pow(1 - percent, 5);
+		}
+
+		float newScale = FMath::Lerp(1.0f ,MiniScale, percent);
+
+
+		SetActorScale3D(FVector(newScale));
+	}
+
+}
+
+void ALaserMirror::MoveToPlace()
+{
+	MoveToHandTimer -= MoveToHandDeltatime;
+	if (MoveToHandTimer < 0)
+	{
+		GetWorldTimerManager().ClearTimer(MoveToPlaceTimerHandle);
+	}
+	else
+	{
+		float percent = MoveToHandTimer / MoveToHandTime;
+		//easeOutQuint
+		if (bEaseOutQuint)
+		{
+			percent = 1 - FMath::Pow(1 - percent, 5);
+		}
+
+		float newScale = FMath::Lerp(1.0f, MiniScale, percent);
+
+
+		SetActorScale3D(FVector(newScale));
+	}
 }
 
 
