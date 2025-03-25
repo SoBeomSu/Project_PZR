@@ -59,6 +59,9 @@ public:
 	AActor* GrabActor;
 	float MoveSpeedVal = 1;
 
+	class IKVRObjectInterface* GrabObj;
+	void GrabStart();
+	void GrabEnd();
 
 	void Move(const struct FInputActionValue& Value);
 	void Turn(const struct FInputActionValue& Value);

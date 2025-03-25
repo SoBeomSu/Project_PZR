@@ -7,10 +7,11 @@
 #include "Components/PointLightComponent.h"
 #include "SBS_WorldLightManager.h"
 #include "SBS_GameMode.h"
+#include "KJW/KVRObjectInterface.h"
 #include "SBS_LightSwitch.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API ASBS_LightSwitch : public AActor
+class PROJECT_PZR_API ASBS_LightSwitch : public AActor,public IKVRObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -60,4 +61,9 @@ public:
 	void ResetRotation(float Deltatime);
 	void SwitchOn();
 	void SwitchOff();
+
+	bool virtual IsGrab() override { return true; };
+	void virtual StartGrab(AActor* HandActor) override;
+	void virtual StopGrab(AActor* HandActor) override;
+	void virtual RotObject(const FRotator AddRotator) override;
 };

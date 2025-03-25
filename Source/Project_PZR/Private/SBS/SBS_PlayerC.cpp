@@ -61,6 +61,41 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	}
 }
 
+void ASBS_PlayerC::GrabStart()
+{
+	if (!VRCamera) return;
+	//이미 잡은 물체가 있다면
+	if (GrabObj) return;
+
+	// 카메라의 위치와 방향 가져오기
+	FVector StartLocation = VRCamera->GetComponentLocation();
+	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
+
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // 자기 자신 무시
+
+	// 라인트레이스 실행
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
+
+	if (bHit)
+	{
+		AActor* HitActor = HitResult.GetActor();
+		if (HitActor)
+		{
+			// IKVRObjectInterface를 가진 오브젝트와 상호작용 시작
+			IKVRObjectInterface* GrabbableObject = Cast<IKVRObjectInterface>(HitActor);
+			if (GrabbableObject && GrabbableObject->IsGrab())
+			{
+				// 그랩 로직 (이 인터페이스를 통해 실제 그랩 기능 호출)
+				GrabbableObject->StartGrab(this);
+				GrabObj = GrabbableObject;
+			}
+		}
+	}
+
+}
+
 void ASBS_PlayerC::Move(const struct FInputActionValue& Value)
 {
 	FVector2d Scale = Value.Get<FVector2d>();
