@@ -73,8 +73,8 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_L); //마우스 왼클릭 + 왼쪽 트리거
 		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_L);
 
-		InputSystem->BindAction(IA_PressA, ETriggerEvent::Triggered, this, &ASBS_PlayerC::PressA); // A 버튼
-		InputSystem->BindAction(IA_PressX, ETriggerEvent::Triggered, this, &ASBS_PlayerC::PressX); // X 버튼
+		InputSystem->BindAction(IA_ButtonPressed, ETriggerEvent::Started, this, &ASBS_PlayerC::ButtonPressed); // A 버튼
+		InputSystem->BindAction(IA_ButtonReleased, ETriggerEvent::Completed, this, &ASBS_PlayerC::ButtonReleased); // X 버튼
 
 		
 	}
@@ -94,10 +94,8 @@ void ASBS_PlayerC::GrabStart_R()
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this); // 자기 자신 무시
-	//DrawDebugLine(GetWorld(),StartLocation,EndLocation,FColor::Red);
-	// 라인트레이스 실행
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
-
+	
 	if (bHit)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Trae Hit"));
@@ -137,12 +135,42 @@ void ASBS_PlayerC::GrabEnd_L()
 
 }
 
-void ASBS_PlayerC::PressA()
+void ASBS_PlayerC::ButtonPressed()
 {
+	UE_LOG(LogTemp, Warning, TEXT("click success"));
+	if (!VRCamera) return;
+
+	// 카메라의 위치와 방향 가져오기
+	FVector StartLocation = VRCamera->GetComponentLocation();
+	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
+
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // 자기 자신 무시
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
+
+	if (bHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Trae Hit"));
+
+		AActor* HitActor = HitResult.GetActor();
+		if (HitActor)
+		{
+			// IKVRObjectInterface를 가진 오브젝트와 상호작용 시작
+			IKVRObjectInterface* GrabbableObject = Cast<IKVRObjectInterface>(HitActor);
+			if (GrabbableObject)
+			{
+				// 그랩 로직 (이 인터페이스를 통해 실제 그랩 기능 호출)
+				GrabbableObject->OnButtonPressed(HitResult.GetComponent(), EVRButton::Right_A_Button);
+				UE_LOG(LogTemp, Warning, TEXT("Button Pressed"));
+			}
+		}
+	}
 
 }
 
-void ASBS_PlayerC::PressX()
+void ASBS_PlayerC::ButtonReleased()
 {
 
 }
@@ -161,21 +189,16 @@ void ASBS_PlayerC::Turn(const struct FInputActionValue& Value)
 	AddControllerPitchInput(Scale.Y); // 위아래
 }
 
-FHitResult ASBS_PlayerC::CameraLineTrace()
+FHitResult ASBS_PlayerC::CameraLineTraceHitResult()
 {
-	FVector StartPoint = VRCamera->GetComponentLocation();
-	FVector Endpoint = StartPoint + VRCamera->GetForwardVector() * 1000.0f;//10 미터
-	FHitResult HitInfo;
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitInfo, StartPoint, Endpoint, ECollisionChannel::ECC_Visibility, Params);
+	FVector StartLocation = VRCamera->GetComponentLocation();
+	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
 
-	if (bHit)
-	{
-		FString HitActorname = HitInfo.GetActor()->GetActorNameOrLabel();
-		UE_LOG(LogTemp, Warning, TEXT("Hit Actor Name : %s"), *HitInfo.GetActor()->GetActorNameOrLabel());
-	}
-	return HitInfo;
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // 자기 자신 무시
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
+	return HitResult;
 }
 
 void ASBS_PlayerC::AttachActor(AActor* actor)

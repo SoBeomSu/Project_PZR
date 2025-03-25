@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
+#include "KJW/KVRObjectInterface.h"
 #include "SBS_Bomb.generated.h"
 
 UCLASS()
@@ -35,5 +36,6 @@ public:
 	class UStaticMeshComponent* StaticMesh;
 
 	void SetupKeypad();
-
+	virtual void  OnButtonPressed(USceneComponent* HitComponent, EVRButton VRButton) override;
+	FString EnterPassword(int Numbers);
 };

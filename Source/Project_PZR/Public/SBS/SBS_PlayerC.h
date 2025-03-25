@@ -48,9 +48,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_MouseLeftButton;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* IA_PressA;
+	class UInputAction* IA_ButtonPressed;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* IA_PressX;
+	class UInputAction* IA_ButtonReleased;
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* VRCamera;
@@ -80,13 +80,13 @@ public:
 	void GrabEnd_R();
 	void GrabStart_L();
 	void GrabEnd_L();
-	void PressA();
-	void PressX();
+	void ButtonPressed();
+	void ButtonReleased();
 
 	void Move(const struct FInputActionValue& Value);
 	void Turn(const struct FInputActionValue& Value);
 
-	FHitResult CameraLineTrace();
+	FHitResult CameraLineTraceHitResult();
 
 	void AttachActor(AActor* actor);
 	void DetachActor(AActor* actor);

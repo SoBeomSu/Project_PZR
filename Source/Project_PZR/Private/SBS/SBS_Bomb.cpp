@@ -13,7 +13,7 @@ ASBS_Bomb::ASBS_Bomb()
 	for (int i= 1; i <= 9; i++)
 	{
 		FString Name = FString::Printf(TEXT("Number%d"), i);
-		UBoxComponent* Box = CreateDefaultSubobject<UBoxComponent>(*Name);
+		UBoxComponent* Box = CreateDefaultSubobject<UBoxComponent>(*Name); //Number1 Number2
 		Box->SetupAttachment(StaticMesh);
 		Box->SetCollisionProfileName(TEXT("DefualtObject")); // 충돌 설정
 		Box->ComponentTags.Add(FName(*FString::FromInt(i))); // 태그로 숫자 지정
@@ -39,5 +39,58 @@ void ASBS_Bomb::Tick(float DeltaTime)
 void ASBS_Bomb::SetupKeypad()
 {
 
+}
+
+void ASBS_Bomb::OnButtonPressed(USceneComponent* HitComponent, EVRButton VRButton)
+{
+	if (HitComponent)
+	{
+		UBoxComponent* HitBox = Cast<UBoxComponent>(HitComponent);
+		if (HitBox && NumberCollisions.Contains(HitBox))
+		{
+			FName Tag = HitBox->ComponentTags[0];
+			int Number = FCString::Atoi(*Tag.ToString());
+			switch (Number)
+			{
+				case 1:
+					EnterPassword(Number);
+				break;
+				case 2:
+					EnterPassword(Number);
+				break;
+				case 3:
+					EnterPassword(Number);
+				break;
+				case 4:
+					EnterPassword(Number);
+				break;
+				case 5:
+					EnterPassword(Number);
+				break;
+				case 6:
+					EnterPassword(Number);
+				break;
+				case 7:
+					EnterPassword(Number);
+				break;
+				case 8:
+					EnterPassword(Number);
+				break;
+				case 9:
+					EnterPassword(Number);
+				break;
+			}
+		}
+	}
+}
+
+FString ASBS_Bomb::EnterPassword(int Numbers)
+{
+	FString Password;
+
+	//Queue
+
+
+	return Password;
 }
 
