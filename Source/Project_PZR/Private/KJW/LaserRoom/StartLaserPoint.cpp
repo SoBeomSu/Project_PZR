@@ -87,7 +87,7 @@ void AStartLaserPoint::StartSetLaser()
 	FHitResult HitInfo;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitInfo, StartPoint, EndPoint, ECC_GameTraceChannel1
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitInfo, StartPoint, EndPoint, ECC_GameTraceChannel6
 		, Params);
 	
 	ALaserMirror* Mirror = nullptr;
@@ -102,7 +102,17 @@ void AStartLaserPoint::StartSetLaser()
 	//2 - 2만약 거울이라면 다음 레이저 쏘기
 	if (Mirror)
 	{
-		Mirror->NextLaserStart(HitInfo, LaserDir, LaserLength, Lines, IsGoal);
+		//뒤에서 쏘는 방향인지 체크 하기
+		//거울 에셋이 전방이 R Vector 이기 때문에 레이저 방향과 오른쪽 방향 백터를 
+		//가져와 분석
+		//
+
+		float dot = FVector::DotProduct(LaserDir, Mirror->GetActorRightVector());
+		UE_LOG(LogTemp, Warning, TEXT("%f"), dot);
+		if (dot < 0)
+		{
+			Mirror->NextLaserStart(HitInfo, LaserDir, LaserLength, Lines, IsGoal);
+		}
 	}
 
 

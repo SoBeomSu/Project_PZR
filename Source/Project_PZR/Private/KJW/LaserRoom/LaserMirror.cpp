@@ -26,6 +26,7 @@ ALaserMirror::ALaserMirror()
 	TempMirrorMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("TempMirrorMeshComp");
 	
 
+	MirrorMeshComp-> SetSimulatePhysics(true);
 	TempMirrorMeshComp->SetSimulatePhysics(false);
 	TempMirrorMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
@@ -66,7 +67,7 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
-	bool bHit = GetWorld()->LineTraceSingleByChannel(MirrorHitInfo, StartPoint, EndPoint, ECC_GameTraceChannel1
+	bool bHit = GetWorld()->LineTraceSingleByChannel(MirrorHitInfo, StartPoint, EndPoint, ECC_GameTraceChannel6
 		, Params);
 
 	if (bHit)
@@ -85,7 +86,13 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 
 	if (NextMirror)
 	{
-		NextMirror->NextLaserStart(MirrorHitInfo, ReflectionVector, LaserLength, Lines, IsGoal);
+		float dot = FVector::DotProduct(ReflectionVector, NextMirror->GetActorRightVector());
+		UE_LOG(LogTemp, Warning, TEXT("%f"), dot);
+		if (dot < 0)
+		{
+			NextMirror->NextLaserStart(MirrorHitInfo, ReflectionVector, LaserLength, Lines, IsGoal);
+		}
+		
 	}
 
 
