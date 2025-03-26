@@ -24,7 +24,13 @@ ALaserMirror::ALaserMirror()
 	MirroBoxComp->SetupAttachment(MirrorMeshComp);
 
 	TempMirrorMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("TempMirrorMeshComp");
+	TempMirroBoxComp = CreateDefaultSubobject<UBoxComponent>("TempMirroBoxComp");
+	TempMirroBoxComp->SetupAttachment(TempMirrorMeshComp);
 	
+	MirrorMeshComp->SetCollisionProfileName(TEXT("GrapObject"));
+	MirroBoxComp->SetCollisionProfileName(TEXT("Mirror"));
+	TempMirroBoxComp->SetCollisionProfileName(TEXT("Mirror"));
+
 
 	MirrorMeshComp-> SetSimulatePhysics(true);
 	TempMirrorMeshComp->SetSimulatePhysics(false);
@@ -36,8 +42,14 @@ ALaserMirror::ALaserMirror()
 void ALaserMirror::BeginPlay()
 {
 	Super::BeginPlay();
-
+	OrginScale = GetActorScale3D().X;
+	TempMirrorMeshComp->SetRelativeScale3D(FVector(OrginScale));
 	TempMirrorMeshComp->SetVisibility(false);
+
+	TempMirroBoxComp->SetRelativeLocation(MirroBoxComp->GetRelativeLocation());
+	TempMirroBoxComp->SetRelativeRotation(MirroBoxComp->GetRelativeRotation());
+	TempMirroBoxComp->SetBoxExtent(MirroBoxComp->GetUnscaledBoxExtent());
+
 }
 
 // Called every frame
@@ -49,8 +61,15 @@ void ALaserMirror::Tick(float DeltaTime)
 
 
 
-void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDir, const float& LaserLength, TArray<FVector>& Lines, bool& IsGoal)
+void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDir, const float& LaserLength, TArray<FVector>& Lines, bool& IsGoal, bool& IsReal)
 {
+	//가짜 빛인지 체크하기
+	if (IsReal && HitInfo.GetComponent() == TempMirroBoxComp)
+	{
+		IsReal = false;
+	}
+
+
 	//1. 들어온 레이저의 반사 방향 구하기
 	FVector SurfaceNormal = HitInfo.ImpactNormal;
 	FVector StartPoint = HitInfo.Location;
@@ -86,15 +105,13 @@ void ALaserMirror::NextLaserStart(const FHitResult& HitInfo, const FVector& InDi
 
 	if (NextMirror)
 	{
-		float dot = FVector::DotProduct(ReflectionVector, NextMirror->GetActorRightVector());
-		UE_LOG(LogTemp, Warning, TEXT("%f"), dot);
+		float dot = FVector::DotProduct(ReflectionVector, MirrorHitInfo.GetComponent()->GetRightVector());
+		//UE_LOG(LogTemp, Warning, TEXT("%f"), dot);
 		if (dot < 0)
 		{
-			NextMirror->NextLaserStart(MirrorHitInfo, ReflectionVector, LaserLength, Lines, IsGoal);
-		}
-		
+			NextMirror->NextLaserStart(MirrorHitInfo, ReflectionVector, LaserLength, Lines, IsGoal,IsReal);
+		}		
 	}
-
 
 	if (bDrawLaser)
 	{
@@ -171,26 +188,32 @@ void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRigh
 
 }
 
-void ALaserMirror::MoveToHand()
+void ALaserMirror::UpdateScale()
+{
+	float percent = MoveToHandTimer / MoveToHandTime;
+	//easeOutQuint
+	if (bEaseOutQuint)
+	{
+		percent = 1 - FMath::Pow(1 - percent, 5);
+	}
+
+	float newScale = FMath::Lerp(OrginScale, MiniScale, percent);
+
+
+	SetActorScale3D(FVector(newScale));
+}
+
+void ALaserMirror::MoveToHand() 
 {
 	MoveToHandTimer += MoveToHandDeltatime;
 	if (MoveToHandTimer > MoveToHandTime)
 	{
+		SetActorScale3D(FVector(MiniScale));
 		GetWorldTimerManager().ClearTimer(MoveToHandTimerHandle);
 	}
 	else
 	{
-		float percent = MoveToHandTimer / MoveToHandTime;
-		//easeOutQuint
-		if (bEaseOutQuint)
-		{
-			percent =  1 - FMath::Pow(1 - percent, 5);
-		}
-
-		float newScale = FMath::Lerp(1.0f ,MiniScale, percent);
-
-
-		SetActorScale3D(FVector(newScale));
+		UpdateScale();
 	}
 
 }
@@ -200,21 +223,12 @@ void ALaserMirror::MoveToPlace()
 	MoveToHandTimer -= MoveToHandDeltatime;
 	if (MoveToHandTimer < 0)
 	{
+		SetActorScale3D(FVector(OrginScale));
 		GetWorldTimerManager().ClearTimer(MoveToPlaceTimerHandle);
 	}
 	else
 	{
-		float percent = MoveToHandTimer / MoveToHandTime;
-		//easeOutQuint
-		if (bEaseOutQuint)
-		{
-			percent = 1 - FMath::Pow(1 - percent, 5);
-		}
-
-		float newScale = FMath::Lerp(1.0f, MiniScale, percent);
-
-
-		SetActorScale3D(FVector(newScale));
+		UpdateScale();
 	}
 }
 

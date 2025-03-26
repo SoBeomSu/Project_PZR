@@ -75,7 +75,7 @@ void AStartLaserPoint::StartSetLaser()
 	//레이저 쏘기전 필요한 초기화
 	Lines.Empty();
 	IsGoal = false;
-
+	bool IsReal = true;
 	//1.시작 위치 방향 조절
 	FVector StartPoint = LaserArrowComp->GetComponentLocation();
 	FVector LaserDir = LaserArrowComp->GetForwardVector();
@@ -107,12 +107,17 @@ void AStartLaserPoint::StartSetLaser()
 		//가져와 분석
 		//
 
-		float dot = FVector::DotProduct(LaserDir, Mirror->GetActorRightVector());
-		UE_LOG(LogTemp, Warning, TEXT("%f"), dot);
+		float dot = FVector::DotProduct(LaserDir, HitInfo.GetComponent()->GetRightVector());
+		//UE_LOG(LogTemp, Warning, TEXT("%f"), dot);
 		if (dot < 0)
 		{
-			Mirror->NextLaserStart(HitInfo, LaserDir, LaserLength, Lines, IsGoal);
+			Mirror->NextLaserStart(HitInfo, LaserDir, LaserLength, Lines, IsGoal, IsReal);
 		}
+	}
+
+	if (!IsReal)
+	{
+		IsGoal = false;
 	}
 
 
@@ -175,6 +180,7 @@ void AStartLaserPoint::CheckIsGoalLaser()
 	}
 
 	if (!CurentEndLaserPoint) { return; }
+
 
 	if (IsGoal)
 	{

@@ -34,6 +34,8 @@ AEndLaserPoint::AEndLaserPoint()
 	ConstructorHelpers::FClassFinder<UTextboard> TextClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/A_Project/KJW/01_LaserRoom/UI/BPW_EndLaser.BPW_EndLaser_C'"));
 	if (TextClass.Succeeded()) TextWidget->SetWidgetClass(TextClass.Class);
 
+
+	BoxComp->SetCollisionProfileName(TEXT("Mirror"));
 }
 
 

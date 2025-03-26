@@ -26,7 +26,7 @@ public:
 
 public:
 	//다음 레이저 이여 발사하기
-	void NextLaserStart(const struct FHitResult& HitInfo, const FVector& InDir, const float& LaserLength, TArray<FVector>& Lines , bool& IsGoal);
+	void NextLaserStart(const struct FHitResult& HitInfo, const FVector& InDir, const float& LaserLength, TArray<FVector>& Lines , bool& IsGoal ,bool& IsReal);
 
 public:
 
@@ -46,6 +46,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* MirroBoxComp;
+
+	UPROPERTY(EditAnywhere)
+	class UBoxComponent* TempMirroBoxComp;
 
 public:
 	UPROPERTY(EditAnywhere, Category = "MirrorLaser")
@@ -68,8 +71,11 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
 	float MiniScale = 0.1;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	float OrginScale = 1.0f;
+
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
-	float MoveToHandTime = 1.0f;
+	float MoveToHandTime = 0.5f;
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
 	bool bEaseOutQuint = false;
 
@@ -77,7 +83,7 @@ public:
 	float MoveToHandTimer = 0.0f;
 
 
-
+	void UpdateScale();
 	void MoveToHand();
 	void MoveToPlace();
 
