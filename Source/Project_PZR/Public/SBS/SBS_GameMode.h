@@ -27,9 +27,11 @@ public:
 	//TArray<A
 	UPROPERTY(EditAnywhere, BlueprintReadWrite);
 	bool bStartGame = false;
+	
 	bool Phase2 = false;
 
 	void StartGame();
 	void GameOver();
 	void UpdateTimer();
+	void InsertCorrectAnswer();
 };

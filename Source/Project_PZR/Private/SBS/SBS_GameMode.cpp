@@ -30,3 +30,8 @@ void ASBS_GameMode::GameOver()
 {
 
 }
+
+void ASBS_GameMode::InsertCorrectAnswer()
+{
+
+}

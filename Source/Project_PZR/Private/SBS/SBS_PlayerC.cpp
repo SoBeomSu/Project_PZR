@@ -150,16 +150,19 @@ void ASBS_PlayerC::ButtonPressed(EVRButton VRButton)
 	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
 
 	FHitResult HitResult;
+	if(GrabObj) GrabObj->OnButtonPressed(HitResult, VRButton);
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this); // 자기 자신 무시
 
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, QueryParams);
 
 	if (bHit)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Trae Hit"));
 
 		AActor* HitActor = HitResult.GetActor();
+		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
+
 		if (HitActor)
 		{
 			// IKVRObjectInterface를 가진 오브젝트와 상호작용 시작

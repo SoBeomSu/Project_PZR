@@ -26,16 +26,32 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere)
     class USceneComponent* Root;
 
     UPROPERTY(VisibleAnywhere, Category = "Components")
     TArray<UBoxComponent*> NumberCollisions; // 1~9 ÄÝ¸®Àü
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
+	class UBoxComponent* EnterKey;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	class UBoxComponent* DeleteKey;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	class UStaticMeshComponent* StaticMesh;
 
+	class ASBS_GameMode* GameMode;
+
+	FString Password;
+	FString Answer;
+	FString WritePassword(int Numbers);
+
 	void SetupKeypad();
+	void PressEnter();
+	void PressDelete();
+
+	void UpdateWidgetText();
+
 	virtual void  OnButtonPressed(FHitResult& HitResult, EVRButton VRButton) override;
-	FString EnterPassword(int Numbers);
 };
