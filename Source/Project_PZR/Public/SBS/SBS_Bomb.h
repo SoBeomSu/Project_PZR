@@ -36,6 +36,6 @@ public:
 	class UStaticMeshComponent* StaticMesh;
 
 	void SetupKeypad();
-	virtual void  OnButtonPressed(USceneComponent* HitComponent, EVRButton VRButton) override;
+	virtual void  OnButtonPressed(FHitResult& HitResult, EVRButton VRButton) override;
 	FString EnterPassword(int Numbers);
 };

@@ -59,9 +59,10 @@ public:
 	//컨트롤러를 통해 오브젝트 회전
 	virtual void  RotObject(class UMotionControllerComponent* MontionComp , bool IsRight , const FRotator AddRotator) {};
 	//VR버튼이 눌렀을 때 호출
-	virtual void  OnButtonPressed(USceneComponent* HitComponent, EVRButton VRButton) {};
+	//virtual void  OnButtonPressed(class USceneComponent* HitComponent, EVRButton VRButton) {};
+	virtual void  OnButtonPressed(FHitResult& HitResult, EVRButton VRButton) {};
 	//VR버튼이 떼어졌을 때 호출
-	virtual void  OnButtonReleased(EVRButton VRButton) {};
+	virtual void  OnButtonReleased(FHitResult& HitResult, EVRButton VRButton) {};
 
 
 };

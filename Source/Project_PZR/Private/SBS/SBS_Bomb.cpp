@@ -41,11 +41,12 @@ void ASBS_Bomb::SetupKeypad()
 
 }
 
-void ASBS_Bomb::OnButtonPressed(USceneComponent* HitComponent, EVRButton VRButton)
+void ASBS_Bomb::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)
 {
-	if (HitComponent)
+
+	if (HitResult.GetComponent())
 	{
-		UBoxComponent* HitBox = Cast<UBoxComponent>(HitComponent);
+		UBoxComponent* HitBox = Cast<UBoxComponent>(HitResult.GetComponent());
 		if (HitBox && NumberCollisions.Contains(HitBox))
 		{
 			FName Tag = HitBox->ComponentTags[0];

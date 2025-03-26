@@ -73,7 +73,7 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_L); //마우스 왼클릭 + 왼쪽 트리거
 		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_L);
 
-		InputSystem->BindAction(IA_ButtonPressed, ETriggerEvent::Started, this, &ASBS_PlayerC::ButtonPressed); // A 버튼
+		InputSystem->BindAction(IA_ButtonPressed, ETriggerEvent::Started, this, &ASBS_PlayerC::ButtonPressed_RA); // A 버튼
 		InputSystem->BindAction(IA_ButtonReleased, ETriggerEvent::Completed, this, &ASBS_PlayerC::ButtonReleased); // X 버튼
 
 		
@@ -135,7 +135,12 @@ void ASBS_PlayerC::GrabEnd_L()
 
 }
 
-void ASBS_PlayerC::ButtonPressed()
+void ASBS_PlayerC::ButtonPressed_RA()
+{
+	ButtonPressed(EVRButton::Right_A_Button);
+}
+
+void ASBS_PlayerC::ButtonPressed(EVRButton VRButton)
 {
 	UE_LOG(LogTemp, Warning, TEXT("click success"));
 	if (!VRCamera) return;
@@ -162,13 +167,13 @@ void ASBS_PlayerC::ButtonPressed()
 			if (GrabbableObject)
 			{
 				// 그랩 로직 (이 인터페이스를 통해 실제 그랩 기능 호출)
-				GrabbableObject->OnButtonPressed(HitResult.GetComponent(), EVRButton::Right_A_Button);
+				GrabbableObject->OnButtonPressed(HitResult, VRButton);
 				UE_LOG(LogTemp, Warning, TEXT("Button Pressed"));
 			}
 		}
 	}
-
 }
+
 
 void ASBS_PlayerC::ButtonReleased()
 {

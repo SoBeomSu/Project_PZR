@@ -80,7 +80,8 @@ public:
 	void GrabEnd_R();
 	void GrabStart_L();
 	void GrabEnd_L();
-	void ButtonPressed();
+	void ButtonPressed_RA();
+	void ButtonPressed(EVRButton VRButton);
 	void ButtonReleased();
 
 	void Move(const struct FInputActionValue& Value);
