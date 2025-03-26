@@ -39,14 +39,13 @@ public:
 	
 public:
 	UPROPERTY(EditAnywhere)
-	class UBoxComponent* BoxComp;
+	class UStaticMeshComponent* MirrorMeshComp;
 
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* MirrorComp;
+	class UStaticMeshComponent* TempMirrorMeshComp;
 
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* BottomComp;
-
+	class UBoxComponent* MirroBoxComp;
 
 public:
 	UPROPERTY(EditAnywhere, Category = "MirrorLaser")

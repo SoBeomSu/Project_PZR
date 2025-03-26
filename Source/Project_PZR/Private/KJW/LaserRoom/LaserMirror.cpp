@@ -17,35 +17,19 @@ ALaserMirror::ALaserMirror()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	MirrorMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MirrorMeshComp");
+	SetRootComponent(MirrorMeshComp);
 	
-	BoxComp = CreateDefaultSubobject<UBoxComponent>("BoxComp");
-	SetRootComponent(BoxComp);
+	MirroBoxComp = CreateDefaultSubobject<UBoxComponent>("MirroBoxComp");
+	MirroBoxComp->SetupAttachment(MirroBoxComp);
 
-	MirrorComp = CreateDefaultSubobject<UStaticMeshComponent>("MirrorComp");
-	MirrorComp->SetupAttachment(RootComponent);
-
-
-
-	BottomComp = CreateDefaultSubobject<UStaticMeshComponent>("BottomComp");
-	BottomComp->SetupAttachment(RootComponent);
+	TempMirrorMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("TempMirrorMeshComp");
 	
-	ConstructorHelpers::FObjectFinder<UStaticMesh> Mirror(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-	if (Mirror.Succeeded()) MirrorComp->SetStaticMesh(Mirror.Object);
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh> Bottom(TEXT("/Script/Engine.StaticMesh'/Engine/VREditor/LaserPointer/CursorPointer.CursorPointer'"));
-	if (Bottom.Succeeded()) BottomComp->SetStaticMesh(Bottom.Object);
-
-	BoxComp->SetBoxExtent(FVector(50.0f, 6.5f, 70.0f));
-
-	MirrorComp->SetRelativeLocation(FVector(0.0f, 0.0f, 20.0f));
-	MirrorComp->SetRelativeScale3D(FVector(1.0f, 0.1f, 1.0f));
-
-	BottomComp->SetRelativeLocation(FVector(0.0f, 0.0f, -70.0f));
-	BottomComp->SetRelativeScale3D(FVector(0.5f, 0.2f, 0.2f));
-	BottomComp->SetRelativeRotation(FRotator(90.0f,0.0f, 0.0f));
-
-	BoxComp->SetSimulatePhysics(true);
-	BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	TempMirrorMeshComp->SetSimulatePhysics(false);
+	TempMirrorMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	
 }
 
 // Called when the game starts or when spawned
@@ -139,13 +123,13 @@ bool ALaserMirror::IsGrab()
 void ALaserMirror::StartGrab(UMotionControllerComponent* MontionComp, bool IsRight)
 {
 	//물리 및 콜리전 끄기
-	BoxComp->SetSimulatePhysics(false);
-	BoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	MirrorMeshComp->SetSimulatePhysics(false);
+	MirrorMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	//잡을려는 MotionController에게 붙이기
-	BoxComp->AttachToComponent(MontionComp, FAttachmentTransformRules::KeepWorldTransform);
+	MirrorMeshComp->AttachToComponent(MontionComp, FAttachmentTransformRules::KeepWorldTransform);
 	//위치 손안으로
-	SetActorLocation(MontionComp->GetComponentLocation());
+	//SetActorLocation(MontionComp->GetComponentLocation());
 	IsGrabbing = true;
 	
 	//스케일 축소 시키기
@@ -161,9 +145,9 @@ void ALaserMirror::StartGrab(UMotionControllerComponent* MontionComp, bool IsRig
 void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRight)
 {
 	IsGrabbing = false;
-	BoxComp->SetSimulatePhysics(true);
-	BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	BoxComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	MirrorMeshComp->SetSimulatePhysics(true);
+	MirrorMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	MirrorMeshComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	
 	
 	if (MoveToHandTimerHandle.IsValid())
