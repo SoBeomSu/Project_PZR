@@ -21,7 +21,7 @@ ALaserMirror::ALaserMirror()
 	SetRootComponent(MirrorMeshComp);
 	
 	MirroBoxComp = CreateDefaultSubobject<UBoxComponent>("MirroBoxComp");
-	MirroBoxComp->SetupAttachment(MirroBoxComp);
+	MirroBoxComp->SetupAttachment(MirrorMeshComp);
 
 	TempMirrorMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("TempMirrorMeshComp");
 	
@@ -29,14 +29,14 @@ ALaserMirror::ALaserMirror()
 	TempMirrorMeshComp->SetSimulatePhysics(false);
 	TempMirrorMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
-	
 }
 
 // Called when the game starts or when spawned
 void ALaserMirror::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	TempMirrorMeshComp->SetVisibility(false);
 }
 
 // Called every frame
