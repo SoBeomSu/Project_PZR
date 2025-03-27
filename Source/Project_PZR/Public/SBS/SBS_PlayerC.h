@@ -38,19 +38,20 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_Move;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_Turn;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* IA_MouseRightButton;
-
+	class UInputAction* IA_R_Grip_Click; // R 그립 우클릭
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* IA_MouseLeftButton;
+	class UInputAction* IA_L_Grip_Click; // L 그립 좌클릭
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* IA_ButtonPressed;
+	class UInputAction* IA_Button_A; // A버튼
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* IA_ButtonReleased;
+	class UInputAction* IA_Button_X; // X버튼
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	class UInputAction* IA_Thumb_R; // 오른쪽 엄지스틱
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	class UInputAction* IA_Thumb_L; // 오른쪽 엄지스틱
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* VRCamera;
@@ -80,7 +81,9 @@ public:
 	void GrabEnd_R();
 	void GrabStart_L();
 	void GrabEnd_L();
-	void ButtonPressed_RA();
+	void ButtonPressed_A();
+	void ButtonPressed_X();
+
 	void ButtonPressed(EVRButton VRButton);
 	void ButtonReleased();
 

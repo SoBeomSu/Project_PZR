@@ -65,18 +65,21 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	if (InputSystem)
 	{
 		InputSystem->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Move);
+		InputSystem->BindAction(IA_Thumb_L, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Move);
+
 		InputSystem->BindAction(IA_Turn, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Turn);
 		
-		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_R); // 마우스 우클릭 + 오른쪽 트리거
-		InputSystem->BindAction(IA_MouseRightButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_R);
+		InputSystem->BindAction(IA_R_Grip_Click, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_R); // 마우스 우클릭 + 오른쪽 트리거
+		InputSystem->BindAction(IA_R_Grip_Click, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_R);
 
-		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_L); //마우스 왼클릭 + 왼쪽 트리거
-		InputSystem->BindAction(IA_MouseLeftButton, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_L);
+		InputSystem->BindAction(IA_L_Grip_Click, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_L); //마우스 왼클릭 + 왼쪽 트리거
+		InputSystem->BindAction(IA_L_Grip_Click, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_L);
 
-		InputSystem->BindAction(IA_ButtonPressed, ETriggerEvent::Started, this, &ASBS_PlayerC::ButtonPressed_RA); // A 버튼
-		InputSystem->BindAction(IA_ButtonReleased, ETriggerEvent::Completed, this, &ASBS_PlayerC::ButtonReleased); // X 버튼
+		InputSystem->BindAction(IA_Button_A, ETriggerEvent::Started, this, &ASBS_PlayerC::ButtonPressed_A); // A 버튼
+		InputSystem->BindAction(IA_Button_A, ETriggerEvent::Completed, this, &ASBS_PlayerC::ButtonReleased); // 
 
-		
+		InputSystem->BindAction(IA_Button_X, ETriggerEvent::Started, this, &ASBS_PlayerC::ButtonPressed_X); // X 버튼
+		InputSystem->BindAction(IA_Button_X, ETriggerEvent::Completed, this, &ASBS_PlayerC::ButtonReleased); //
 	}
 }
 
@@ -135,9 +138,14 @@ void ASBS_PlayerC::GrabEnd_L()
 
 }
 
-void ASBS_PlayerC::ButtonPressed_RA()
+void ASBS_PlayerC::ButtonPressed_A()
 {
 	ButtonPressed(EVRButton::Right_A_Button);
+}
+
+void ASBS_PlayerC::ButtonPressed_X()
+{
+	ButtonPressed(EVRButton::Left_X_Button);
 }
 
 void ASBS_PlayerC::ButtonPressed(EVRButton VRButton)

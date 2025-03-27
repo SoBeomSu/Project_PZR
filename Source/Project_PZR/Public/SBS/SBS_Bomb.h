@@ -57,7 +57,7 @@ public:
 	class ASBS_GameMode* GameMode;
 	FString WritePassword(int Numbers);
 
-	void SetupKeypad();
+	void SetupKeypad();	
 	void PressEnter();
 	void PressDelete();
 
