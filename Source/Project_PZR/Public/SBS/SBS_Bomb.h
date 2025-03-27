@@ -40,11 +40,21 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	class UStaticMeshComponent* StaticMesh;
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* PasswordWidget;
+
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* TimeLeftWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCorrect = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Password;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Answer = "3958";
 
 	class ASBS_GameMode* GameMode;
-
-	FString Password;
-	FString Answer;
 	FString WritePassword(int Numbers);
 
 	void SetupKeypad();

@@ -3,6 +3,8 @@
 
 #include "SBS/SBS_Bomb.h"
 #include "SBS/SBS_GameMode.h"
+#include "Components/TextRenderComponent.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 ASBS_Bomb::ASBS_Bomb()
@@ -17,16 +19,22 @@ ASBS_Bomb::ASBS_Bomb()
 		FString Name = FString::Printf(TEXT("Number%d"), i);
 		UBoxComponent* NumPad = CreateDefaultSubobject<UBoxComponent>(*Name); //Number1 Number2
 		NumPad->SetupAttachment(StaticMesh);
-		NumPad->SetCollisionProfileName(TEXT("OverlapAll")); // 충돌 설정
+		NumPad->SetCollisionProfileName(TEXT("BlockAllDynamic")); // 충돌 설정
 		NumPad->ComponentTags.Add(FName(*FString::FromInt(i))); // 태그로 숫자 지정
 		NumberCollisions.Add(NumPad);
 	}
 	EnterKey = CreateDefaultSubobject<UBoxComponent>(TEXT("EnterKey"));
 	EnterKey->SetupAttachment(StaticMesh);
-	EnterKey->SetCollisionProfileName(TEXT("OverlapAll"));
+	EnterKey->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	DeleteKey = CreateDefaultSubobject<UBoxComponent>(TEXT("DeleteKey"));
 	DeleteKey->SetupAttachment(StaticMesh);
-	DeleteKey->SetCollisionProfileName(TEXT("OverlapAll"));
+	DeleteKey->SetCollisionProfileName(TEXT("BlockAllDynamic"));
+
+	PasswordWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PasswordWidget"));
+	PasswordWidget->SetupAttachment(StaticMesh);
+	TimeLeftWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("TimeLeftWidget"));
+	TimeLeftWidget->SetupAttachment(StaticMesh);
+
 }
 
 // Called when the game starts or when spawned
@@ -85,7 +93,12 @@ void ASBS_Bomb::PressEnter()
 {
 	if (Password == Answer)
 	{
+		bCorrect= true;
 		GameMode->InsertCorrectAnswer();
+	}
+	else
+	{
+		
 	}
 }
 

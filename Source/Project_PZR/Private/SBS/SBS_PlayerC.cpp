@@ -161,7 +161,7 @@ void ASBS_PlayerC::ButtonPressed(EVRButton VRButton)
 		UE_LOG(LogTemp, Warning, TEXT("Trae Hit"));
 
 		AActor* HitActor = HitResult.GetActor();
-		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
+		//UPrimitiveComponent* HitComponent = HitResult.GetComponent();
 
 		if (HitActor)
 		{
