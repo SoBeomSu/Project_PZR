@@ -33,9 +33,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "FSMcomp")
 	class USBS_PlayerFSM* playerFSM;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Mesh")
+	class USkeletalMeshComponent* RightHandMesh;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Mesh")
+	class USkeletalMeshComponent* LeftHandMesh;
+
+
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputMappingContext* IMC_VR;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputAction* IA_Move;
 	UPROPERTY(EditDefaultsOnly, Category = "Input")

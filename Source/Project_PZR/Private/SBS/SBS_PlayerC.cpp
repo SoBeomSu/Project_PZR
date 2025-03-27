@@ -31,6 +31,14 @@ ASBS_PlayerC::ASBS_PlayerC()
 	RightAim->SetupAttachment(RootComponent);
 	RightAim->SetTrackingMotionSource(TEXT("RightAim"));
 
+	RightHandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("RightHandMesh"));
+	RightHandMesh->SetupAttachment(RightHand);
+	LeftHandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("LeftHandMesh"));
+	LeftHandMesh->SetupAttachment(LeftHand);
+
+
+
+
 }
 
 // Called when the game starts or when spawned
