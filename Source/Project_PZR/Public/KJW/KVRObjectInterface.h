@@ -64,5 +64,7 @@ public:
 	//VR버튼이 떼어졌을 때 호출
 	virtual void  OnButtonReleased(FHitResult& HitResult, EVRButton VRButton) {};
 
+	//Thumbstick 입력을 받아오는
+	virtual void OnThumbstickValue(class UMotionControllerComponent* MontionComp, bool IsRight, const FVector2D& Value) {};
 
 };

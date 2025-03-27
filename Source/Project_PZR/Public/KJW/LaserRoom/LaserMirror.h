@@ -36,7 +36,11 @@ public:
 	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
 	//손으로 오브젝트 잡기 종료
 	virtual void StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
-	
+	//버튼 반응
+	virtual void  OnButtonPressed(FHitResult& HitResult, EVRButton VRButton) override;
+	//썸스틱 입력
+	virtual void OnThumbstickValue(class UMotionControllerComponent* MontionComp, bool IsRight, const FVector2D& Value) override;
+
 public:
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* MirrorMeshComp;
@@ -90,4 +94,5 @@ public:
 	void MoveToHand();
 	void MoveToPlace();
 	void DrawTempMirror();
+	void TempMirrorRot(FRotator AddRot);
 };

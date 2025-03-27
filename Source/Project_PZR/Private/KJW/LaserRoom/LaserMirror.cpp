@@ -179,7 +179,10 @@ void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRigh
 	if (IsComplete)
 	{
 		IsComplete = false;
+		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		TempMirrorMeshComp->SetVisibility(false);
 		SetActorLocation(MovePos);
+		SetActorRotation(TempMirrorMeshComp->GetComponentRotation());
 	}
 
 	if (MoveToHandTimerHandle.IsValid())
@@ -195,6 +198,25 @@ void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRigh
 
 
 }
+
+void ALaserMirror::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)
+{
+	if (!IsComplete)return;
+
+	if (VRButton == EVRButton::Right_A_Button)
+	{
+		TempMirrorRot(FRotator());
+
+	}
+
+}
+
+void ALaserMirror::OnThumbstickValue(UMotionControllerComponent* MontionComp, bool IsRight, const FVector2D& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%f , %f"), Value.X, Value.Y);
+}
+
+
 
 void ALaserMirror::UpdateScale()
 {
@@ -292,6 +314,19 @@ void ALaserMirror::DrawTempMirror()
 
 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red);
 	
+
+}
+
+void ALaserMirror::TempMirrorRot(FRotator AddRot)
+{
+	//FRotator 회전
+	FRotator TempAddRot = FRotator(0, 10, 0);
+	TempMirrorMeshComp->AddRelativeRotation(TempAddRot);
+	
+	//FQuat 회전
+	//임시 회전 각도
+	//float AddAngle = 10.0f;
+
 
 }
 
