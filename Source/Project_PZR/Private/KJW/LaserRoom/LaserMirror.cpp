@@ -15,7 +15,7 @@
 ALaserMirror::ALaserMirror()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	MirrorMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MirrorMeshComp");
 	SetRootComponent(MirrorMeshComp);
@@ -48,6 +48,7 @@ void ALaserMirror::BeginPlay()
 
 	TempMirroBoxComp->SetRelativeLocation(MirroBoxComp->GetRelativeLocation());
 	TempMirroBoxComp->SetRelativeRotation(MirroBoxComp->GetRelativeRotation());
+	TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	TempMirroBoxComp->SetBoxExtent(MirroBoxComp->GetUnscaledBoxExtent());
 
 }
@@ -56,7 +57,7 @@ void ALaserMirror::BeginPlay()
 void ALaserMirror::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	DrawTempMirror();
 }
 
 
@@ -155,7 +156,9 @@ void ALaserMirror::StartGrab(UMotionControllerComponent* MontionComp, bool IsRig
 	//위치 손안으로
 	//SetActorLocation(MontionComp->GetComponentLocation());
 	IsGrabbing = true;
-	
+	IsComplete = false;
+	OrginPos = GetActorLocation();
+
 	//스케일 축소 시키기
 	if (!MoveToHandTimerHandle.IsValid())
 	{
@@ -173,7 +176,12 @@ void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRigh
 	MirrorMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	MirrorMeshComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	
-	
+	if (IsComplete)
+	{
+		IsComplete = false;
+		SetActorLocation(MovePos);
+	}
+
 	if (MoveToHandTimerHandle.IsValid())
 	{
 		GetWorldTimerManager().ClearTimer(MoveToHandTimerHandle);
@@ -209,11 +217,21 @@ void ALaserMirror::MoveToHand()
 	if (MoveToHandTimer > MoveToHandTime)
 	{
 		SetActorScale3D(FVector(MiniScale));
+		IsComplete = true;
 		GetWorldTimerManager().ClearTimer(MoveToHandTimerHandle);
 	}
 	else
 	{
 		UpdateScale();
+		//위치 이동
+		float percent = MoveToHandTimer / MoveToHandTime;
+	
+		FVector offset = FVector(0.0f, 0.0f, -7.0f);
+		FVector NewPos = FMath::Lerp(OrginPos, HandComp->GetComponentLocation(), percent);
+
+		NewPos += offset;
+
+		SetActorLocation(NewPos);
 	}
 
 }
@@ -230,6 +248,51 @@ void ALaserMirror::MoveToPlace()
 	{
 		UpdateScale();
 	}
+}
+
+void ALaserMirror::DrawTempMirror()
+{
+	if (!IsComplete) return;
+
+	// 카메라의 위치와 방향 가져오기
+	FVector StartLocation = HandComp->GetComponentLocation();
+	FVector EndLocation = StartLocation + HandComp->GetForwardVector() * 10000.0f;
+
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // 자기 자신 무시
+	QueryParams.AddIgnoredComponent(MirroBoxComp); // 콜리전 컴퍼넌트 무시
+	QueryParams.AddIgnoredComponent(MirrorMeshComp); // 콜리전 컴퍼넌트 무시
+	QueryParams.AddIgnoredComponent(TempMirrorMeshComp); // 콜리전 컴퍼넌트 무시
+	QueryParams.AddIgnoredComponent(MirroBoxComp); //콜리전 컴퍼넌트 무시
+	QueryParams.AddIgnoredComponent(TempMirroBoxComp); //콜리전 컴퍼넌트 무시
+
+	// 라인트레이스 실행
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, QueryParams);
+
+	if (bHit)
+	{
+		AActor* HitActor = HitResult.GetActor();
+		if (HitActor)
+		{
+			EndLocation = HitResult.Location;
+		
+			TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			TempMirrorMeshComp->SetVisibility(true);
+			TempMirrorMeshComp->SetWorldLocation(EndLocation);
+			MovePos = EndLocation;
+		}
+	}
+	else
+	{
+		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		TempMirrorMeshComp->SetVisibility(false);
+		MovePos = GetActorLocation(); 
+	}
+
+	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red);
+	
+
 }
 
 

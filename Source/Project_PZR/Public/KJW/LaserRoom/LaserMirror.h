@@ -65,6 +65,7 @@ public:
 	//거울을 집을때 기존 크기에서 0.1 사이즈 정도로 줄여지면서 손안으로 오겠끔
 
 	bool IsGrabbing = false;
+	bool IsComplete = false;
 	class UMotionControllerComponent* HandComp;
 	FTimerHandle MoveToHandTimerHandle;
 	FTimerHandle MoveToPlaceTimerHandle;
@@ -79,6 +80,8 @@ public:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
 	bool bEaseOutQuint = false;
 
+	FVector OrginPos;
+	FVector MovePos;
 	float MoveToHandDeltatime = 0.02f;
 	float MoveToHandTimer = 0.0f;
 
@@ -86,5 +89,5 @@ public:
 	void UpdateScale();
 	void MoveToHand();
 	void MoveToPlace();
-
+	void DrawTempMirror();
 };
