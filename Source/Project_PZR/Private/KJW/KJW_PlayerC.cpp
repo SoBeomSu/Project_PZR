@@ -19,7 +19,7 @@ AKJW_PlayerC::AKJW_PlayerC()
 	VRCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("VRCamera"));
 	VRCamera->SetupAttachment(GetRootComponent());
 
-	static ConstructorHelpers::FObjectFinder<UInputMappingContext> IMCObj(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/A_Project/KJW/IMC_VR_K.IMC_VR_K'"));
+	/*static ConstructorHelpers::FObjectFinder<UInputMappingContext> IMCObj(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/A_Project/KJW/IMC_VR_K.IMC_VR_K'"));
 	if (IMCObj.Succeeded())
 	{
 		IMC_VR = IMCObj.Object;
@@ -65,7 +65,7 @@ AKJW_PlayerC::AKJW_PlayerC()
 	if (InteractWidgetActionObj.Succeeded())
 	{
 		IA_InteractWidget = InteractWidgetActionObj.Object;
-	}
+	}*/
 
 
 	// 위젯 상호작용 컴포넌트 생성
