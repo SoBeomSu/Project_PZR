@@ -203,17 +203,15 @@ void ALaserMirror::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)
 {
 	if (!IsComplete)return;
 
-	if (VRButton == EVRButton::Right_A_Button)
-	{
-		TempMirrorRot(FRotator());
-
-	}
+	
 
 }
 
 void ALaserMirror::OnThumbstickValue(UMotionControllerComponent* MontionComp, bool IsRight, const FVector2D& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%f , %f"), Value.X, Value.Y);
+	float AddYaw = 100 * Value.Y * GetWorld()->DeltaTimeSeconds;
+	FRotator TempAddRot = FRotator(0, AddYaw, 0);
+	TempMirrorRot(TempAddRot);
 }
 
 
@@ -320,8 +318,8 @@ void ALaserMirror::DrawTempMirror()
 void ALaserMirror::TempMirrorRot(FRotator AddRot)
 {
 	//FRotator 회전
-	FRotator TempAddRot = FRotator(0, 10, 0);
-	TempMirrorMeshComp->AddRelativeRotation(TempAddRot);
+	
+	TempMirrorMeshComp->AddRelativeRotation(AddRot);
 	
 	//FQuat 회전
 	//임시 회전 각도
