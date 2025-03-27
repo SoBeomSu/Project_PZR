@@ -159,6 +159,8 @@ void ALaserMirror::StartGrab(UMotionControllerComponent* MontionComp, bool IsRig
 	IsComplete = false;
 	OrginPos = GetActorLocation();
 
+	SetActorRotation(FRotator());
+
 	//스케일 축소 시키기
 	if (!MoveToHandTimerHandle.IsValid())
 	{
@@ -301,6 +303,7 @@ void ALaserMirror::DrawTempMirror()
 			TempMirrorMeshComp->SetVisibility(true);
 			TempMirrorMeshComp->SetWorldLocation(EndLocation);
 			MovePos = EndLocation;
+			MovePos.Z = 10.0f;
 		}
 	}
 	else
@@ -308,6 +311,7 @@ void ALaserMirror::DrawTempMirror()
 		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TempMirrorMeshComp->SetVisibility(false);
 		MovePos = GetActorLocation(); 
+		MovePos.Z = 10.0f;
 	}
 
 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red);

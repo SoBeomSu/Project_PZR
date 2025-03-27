@@ -95,18 +95,19 @@ void ALaserRoomGameMode::SpawnStageActor()
 	for (auto& data : StageData->LaserRoomActorDatas)
 	{
 		if (!data.ActorClass) return;
+		FTransform SpawnTr;
+
+		SpawnTr.SetLocation(data.SpawnLocation);
+		SpawnTr.SetRotation(data.SpawnRotation.Quaternion());
+		SpawnTr.SetScale3D(data.SpawnScale);
 
 		AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(
 			data.ActorClass,
-			data.SpawnLocation,
-			data.SpawnRotation,
+			SpawnTr,
 			SpawnParams
 		);
 
-		if (SpawnedActor)
-		{
-			SpawnedActor->SetActorScale3D(data.SpawnScale);
-		}
+		
 
 		SpawnedActors.Add(SpawnedActor);
 	}

@@ -13,18 +13,12 @@ AEndLaserPoint::AEndLaserPoint()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	BoxComp = CreateDefaultSubobject<UBoxComponent>("BoxComp");
-	SetRootComponent(BoxComp);
-
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
-	MeshComp->SetupAttachment(RootComponent);
+	SetRootComponent(MeshComp);
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-	if (MeshObj.Succeeded()) MeshComp->SetStaticMesh(MeshObj.Object);
+	BoxComp = CreateDefaultSubobject<UBoxComponent>("BoxComp");
+	BoxComp->SetupAttachment(RootComponent);
 
-
-	BoxComp->SetBoxExtent(FVector(50.0f, 6.5f, 50.0f));
-	MeshComp->SetRelativeScale3D(FVector(1.0f, 0.1f, 1.0f));
 
 	//UI Component
 	TextWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("TextWidget"));
@@ -63,7 +57,12 @@ void AEndLaserPoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	SetGoalMt(DeltaTime);
+	//SetGoalMt(DeltaTime);
+}
+
+void AEndLaserPoint::OnButtonReleased(FHitResult& HitResult, EVRButton VRButton)
+{
+
 }
 
 void AEndLaserPoint::AddMirrorPoint(AStartLaserPoint* StartLaserPoint)
@@ -114,10 +113,10 @@ void AEndLaserPoint::SetGoalMt(const float& DeltaTime)
 	MeshComp->SetScalarParameterValueOnMaterials(TEXT("EmissiveScale"), EmissiveScale);
 	MeshComp->SetColorParameterValueOnMaterials(TEXT("Color"), InColor);
 
-	if(LaserGamemode && CurNeedTime >= NeedTime)
-	{
-		LaserGamemode->ChangeLaserGameState(EKGameState::CLEAR);
-	}
+	//if(LaserGamemode && CurNeedTime >= NeedTime)
+	//{
+	//	LaserGamemode->ChangeLaserGameState(EKGameState::CLEAR);
+	//}
 }
 
 
@@ -125,7 +124,16 @@ void AEndLaserPoint::SetGoalText()
 {
 	if (!Textboard) return;
 	int32 num = GoalCount - StartLasers.Num();
-	Textboard->SetTextBlock((FText::AsNumber(num)));
+	if (num == 0)
+	{
+		Textboard->SetTextBlock(FText::FromString("Complete"));
+	}
+	else
+	{
+		Textboard->SetTextBlock(FText::FromString("Ready"));
+	}
+	
+	//Textboard->SetTextBlock((FText::AsNumber(num)));
 	
 }
 
