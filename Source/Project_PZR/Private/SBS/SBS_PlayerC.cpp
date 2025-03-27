@@ -64,8 +64,9 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	auto InputSystem = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (InputSystem)
 	{
-		InputSystem->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Move);
+		//InputSystem->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Move);
 		InputSystem->BindAction(IA_Thumb_L, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Move);
+		InputSystem->BindAction(IA_Thumb_R, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Thumb_RInput);
 
 		InputSystem->BindAction(IA_Turn, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Turn);
 		
@@ -193,9 +194,20 @@ void ASBS_PlayerC::ButtonReleased()
 
 void ASBS_PlayerC::Move(const struct FInputActionValue& Value)
 {
+
 	FVector2d Scale = Value.Get<FVector2d>();
+	UE_LOG(LogTemp, Warning, TEXT("%f , %f"), Scale.X, Scale.Y);
 	FVector Direction = VRCamera->GetForwardVector() * Scale.X + VRCamera->GetRightVector() * Scale.Y;
 	AddMovementInput(Direction, MoveSpeedVal); // 이렇게 한번에 해주는게 좋다.
+}
+
+void ASBS_PlayerC::Thumb_RInput(const FInputActionValue& Value)
+{
+	FVector2d Scale = Value.Get<FVector2d>();
+	if (GrabObj)
+	{
+		GrabObj->OnThumbstickValue(RightHand, true, Scale);
+	}
 }
 
 void ASBS_PlayerC::Turn(const struct FInputActionValue& Value)

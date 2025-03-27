@@ -88,6 +88,7 @@ public:
 	void ButtonReleased();
 
 	void Move(const struct FInputActionValue& Value);
+	void Thumb_RInput(const struct FInputActionValue& Value);
 	void Turn(const struct FInputActionValue& Value);
 
 	FHitResult CameraLineTraceHitResult();
