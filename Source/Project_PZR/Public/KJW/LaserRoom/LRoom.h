@@ -41,6 +41,9 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	UChildActorComponent* B_Door;
 
+	UPROPERTY(VisibleAnywhere)
+	UChildActorComponent* RoomBase;
+
 	TArray<class ALDoor*> Doors;
 
 	class ALaserRoomGameMode* LRGM;

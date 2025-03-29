@@ -40,6 +40,18 @@ public:
 		return ReflectionVector;
 	}
 
+	template <typename T>
+	T Lerp(const T& A, const T& B, float Alpha)
+	{
+	
+		//기본 Lerp 공식 ]
+		//Lerp = A + (B - A ) * Alpha
+
+		//Easing 함수를 추가 하여 다양한 Easing 효과 추가
+
+
+	}
+	
 
 };
 

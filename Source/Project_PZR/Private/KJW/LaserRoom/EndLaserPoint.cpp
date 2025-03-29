@@ -60,9 +60,9 @@ void AEndLaserPoint::Tick(float DeltaTime)
 	//SetGoalMt(DeltaTime);
 }
 
-void AEndLaserPoint::OnButtonReleased(FHitResult& HitResult, EVRButton VRButton)
+void AEndLaserPoint::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)
 {
-	if (VRButton == EVRButton::Right_A_Button)
+	if (VRButton == EVRButton::Left_X_Button)
 	{
 		LaserGamemode->OpenDoor();
 	}

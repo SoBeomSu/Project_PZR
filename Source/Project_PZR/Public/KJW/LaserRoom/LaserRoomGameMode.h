@@ -74,7 +74,6 @@ private:
 
 private:
 	class ALRStatgeDisplay* Display;
-
 	class ALRoom* CurentRoom;
-
+	int32 OpenDoorIndex = 0;
 };

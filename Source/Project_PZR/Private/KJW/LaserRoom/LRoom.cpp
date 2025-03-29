@@ -25,6 +25,8 @@ ALRoom::ALRoom()
 	B_Door = CreateDefaultSubobject<UChildActorComponent>(TEXT("B_Door"));
 	B_Door->SetupAttachment(GetRootComponent());
 
+	RoomBase = CreateDefaultSubobject<UChildActorComponent>(TEXT("RoomBase"));
+	RoomBase->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
@@ -58,6 +60,10 @@ void ALRoom::OpenDoor(int32 Index)
 
 	Doors[Index]->SetDoor(true);
 
+	if (NextRoom)
+	{
+
+	}
 	
 }
 

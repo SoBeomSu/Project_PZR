@@ -70,11 +70,12 @@ void ALaserRoomGameMode::BeginPlay()
 	}
 	
 
-	GetWorld()->GetTimerManager().SetTimer(LaserGameStateTimerHandle,
-		FTimerDelegate::CreateLambda([this]()
-			{
-				ChangeLaserGameState(EKGameState::START);
-			}), 2.0f, false);
+	ChangeLaserGameState(EKGameState::START);
+	//GetWorld()->GetTimerManager().SetTimer(LaserGameStateTimerHandle,
+	//	FTimerDelegate::CreateLambda([this]()
+	//		{
+	//			ChangeLaserGameState(EKGameState::START);
+	//		}), 2.0f, false);
 	
 }
 
@@ -92,7 +93,7 @@ void ALaserRoomGameMode::SpawnStageActor()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	NeedLaser = StageData->NeedLaser;
-
+	OpenDoorIndex = StageData->OpenDoorIndex;
 	SpawnedActors.Empty();
 	for (auto& data : StageData->LaserRoomActorDatas)
 	{
@@ -178,6 +179,6 @@ void ALaserRoomGameMode::OpenDoor()
 {
 	if (CurentRoom)
 	{
-		CurentRoom->OpenDoor(0);
+		CurentRoom->OpenDoor(OpenDoorIndex);
 	}
 }

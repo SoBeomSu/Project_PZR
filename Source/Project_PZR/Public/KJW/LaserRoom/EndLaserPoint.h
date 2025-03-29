@@ -26,7 +26,7 @@ public:
 
 public:
 	//VR버튼이 떼어졌을 때 호출
-	virtual void  OnButtonReleased(FHitResult& HitResult, EVRButton VRButton) override;
+	virtual void  OnButtonPressed(FHitResult& HitResult, EVRButton VRButton) override;
 
 public:
 	void AddMirrorPoint(class AStartLaserPoint* StartLaserPoint);
