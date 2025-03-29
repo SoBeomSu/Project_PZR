@@ -47,7 +47,7 @@ void ALDoor::DoorTick(float DeltaTime)
 {
 	if (DoorTime <= 0) return;
 		
-
+	
 	if (bOpen)
 		DoorTimer += DeltaTime;
 	else

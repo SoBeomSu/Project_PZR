@@ -28,6 +28,9 @@ public:
 
 	ALRoom* NextRoom;
 	ALRoom* PreRoom;
+	TArray<AActor*> RoomObject;
+public:
+
 private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	USceneComponent* RoomSceneComp;

@@ -38,7 +38,8 @@ private:
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
 	bool bOpen = false;
-	float DoorTime = 0.2f;
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	float DoorTime = 0.5f;
 
 	float DoorTimer = 0.0f;
 	

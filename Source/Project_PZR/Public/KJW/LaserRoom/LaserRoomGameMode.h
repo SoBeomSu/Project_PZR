@@ -54,16 +54,22 @@ public:
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas")
 	int32 NeedLaser = 1;
 private:
+	//방 사용 전체
+	UPROPERTY(EditAnywhere, Category = "LaserStageDatas", meta = (AllowPrivateAccess = true))
+	TSubclassOf<class ALRoom> LaserRoomClass;
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas" , meta = (AllowPrivateAccess = true))
 	TArray<class ULaserStageData*> StageDatas;
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas", meta = (AllowPrivateAccess = true))
-	int32 Stage = 1;
+	int32 CurStage = 1;
+	
+
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas", meta = (AllowPrivateAccess = true))
 	int32 MaxStage = 1;
 	FTimerHandle LaserGameStateTimerHandle;
 public:
 	FUpdateDelegate UpdateStageDelegate;
 private:
+	int32 Stage = 1;
 	UPROPERTY()
 	TArray<AActor*> SpawnedActors;
 
@@ -74,6 +80,9 @@ private:
 
 private:
 	class ALRStatgeDisplay* Display;
-	class ALRoom* CurentRoom;
+	
+	TArray<class ALRoom*> RoomList;
+
 	int32 OpenDoorIndex = 0;
+	FVector RoomSpawnPos = FVector::ZeroVector;
 };

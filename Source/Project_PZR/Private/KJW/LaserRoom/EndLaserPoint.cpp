@@ -64,7 +64,9 @@ void AEndLaserPoint::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)
 {
 	if (VRButton == EVRButton::Left_X_Button)
 	{
-		LaserGamemode->OpenDoor();
+		int32 num = GoalCount - StartLasers.Num();
+		if (num == 0)
+			LaserGamemode->OpenDoor();
 	}
 }
 
