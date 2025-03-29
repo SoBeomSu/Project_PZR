@@ -62,7 +62,10 @@ void AEndLaserPoint::Tick(float DeltaTime)
 
 void AEndLaserPoint::OnButtonReleased(FHitResult& HitResult, EVRButton VRButton)
 {
-
+	if (VRButton == EVRButton::Right_A_Button)
+	{
+		LaserGamemode->OpenDoor();
+	}
 }
 
 void AEndLaserPoint::AddMirrorPoint(AStartLaserPoint* StartLaserPoint)

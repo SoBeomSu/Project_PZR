@@ -5,6 +5,8 @@
 #include "KJW/LaserRoom/LaserStageData.h"
 #include "KJW/LaserRoom/Laser.h"
 #include "KJW/LaserRoom/LRStatgeDisplay.h"
+#include "KJW/LaserRoom/LRoom.h"
+
 
 
 ALaserRoomGameMode::ALaserRoomGameMode()
@@ -38,10 +40,10 @@ void ALaserRoomGameMode::ChangeLaserGameState(EKGameState NewLaserGameState)
 		}
 		else
 		{
-			ResetStageActor();
-			Stage++;
-			SetDisplay();
-			SpawnStageActor();
+			//ResetStageActor();
+			//Stage++;
+			//SetDisplay();
+			//SpawnStageActor();
 			LaserGameState = EKGameState::INGAME;
 		}
 		break;
@@ -107,6 +109,10 @@ void ALaserRoomGameMode::SpawnStageActor()
 			SpawnParams
 		);
 
+		if (SpawnedActor->IsA<ALRoom>())
+		{
+			CurentRoom = Cast<ALRoom>(SpawnedActor);
+		}
 		
 
 		SpawnedActors.Add(SpawnedActor);
@@ -166,4 +172,12 @@ void ALaserRoomGameMode::SetDisplay()
 	if (!Display) return;
 
 	Display->SetStageInfo();
+}
+
+void ALaserRoomGameMode::OpenDoor()
+{
+	if (CurentRoom)
+	{
+		CurentRoom->OpenDoor(0);
+	}
 }

@@ -46,6 +46,9 @@ public:
 private:
 	void SetDisplay();
 public:
+	void OpenDoor();
+
+public:
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas")
 	EKGameState LaserGameState = EKGameState::NONE;
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas")
@@ -71,5 +74,7 @@ private:
 
 private:
 	class ALRStatgeDisplay* Display;
+
+	class ALRoom* CurentRoom;
 
 };
