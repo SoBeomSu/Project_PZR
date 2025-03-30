@@ -44,8 +44,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LaserRoom")
     int32 NeedLaser = 1;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LaserRoom")
-    int32 OpenDoorIndex = 0; //0 L , 1 R , 2 F , 3 B
+    //
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LaserRoom" 
+    , Meta = (ToolTip = "0 : L , 1 : R , 2 : F , 3 : B"))
+    int32 OpenDoorIndex = 0; 
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LaserRoom")
     TArray<FLaserRoomActorData> LaserRoomActorDatas;

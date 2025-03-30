@@ -24,13 +24,22 @@ public:
 	virtual void Tick(float DeltaTime) override;
 public:
 	void OpenDoor(int32 Index);
+	void OpenDoor();
 	void CloseDoor(int32 Index);
+	void CloseAllDoor();
+private :
+	UFUNCTION()
+	void OverLapDoorBoxComp ( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OverLapMainBoxComp(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+public:
 	ALRoom* NextRoom;
-	ALRoom* PreRoom;
+	ALRoom* PrevRoom;
 	TArray<AActor*> RoomObject;
 public:
-
+	bool IsRoomClear = false;
+	int32 OpenDoorIndex = 0;
 private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	USceneComponent* RoomSceneComp;
@@ -44,11 +53,25 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	UChildActorComponent* B_Door;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	class UBoxComponent* Main_BoxComp;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	class UBoxComponent* L_BoxComp;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	class UBoxComponent* R_BoxComp;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	class UBoxComponent* F_BoxComp;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	class UBoxComponent* B_BoxComp;
+
 	UPROPERTY(VisibleAnywhere)
 	UChildActorComponent* RoomBase;
 
 	TArray<class ALDoor*> Doors;
 
 	class ALaserRoomGameMode* LRGM;
+
+
 
 };

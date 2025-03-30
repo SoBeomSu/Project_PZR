@@ -65,7 +65,7 @@ public:
 private:
 
 	class ALaserRoomGameMode* LaserGamemode;
-
+	bool IsOpen = false;
 public:
 	//UI
 	UPROPERTY(EditAnywhere, Category = "UI")
