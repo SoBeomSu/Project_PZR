@@ -6,7 +6,7 @@
 #include "KJW/LaserRoom/Laser.h"
 #include "KJW/LaserRoom/LRStatgeDisplay.h"
 #include "KJW/LaserRoom/LRoom.h"
-
+#include "KJW/StageObject.h"
 
 
 ALaserRoomGameMode::ALaserRoomGameMode()
@@ -30,7 +30,7 @@ void ALaserRoomGameMode::ChangeLaserGameState(EKGameState NewLaserGameState)
 		//Stage++;
 		//SpawnStageActor();
 		SpanwStage();
-
+		RoomList[CurStage]->StartRoom();
 		break;
 	}
 	case EKGameState::INGAME:
@@ -117,9 +117,10 @@ void ALaserRoomGameMode::SpanwStage()
 		if(!LRoom) return;
 		if (PrevRoom)
 		{
+			LRoom->PrevRoom = PrevRoom;
 			PrevRoom->NextRoom = LRoom;
-			PrevRoom = LRoom;
 		}
+		PrevRoom = LRoom;
 		
 		//스테이지 오브젝트 스폰하기
 		NeedLaser = StageData->NeedLaser;
@@ -143,13 +144,18 @@ void ALaserRoomGameMode::SpanwStage()
 				SpawnParams
 			);
 
+			if (IStageObject* stageObj = Cast<IStageObject>(SpawnedActor))
+			{
+				LRoom->StageObject.Add(stageObj);
+			}
+			
 			LRoom->RoomObject.Add(SpawnedActor);
 		}
 
 		//다음 스테이지 스폰위치
 		//2935.0
 		int x[4] = { 0,0,1,-1 };
-		int y[4] = { 1,-1,0,0 };
+		int y[4] = { -1,1,0,0 };
 		RoomSpawnPos += FVector(x[LRoom->OpenDoorIndex] * 2935.0f, y[LRoom->OpenDoorIndex] * 2935.0f, 0.0f);
 		RoomList.Add(LRoom);
 	}

@@ -86,6 +86,18 @@ void ALRoom::Tick(float DeltaTime)
 
 }
 
+void ALRoom::StartRoom()
+{
+	if (!IsStart)
+	{
+		for (IStageObject* interface : StageObject)
+		{
+			interface->Start();
+		}
+		IsStart = true;
+	}
+}
+
 void ALRoom::OpenDoor(int32 Index)
 {
 	Doors[Index]->SetDoor(true);
@@ -100,8 +112,9 @@ void ALRoom::OpenDoor()
 
 	if (NextRoom && IsRoomClear)
 	{
-		int32 nextDoor[4] = { 1 , 0,3,2 };
+		int32 nextDoor[4] = {1,0,3,2 };
 		NextRoom->OpenDoor(nextDoor[OpenDoorIndex]);
+
 	}
 }
 
@@ -120,15 +133,32 @@ void ALRoom::CloseAllDoor()
 	}
 }
 
+void ALRoom::DestroyObjecet()
+{
+	for (AActor* obj : RoomObject)
+	{
+		obj->Destroy();
+	}
+}
+
 void ALRoom::OverLapDoorBoxComp(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (IsRoomClear)
 		CloseAllDoor();
+	
 }
 
 void ALRoom::OverLapMainBoxComp(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!IsRoomClear)
 		CloseAllDoor();
+	if (PrevRoom)
+	{
+		PrevRoom->DestroyObjecet();
+		PrevRoom = nullptr;
+	}
+	
+	StartRoom();
+
 }
 

@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "KJW/StageObject.h"
 #include "LRoom.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API ALRoom : public AActor
+class PROJECT_PZR_API ALRoom : public AActor 
 {
 	GENERATED_BODY()
 	
@@ -23,10 +24,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 public:
+	void StartRoom();
 	void OpenDoor(int32 Index);
 	void OpenDoor();
 	void CloseDoor(int32 Index);
 	void CloseAllDoor();
+	void DestroyObjecet();
 private :
 	UFUNCTION()
 	void OverLapDoorBoxComp ( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -37,6 +40,7 @@ public:
 	ALRoom* NextRoom;
 	ALRoom* PrevRoom;
 	TArray<AActor*> RoomObject;
+	TArray<IStageObject*> StageObject;
 public:
 	bool IsRoomClear = false;
 	int32 OpenDoorIndex = 0;
@@ -72,6 +76,7 @@ private:
 
 	class ALaserRoomGameMode* LRGM;
 
+	bool IsStart = false;
 
 
 };

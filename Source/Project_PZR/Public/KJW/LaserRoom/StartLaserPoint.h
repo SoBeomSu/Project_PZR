@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "KJW/StageObject.h"
 #include "StartLaserPoint.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API AStartLaserPoint : public AActor
+class PROJECT_PZR_API AStartLaserPoint : public AActor , public IStageObject
 {
 	GENERATED_BODY()
 	
@@ -22,8 +23,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+public:
 
-
+	
 private:
 	void StartSetLaser();
 	void DrawLaser();
