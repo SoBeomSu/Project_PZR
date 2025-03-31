@@ -56,8 +56,10 @@ void ALDoor::DoorTick(float DeltaTime)
 	DoorTimer =	FMath::Clamp(DoorTimer, 0.0f, DoorTime);
 	float percent = DoorTimer / DoorTime;
 
-	FVector LDoorPos =  FMath::Lerp(LDoor_ClosePos, LDoor_OpenPos, percent);
-	FVector RDoorPos =  FMath::Lerp(RDoor_ClosePos, RDoor_OpenPos, percent);
+	//FVector LDoorPos =  FMath::Lerp(LDoor_ClosePos, LDoor_OpenPos, percent);
+	FVector LDoorPos = KHelper::Lerp(LDoor_ClosePos, LDoor_OpenPos, percent, Easing);
+	//FVector RDoorPos =  FMath::Lerp(RDoor_ClosePos, RDoor_OpenPos, percent);
+	FVector RDoorPos = KHelper::Lerp(RDoor_ClosePos, RDoor_OpenPos, percent, Easing);
 	
 	L_DoorComp->SetRelativeLocation(LDoorPos);
 	R_DoorComp->SetRelativeLocation(RDoorPos);

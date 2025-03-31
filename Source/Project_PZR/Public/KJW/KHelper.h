@@ -16,6 +16,16 @@ enum class EKGameState : uint8
 	FINISH UMETA(DisplayName = "Finish"),
 };
 
+UENUM(BlueprintType)
+enum class EEasing : uint8
+{
+	Linear ,
+	EaseOutQuint, //느리게 시작 → 점점 가속
+	EaseInQuint, //빠르게 시작 → 점점 감속
+	
+};
+
+
  class PROJECT_PZR_API KHelper
 {
 public:
@@ -41,15 +51,35 @@ public:
 	}
 
 	template <typename T>
-	T Lerp(const T& A, const T& B, float Alpha)
+	static T Lerp(const T& A, const T& B, float Alpha , EEasing Easing = EEasing::Linear)
 	{
 	
-		//기본 Lerp 공식 ]
+		//기본 Lerp 공식 
+		// linear 
 		//Lerp = A + (B - A ) * Alpha
-
-		//Easing 함수를 추가 하여 다양한 Easing 효과 추가
-
-
+		
+		float x = Alpha;
+		switch (Easing)
+		{
+		case EEasing::Linear: 
+		{	
+			break;
+		}
+		case EEasing::EaseOutQuint://느리게 시작 → 점점 가속
+		{
+			x = 1 - FMath::Pow(1 - x, 5);
+			break;
+		}
+		case EEasing::EaseInQuint://빠르게 시작 → 점점 감속
+		{
+			x =  x * x * x * x * x;
+			break;
+		}
+		default:
+			break;
+		}
+		
+		return A + (B - A) * x;
 	}
 	
 

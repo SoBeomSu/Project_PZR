@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "KJW/LaserRoom/LaserMirror.h"
-#include "KJW/KHelper.h"
+
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
 #include "MotionControllerComponent.h"
@@ -249,7 +249,9 @@ void ALaserMirror::MoveToHand()
 		float percent = MoveToHandTimer / MoveToHandTime;
 	
 		FVector offset = FVector(0.0f, 0.0f, -7.0f);
-		FVector NewPos = FMath::Lerp(OrginPos, HandComp->GetComponentLocation(), percent);
+
+		//FVector NewPos = FMath::Lerp(OrginPos, HandComp->GetComponentLocation(), percent);
+		FVector NewPos = KHelper::Lerp(OrginPos, HandComp->GetComponentLocation(), percent, Easing);
 
 		NewPos += offset;
 

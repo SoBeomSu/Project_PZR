@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "KJW/KVRObjectInterface.h"
+#include "KJW/KHelper.h"
 #include "LaserMirror.generated.h"
 
 UCLASS()
@@ -53,6 +54,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* TempMirroBoxComp;
+
+	UPROPERTY(EditAnywhere)
+	EEasing Easing;
 
 public:
 	UPROPERTY(EditAnywhere, Category = "MirrorLaser")

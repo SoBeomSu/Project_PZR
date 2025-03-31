@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "KJW/KHelper.h"
 #include "LDoor.generated.h"
 
 UCLASS()
@@ -27,6 +28,9 @@ public:
 private:
 	void DoorTick(float DeltaTime);
 
+public:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	EEasing Easing;
 private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	USceneComponent* DoorSceneComp;
