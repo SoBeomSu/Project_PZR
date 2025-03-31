@@ -84,7 +84,7 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		InputSystem->BindAction(IA_Thumb_L, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Move);
 		InputSystem->BindAction(IA_Thumb_R, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Thumb_RInput);
 
-		InputSystem->BindAction(IA_Turn, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Turn);
+		//InputSystem->BindAction(IA_Turn, ETriggerEvent::Triggered, this, &ASBS_PlayerC::Turn);
 		
 		InputSystem->BindAction(IA_R_Grip_Click, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_R); // 마우스 우클릭 + 오른쪽 트리거
 		InputSystem->BindAction(IA_R_Grip_Click, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_R);
@@ -108,8 +108,8 @@ void ASBS_PlayerC::GrabStart_R()
 	if (GrabObj) return;
 
 	// 카메라의 위치와 방향 가져오기
-	FVector StartLocation = VRCamera->GetComponentLocation();
-	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
+	FVector StartLocation = RightHand->GetComponentLocation();
+	FVector EndLocation = StartLocation + RightHand->GetForwardVector() * 100.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
@@ -147,46 +147,46 @@ void ASBS_PlayerC::GrabEnd_R()
 
 void ASBS_PlayerC::GrabStart_L()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("click success"));
-	//if (!VRCamera) return;
-	////이미 잡은 물체가 있다면
-	//if (GrabObj) return;
-	//
-	//// 카메라의 위치와 방향 가져오기
-	//FVector StartLocation = VRCamera->GetComponentLocation();
-	//FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
-	//
-	//FHitResult HitResult;
-	//FCollisionQueryParams QueryParams;
-	//QueryParams.AddIgnoredActor(this); // 자기 자신 무시
-	//bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
-	//
-	//if (bHit)
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Trae Hit"));
-	//
-	//	AActor* HitActor = HitResult.GetActor();
-	//	if (HitActor)
-	//	{
-	//		// IKVRObjectInterface를 가진 오브젝트와 상호작용 시작
-	//		IKVRObjectInterface* GrabbableObject = Cast<IKVRObjectInterface>(HitActor);
-	//		if (GrabbableObject && GrabbableObject->IsGrab())
-	//		{
-	//			// 그랩 로직 (이 인터페이스를 통해 실제 그랩 기능 호출)
-	//			GrabbableObject->StartGrab(LeftHand, false);
-	//			LGrabObj = GrabbableObject;
-	//			UE_LOG(LogTemp, Warning, TEXT("grab sucess"));
-	//		}
-	//	}
-	//}
+	UE_LOG(LogTemp, Warning, TEXT("click success"));
+	if (!VRCamera) return;
+	//이미 잡은 물체가 있다면
+	if (GrabObj) return;
+
+	// 카메라의 위치와 방향 가져오기
+	FVector StartLocation = LeftHand->GetComponentLocation();
+	FVector EndLocation = StartLocation + LeftHand->GetForwardVector() * 100.0f;
+
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // 자기 자신 무시
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
+
+	if (bHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Trae Hit"));
+
+		AActor* HitActor = HitResult.GetActor();
+		if (HitActor)
+		{
+			// IKVRObjectInterface를 가진 오브젝트와 상호작용 시작
+			IKVRObjectInterface* GrabbableObject = Cast<IKVRObjectInterface>(HitActor);
+			if (GrabbableObject && GrabbableObject->IsGrab())
+			{
+				// 그랩 로직 (이 인터페이스를 통해 실제 그랩 기능 호출)
+				GrabbableObject->StartGrab(LeftHand, false);
+				LGrabObj = GrabbableObject;
+				UE_LOG(LogTemp, Warning, TEXT("grab sucess"));
+			}
+		}
+	}
 }
 
 void ASBS_PlayerC::GrabEnd_L()
 {
-	//if (!GrabObj) return;
-	//
-	//LGrabObj->StopGrab(LeftHand, true);
-	//LGrabObj = nullptr;
+	if (!GrabObj) return;
+
+	LGrabObj->StopGrab(LeftHand, true);
+	LGrabObj = nullptr;
 }
 
 void ASBS_PlayerC::ButtonPressed_A()
@@ -205,8 +205,21 @@ void ASBS_PlayerC::ButtonPressed(EVRButton VRButton)
 	if (!VRCamera) return;
 
 	// 카메라의 위치와 방향 가져오기
-	FVector StartLocation = VRCamera->GetComponentLocation();
-	FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
+	FVector StartLocation;
+	FVector Direction;
+	if (VRButton == EVRButton::Left_X_Button || VRButton == EVRButton::Left_Y_Button)
+	{
+		StartLocation = LeftHand->GetComponentLocation();
+		Direction = LeftHand->GetForwardVector();
+	}
+	if (VRButton == EVRButton::Right_A_Button || VRButton == EVRButton::Right_B_Button)
+	{
+		StartLocation = RightHand->GetComponentLocation();
+		Direction = RightHand->GetForwardVector();
+	}
+	//FVector StartLocation = VRCamera->GetComponentLocation();
+
+	FVector EndLocation = StartLocation + Direction * 200.0f;
 
 	FHitResult HitResult;
 	if(GrabObj) GrabObj->OnButtonPressed(HitResult, VRButton);

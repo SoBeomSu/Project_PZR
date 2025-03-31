@@ -64,7 +64,7 @@ void ASBS_Bomb::BeginPlay()
 		{
 			AttachToActor(RandomAnimal, FAttachmentTransformRules::KeepWorldTransform);
 
-			FVector Offset = RandomAnimal->GetActorForwardVector()* -20 + FVector(0,0,50);
+			FVector Offset = RandomAnimal->GetActorForwardVector()* -50 + FVector(0,0,50);
 			SetActorLocation(RandomAnimal->GetActorLocation() + Offset);
 		}
 	}
