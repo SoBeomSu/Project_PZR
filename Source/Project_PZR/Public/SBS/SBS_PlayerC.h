@@ -90,6 +90,7 @@ public:
 	void GrabEnd_L();
 	void ButtonPressed_A();
 	void ButtonPressed_X();
+	void Grabbing();
 
 	void ButtonPressed(EVRButton VRButton);
 	void ButtonReleased();

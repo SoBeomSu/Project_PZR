@@ -34,8 +34,15 @@ void ASBS_GameStartButton::ButtonPressed()
 	{
 		GameMode01->StartGame();
 	}
-
-	GetWorld()->GetTimerManager().SetTimer(TimeHandler, this, &ASBS_GameStartButton::GoDown, 0.02, true);
+	currenttime = 0;
+	if (currenttime > DelayTime)
+	{
+		GetWorld()->GetTimerManager().SetTimer(TimeHandler, this, &ASBS_GameStartButton::GoDown, 0.02, true);
+	}
+	else
+	{
+			currenttime += GetWorld()->GetDeltaSeconds();
+	}
 }
 
 void ASBS_GameStartButton::GoDown()

@@ -81,7 +81,7 @@ void USBS_AnimalFSM::Stay(float Deltatime)
 
 void USBS_AnimalFSM::IdleState()
 {
-	//Animal->BoxComp->UPrimitiveComponent::SetSimulatePhysics(true);
+	Animal->BoxComp->SetSimulatePhysics(true);
 	Animal->SkeletalMesh->SetVisibility(true);
 	CurrentTime += GetWorld()->DeltaTimeSeconds;
 	if (CurrentTime >= StayTime)
@@ -125,10 +125,14 @@ void USBS_AnimalFSM::MoveState()
 
 		bool bMoved = Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir*AnimalSpeed*GetWorld()->GetDeltaSeconds(), true, &Hitresult);
 
-		if (!bMoved&& Hitresult.bBlockingHit)
+		if (!bMoved && Hitresult.bBlockingHit && !(Hitresult.GetActor()->GetName().Contains(TEXT("Floor"))))
 		{
+
+			UE_LOG(LogTemp, Log, TEXT("HitActor: %s"), *Hitresult.GetActor()->GetName());
+
 			ChangeDir();
 			Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir * AnimalSpeed * GetWorld()->GetDeltaSeconds(), true, &Hitresult);
+
 		}
 
 		Animal->SetActorRotation(FRotator(0, AnimalDir.Rotation().Yaw, 0));

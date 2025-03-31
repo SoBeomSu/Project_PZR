@@ -99,12 +99,25 @@ void ASBS_Animal::StartGrab(class UMotionControllerComponent* MontionComp, bool 
 void ASBS_Animal::StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
 {
 	BoxComp->SetSimulatePhysics(true);
+	BoxComp->AddImpulse(ThrowPower*ThrowDirection, NAME_None, true);
 	AnimalFSM->SetState(ESBS_AnimalState::Idle);
 	this->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	UE_LOG(LogTemp, Warning, TEXT("Animal Release"));
+	//UE_LOG(LogTemp, Warning, TEXT("Animal Release"));
 }
 
 void ASBS_Animal::Grabbing(class UMotionControllerComponent* MontionComp, bool IsRight)
 {
+	ThrowDirection = MontionComp->GetComponentLocation() - PrePos;
 
+	//회전변화량 구하기
+	//공식
+	//anlge1 = Q1, angle2 = Q2
+	//angle1 + angle2 = Q1 + Q2
+	//~angel2 = Q2.inverse()
+	//angle2 - anlge1 = angle2+ (-angle1) = Q2 * Q1.inverse()
+
+	DeltaRotation = MontionComp->GetComponentQuat() * PreRot.Inverse();
+
+	PrePos = MontionComp->GetComponentLocation();
+	PreRot = MontionComp->GetComponentQuat();
 }

@@ -39,7 +39,7 @@ public:
 	ASBS_GameMode* GameMode01;
 	ASBS_LightSwitch* Lightswitch;
 	FTimerHandle TimeHandler;
-
+	float currenttime;
 	float DelayTime;
 	bool bworked = false;
 	virtual bool  IsGrab() override { return true; };
