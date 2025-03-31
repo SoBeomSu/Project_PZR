@@ -34,9 +34,11 @@ public:
 	class UStaticMeshComponent* Button;
 
 	void ButtonPressed();
+	void GoDown();
 
 	ASBS_GameMode* GameMode01;
 	ASBS_LightSwitch* Lightswitch;
+	FTimerHandle TimeHandler;
 
 	float DelayTime;
 	bool bworked = false;

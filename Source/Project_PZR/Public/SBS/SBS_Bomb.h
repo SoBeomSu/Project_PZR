@@ -29,8 +29,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
     class USceneComponent* Root;
 
-    UPROPERTY(VisibleAnywhere, Category = "Components")
-    TArray<UBoxComponent*> NumberCollisions; // 1~9 콜리전
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBoxComponent* Boxcollision;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Components")
+    TArray<UBoxComponent*> NumberCollisions; // 0~9 콜리전
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	class UBoxComponent* EnterKey;
@@ -54,14 +57,28 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Answer = "3958";
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* OneGreen;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* TwoGreen;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* ThreeGreen;
+
 	class ASBS_GameMode* GameMode;
 	FString WritePassword(int Numbers);
+
+	class ASBS_Animal* Animal;
 
 	void SetupKeypad();	
 	void PressEnter();
 	void PressDelete();
 
 	void UpdateWidgetText();
+	void UpdateBombMaterial(int CorrectCount);
 
 	virtual void  OnButtonPressed(FHitResult& HitResult, EVRButton VRButton) override;
+	virtual bool IsGrab() override { return true; };
+	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
+	//손으로 오브젝트 잡기 종료
+	virtual void StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
 };

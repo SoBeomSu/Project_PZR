@@ -6,6 +6,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "MotionControllerComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "SBS/SBS_GameMode.h"
 
 // Sets default values
 ASBS_Animal::ASBS_Animal()
@@ -30,7 +32,13 @@ ASBS_Animal::ASBS_Animal()
 void ASBS_Animal::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	TArray<AActor*> SafeZones;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("SafeZone"), SafeZones);
+	if (SafeZones.Num() > 0)
+	{
+		SafeZones[0]->OnActorBeginOverlap.AddDynamic(this, &ASBS_Animal::OnSafeZoneOverlap);
+		SafeZones[0]->OnActorEndOverlap.AddDynamic(this, &ASBS_Animal::OnSafeZoneEndOverlap);
+	}
 }
 
 // Called every frame
@@ -46,6 +54,32 @@ void ASBS_Animal::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+
+void ASBS_Animal::OnSafeZoneOverlap(AActor* OVerlappedActor, AActor* OtherActor)
+{
+	if (OtherActor == this)
+	{
+		bInSafeZone = true;
+		ASBS_GameMode* GM = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
+		if (GM)
+		{
+			GM->UpdateAnimalCount(1);  // 카운터 증가
+		}
+	}
+}
+
+void ASBS_Animal::OnSafeZoneEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	if (OtherActor == this)
+	{
+		bInSafeZone = false;
+		ASBS_GameMode* GM = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
+		if (GM)
+		{
+			GM->UpdateAnimalCount(-1);  // 카운터 감소
+		}
+	}
+}
 
 void ASBS_Animal::StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
 {

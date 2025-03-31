@@ -38,8 +38,10 @@ public:
 public:
 
 	class ASBS_Animal* Animal;
+	class USBS_AnimalAnim* AnimalAnim;
 	class ASBS_FirePit* Firepit;
 	class ASBS_GameMode* GameMode;
+	ASBS_Animal* LeaderAnimal = nullptr;
 
 	void SetState(ESBS_AnimalState Newstate)
 	{
@@ -53,12 +55,19 @@ public:
 	void Burning();
 	void Dead();
 
+	void ChangeDir();
+
 	float CurrentTime = 0;
-	float StayTime = 5;
+	float StayTime = 1;
 	float BurnTime = 1;
 
+	bool bCrash;
+
 	FVector AnimalDir;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AnimalSpeed = 200;
+
+	FTimerHandle TimeHandle;
 	float DirChangeRate = 3;
 	int AnimalHealth;
 	

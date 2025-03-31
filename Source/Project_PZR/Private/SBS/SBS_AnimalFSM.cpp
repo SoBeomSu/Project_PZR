@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "SBS/SBS_GameMode.h"
 #include "MotionControllerComponent.h"
+#include "SBS/SBS_AnimalAnim.h"
 
 // Sets default values for this component's properties
 USBS_AnimalFSM::USBS_AnimalFSM()
@@ -27,7 +28,18 @@ void USBS_AnimalFSM::BeginPlay()
 	// ...
 	GameMode = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
 	Animal = Cast<ASBS_Animal>(GetOwner());
-
+	AnimalAnim = Cast<USBS_AnimalAnim>(Animal->SkeletalMesh->GetAnimInstance());
+	TArray<AActor*> Animals;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASBS_Animal::StaticClass(), Animals);
+	for (AActor* Actor : Animals)
+	{
+		ASBS_Animal* OtherAnimal = Cast<ASBS_Animal>(Actor);
+		if (OtherAnimal && OtherAnimal->bIsLeader)
+		{
+			LeaderAnimal = OtherAnimal;
+			break;
+		}
+	}
 }
 
 
@@ -46,6 +58,11 @@ void USBS_AnimalFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	case ESBS_AnimalState::Burning: Burning(); break;
 	case ESBS_AnimalState::Dead: Dead(); break;
 	}
+	//if (bCrash)
+	//{
+	//	ChangeDir();
+	//	bCrash = true;
+	//}
 }
 
 void USBS_AnimalFSM::Stay(float Deltatime)
@@ -55,9 +72,11 @@ void USBS_AnimalFSM::Stay(float Deltatime)
 		CurrentTime += Deltatime;
 		if(CurrentTime > 3)
 		{
-			SetState(ESBS_AnimalState::Idle);
 		}
 	}
+	SetState(ESBS_AnimalState::Idle);
+	AnimalAnim->bMoving = false;
+	AnimalAnim->bGrab = false;
 }
 
 void USBS_AnimalFSM::IdleState()
@@ -70,6 +89,11 @@ void USBS_AnimalFSM::IdleState()
 		CurrentTime = 0;
 		SetState(ESBS_AnimalState::Move);
 	}
+	if (AnimalAnim)
+	{
+		AnimalAnim->bMoving = false;
+		AnimalAnim->bGrab = false;
+	}
 }
 
 void USBS_AnimalFSM::MoveState()
@@ -77,18 +101,42 @@ void USBS_AnimalFSM::MoveState()
 	if (Animal)
 	{
 		FVector CurrentAnimalLocation = Animal->GetActorLocation();
-		Firepit = Cast<ASBS_FirePit>(UGameplayStatics::GetActorOfClass(GetWorld(), ASBS_FirePit::StaticClass()));
-		if (Firepit)
+		//Firepit = Cast<ASBS_FirePit>(UGameplayStatics::GetActorOfClass(GetWorld(), ASBS_FirePit::StaticClass()));
+		//if (Firepit)
+		//{
+		//	AnimalDir = Firepit->GetActorLocation() - Animal->GetActorLocation();
+		//	AnimalDir.Z = 0;
+		//	AnimalDir.Normalize();
+		//}
+		//else
+		//	AnimalDir = Animal-> GetActorForwardVector();
+		if (LeaderAnimal && LeaderAnimal != Animal && LeaderAnimal->bInSafeZone)
 		{
-			AnimalDir = Firepit->GetActorLocation() - Animal->GetActorLocation();
-			AnimalDir.Z = 0;
-			AnimalDir.Normalize();
+			AnimalDir = (LeaderAnimal->GetActorLocation() - CurrentAnimalLocation).GetSafeNormal();
+			AnimalDir.Z = 0;  // 수평 이동만
 		}
-		else
-			AnimalDir = Animal-> GetActorForwardVector();
+		CurrentTime += GetWorld()->DeltaTimeSeconds;
+		if (CurrentTime > 3)
+		{
+			ChangeDir();
+			CurrentTime = 0;
+		}
+		FHitResult Hitresult;
 
-		Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir*AnimalSpeed*GetWorld()->GetDeltaSeconds());
-		Animal->SetActorRotation(FRotator(0, AnimalDir.Rotation().Yaw, -90));
+		bool bMoved = Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir*AnimalSpeed*GetWorld()->GetDeltaSeconds(), true, &Hitresult);
+
+		if (!bMoved&& Hitresult.bBlockingHit)
+		{
+			ChangeDir();
+			Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir * AnimalSpeed * GetWorld()->GetDeltaSeconds(), true, &Hitresult);
+		}
+
+		Animal->SetActorRotation(FRotator(0, AnimalDir.Rotation().Yaw, 0));
+	}
+	if (AnimalAnim)
+	{
+	AnimalAnim->bMoving = true;
+	AnimalAnim->bGrab = false;
 	}
 }
 
@@ -98,6 +146,11 @@ void USBS_AnimalFSM::InAir()
 	//{
 	//	SetState(ESBS_AnimalState::Idle);
 	//}
+	if (AnimalAnim)
+	{
+	AnimalAnim->bMoving = false;
+	AnimalAnim->bGrab = true;
+	}
 }
 
 void USBS_AnimalFSM::Burning()
@@ -122,5 +175,8 @@ void USBS_AnimalFSM::Dead()
 	
 }
 
-
-
+void USBS_AnimalFSM::ChangeDir()
+{
+	AnimalDir = (FVector(FMath::RandRange(-1.0f, 1.0f), FMath::RandRange(-1.0f, 1.0f), 0)).GetSafeNormal();
+	bCrash = false;
+}

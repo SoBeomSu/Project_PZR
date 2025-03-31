@@ -25,10 +25,16 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-    USceneComponent* Root;
+    class USceneComponent* Root;
 
-    UPROPERTY(EditAnywhere, Category = "Text")
-    UTextRenderComponent* TextDisplay;
+	UPROPERTY(EditAnywhere, Category = "Collision")
+	class UBoxComponent* BoxCollision;
+	UPROPERTY(EditAnywhere, Category = "StaticMesh")
+	class UStaticMeshComponent* StaticMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Widget")
+	class UWidgetComponent* WidgetComp;
+
 
     // 표시할 변수
     UPROPERTY(EditAnywhere, Category = "Text")
