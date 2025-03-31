@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "KJW/LaserRoom/LaserMirror.h"
-#include "KJW/KHelper.h"
+
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
 #include "MotionControllerComponent.h"
@@ -159,6 +159,8 @@ void ALaserMirror::StartGrab(UMotionControllerComponent* MontionComp, bool IsRig
 	IsComplete = false;
 	OrginPos = GetActorLocation();
 
+	SetActorRotation(FRotator());
+
 	//스케일 축소 시키기
 	if (!MoveToHandTimerHandle.IsValid())
 	{
@@ -247,7 +249,9 @@ void ALaserMirror::MoveToHand()
 		float percent = MoveToHandTimer / MoveToHandTime;
 	
 		FVector offset = FVector(0.0f, 0.0f, -7.0f);
-		FVector NewPos = FMath::Lerp(OrginPos, HandComp->GetComponentLocation(), percent);
+
+		//FVector NewPos = FMath::Lerp(OrginPos, HandComp->GetComponentLocation(), percent);
+		FVector NewPos = KHelper::Lerp(OrginPos, HandComp->GetComponentLocation(), percent, Easing);
 
 		NewPos += offset;
 
@@ -301,6 +305,7 @@ void ALaserMirror::DrawTempMirror()
 			TempMirrorMeshComp->SetVisibility(true);
 			TempMirrorMeshComp->SetWorldLocation(EndLocation);
 			MovePos = EndLocation;
+			MovePos.Z = 10.0f;
 		}
 	}
 	else
@@ -308,6 +313,7 @@ void ALaserMirror::DrawTempMirror()
 		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TempMirrorMeshComp->SetVisibility(false);
 		MovePos = GetActorLocation(); 
+		MovePos.Z = 10.0f;
 	}
 
 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red);

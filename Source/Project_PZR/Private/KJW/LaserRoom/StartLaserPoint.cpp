@@ -26,9 +26,7 @@ AStartLaserPoint::AStartLaserPoint()
 	LaserArrowComp->SetupAttachment(RootComponent);
 
 	
-
-
-}
+	}
 
 // Called when the game starts or when spawned
 void AStartLaserPoint::BeginPlay()
@@ -51,7 +49,7 @@ void AStartLaserPoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AStartLaserPoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (!IsStart) return;
 	if (LaserDelayTimer < LaserDelay)
 	{
 		LaserDelayTimer += DeltaTime;
@@ -69,6 +67,8 @@ void AStartLaserPoint::Tick(float DeltaTime)
 	CheckIsGoalLaser();
 
 }
+
+
 
 void AStartLaserPoint::StartSetLaser()
 {

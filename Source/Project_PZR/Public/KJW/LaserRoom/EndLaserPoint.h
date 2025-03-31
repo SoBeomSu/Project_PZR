@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "KJW/KVRObjectInterface.h"
 #include "EndLaserPoint.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API AEndLaserPoint : public AActor
+class PROJECT_PZR_API AEndLaserPoint : public AActor, public IKVRObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -22,6 +23,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+public:
+	//VR버튼이 떼어졌을 때 호출
+	virtual void  OnButtonPressed(FHitResult& HitResult, EVRButton VRButton) override;
 
 public:
 	void AddMirrorPoint(class AStartLaserPoint* StartLaserPoint);
@@ -60,7 +65,7 @@ public:
 private:
 
 	class ALaserRoomGameMode* LaserGamemode;
-
+	bool IsOpen = false;
 public:
 	//UI
 	UPROPERTY(EditAnywhere, Category = "UI")

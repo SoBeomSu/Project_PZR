@@ -28,10 +28,11 @@ protected:
 public:
 	//게임 상태 변경
 	void ChangeLaserGameState(EKGameState NewLaserGameState);
-	//현제 스테이지 액터 스폰
-	void SpawnStageActor();
+
 	//스폰된 액터 제거
 	void ResetStageActor();
+	//월드 생성
+	void SpanwStage();
 
 public:
 	//레이저 풀 관련
@@ -46,21 +47,30 @@ public:
 private:
 	void SetDisplay();
 public:
+	void OpenDoor();
+
+public:
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas")
 	EKGameState LaserGameState = EKGameState::NONE;
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas")
 	int32 NeedLaser = 1;
 private:
+	//방 사용 전체
+	UPROPERTY(EditAnywhere, Category = "LaserStageDatas", meta = (AllowPrivateAccess = true))
+	TSubclassOf<class ALRoom> LaserRoomClass;
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas" , meta = (AllowPrivateAccess = true))
 	TArray<class ULaserStageData*> StageDatas;
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas", meta = (AllowPrivateAccess = true))
-	int32 Stage = 1;
+	int32 CurStage = 0;
+	
+
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas", meta = (AllowPrivateAccess = true))
 	int32 MaxStage = 1;
 	FTimerHandle LaserGameStateTimerHandle;
 public:
 	FUpdateDelegate UpdateStageDelegate;
 private:
+	int32 Stage = 1;
 	UPROPERTY()
 	TArray<AActor*> SpawnedActors;
 
@@ -71,5 +81,11 @@ private:
 
 private:
 	class ALRStatgeDisplay* Display;
+	
+	TArray<class ALRoom*> RoomList;
+	class ALRoom* PrevRoom;
+;
+	FVector RoomSpawnPos = FVector::ZeroVector;
 
+private :
 };
