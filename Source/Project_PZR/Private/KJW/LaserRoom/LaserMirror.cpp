@@ -278,6 +278,7 @@ void ALaserMirror::DrawTempMirror()
 {
 	if (!IsComplete) return;
 
+	
 	// 카메라의 위치와 방향 가져오기
 	FVector StartLocation = HandComp->GetComponentLocation();
 	FVector EndLocation = StartLocation + HandComp->GetForwardVector() * 10000.0f;
@@ -293,30 +294,34 @@ void ALaserMirror::DrawTempMirror()
 
 	// 라인트레이스 실행
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, QueryParams);
-
+	AActor* HitActor = nullptr;
 	if (bHit)
 	{
-		AActor* HitActor = HitResult.GetActor();
-		if (HitActor)
-		{
-			EndLocation = HitResult.Location;
-		
-			TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-			TempMirrorMeshComp->SetVisibility(true);
-			TempMirrorMeshComp->SetWorldLocation(EndLocation);
-			MovePos = EndLocation;
-			MovePos.Z = 10.0f;
-		}
+		HitActor = HitResult.GetActor();
+	}
+
+	if (HitActor)
+	{
+		EndLocation = HitResult.Location;
+
+		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		TempMirrorMeshComp->SetVisibility(true);
+		MovePos = EndLocation;
+		MovePos.Z = 10.0f;
+		MovePos = MovePos.GridSnap(10.0f);
+		TempMirrorMeshComp->SetWorldLocation(MovePos);
 	}
 	else
 	{
 		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TempMirrorMeshComp->SetVisibility(false);
-		MovePos = GetActorLocation(); 
+		MovePos = GetActorLocation();
 		MovePos.Z = 10.0f;
 	}
 
+
 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red);
+
 	
 
 }

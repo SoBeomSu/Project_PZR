@@ -57,8 +57,8 @@ public:
 		//기본 Lerp 공식 
 		// linear 
 		//Lerp = A + (B - A ) * Alpha
-		
-		float x = Alpha;
+		//FMath::Lerp(LDoor_ClosePos, LDoor_OpenPos, percent);
+		float x = Alpha;// 0 ~ 1
 		switch (Easing)
 		{
 		case EEasing::Linear: 
