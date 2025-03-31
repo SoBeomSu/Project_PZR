@@ -39,6 +39,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "FSM")
 	class USBS_AnimalFSM* AnimalFSM;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* YellowDuck;
 
 	UPROPERTY(EditAnywhere)
 	bool bIsLeader = false;
