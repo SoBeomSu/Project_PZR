@@ -8,8 +8,7 @@
 
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
-
-
+#include "KJW/LaserRoom/LaserRoomGameMode.h"
 #include "KJW/LaserRoom/EndLaserPoint.h"
 // Sets default values
 ALaserMirror::ALaserMirror()
@@ -50,7 +49,9 @@ void ALaserMirror::BeginPlay()
 	TempMirroBoxComp->SetRelativeRotation(MirroBoxComp->GetRelativeRotation());
 	TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	TempMirroBoxComp->SetBoxExtent(MirroBoxComp->GetUnscaledBoxExtent());
-
+	
+	LRGM = Cast<ALaserRoomGameMode>(GetWorld()->GetAuthGameMode());
+	
 }
 
 // Called every frame
@@ -198,7 +199,8 @@ void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRigh
 		GetWorldTimerManager().SetTimer(MoveToPlaceTimerHandle, this, &ThisClass::MoveToPlace, MoveToHandDeltatime, true);
 	}
 
-
+	
+	LRGM->PlayGameSound(EKGameSound::SWITCH);
 }
 
 void ALaserMirror::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)

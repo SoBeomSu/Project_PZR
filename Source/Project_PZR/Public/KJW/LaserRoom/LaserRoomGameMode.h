@@ -11,7 +11,15 @@
  * 
  */
 
-
+UENUM(BlueprintType)
+enum class EKGameSound : uint8
+{
+	OPENDOOR UMETA(DisplayName = "OpenDoor"),
+	CLOASEDOOR UMETA(DisplayName = "CloseDoor"),
+	SWITCH UMETA(DisplayName = "Switch"),
+	CLEAR UMETA(DisplayName = "Clear"),
+	FINISH UMETA(DisplayName = "Finish"),
+};
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FUpdateDelegate, EKGameState);
 
@@ -44,10 +52,13 @@ public:
 
 	int32 GetCurentStage() { return Stage; }
 	void SetDisplayGmae(class  ALRStatgeDisplay* NewDisplay) { Display = NewDisplay; };
-private:
-	void SetDisplay();
 public:
 	void OpenDoor();
+	void PlayGameSound(EKGameSound GameSound);
+
+private:
+	void SetDisplay();
+
 
 public:
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas")
@@ -62,7 +73,6 @@ private:
 	TArray<class ULaserStageData*> StageDatas;
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas", meta = (AllowPrivateAccess = true))
 	int32 CurStage = 0;
-	
 
 	UPROPERTY(EditAnywhere, Category = "LaserStageDatas", meta = (AllowPrivateAccess = true))
 	int32 MaxStage = 1;
@@ -84,8 +94,12 @@ private:
 	
 	TArray<class ALRoom*> RoomList;
 	class ALRoom* PrevRoom;
-;
+
 	FVector RoomSpawnPos = FVector::ZeroVector;
 
 private :
+	UPROPERTY(EditAnywhere, Category = "Sound", meta = (AllowPrivateAccess = true))
+	TArray<USoundBase*> Sounds;
+	UPROPERTY(EditAnywhere, Category = "Sound", meta = (AllowPrivateAccess = true))
+	USoundBase* BGMSound;
 };
