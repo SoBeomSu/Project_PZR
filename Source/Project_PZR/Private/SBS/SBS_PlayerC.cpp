@@ -10,7 +10,7 @@
 #include "SBS/SBS_AnimalFSM.h"
 #include "SBS/SBS_LightSwitch.h"
 #include "MotionControllerComponent.h"
-#include "../../../../Plugins/Runtime/XRBase/Source/XRBase/Public/HeadMountedDisplayFunctionLibrary.h"
+#include "HeadMountedDisplayFunctionLibrary.h"
 
 
 // Sets default values
@@ -49,11 +49,11 @@ void ASBS_PlayerC::BeginPlay()
 	Super::BeginPlay();
 	GameMode = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
 
-	//if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
-	//{
-	//	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::View);
-	//	//UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition(90); // yaw값만 컨트롤 tracking 기본값 설정
-	//}
+	if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
+	{
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::View);
+		//UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition(90); // yaw값만 컨트롤 tracking 기본값 설정
+	}
 }
 
 // Called every frame

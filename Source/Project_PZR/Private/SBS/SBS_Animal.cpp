@@ -39,6 +39,8 @@ void ASBS_Animal::BeginPlay()
 		SafeZones[0]->OnActorBeginOverlap.AddDynamic(this, &ASBS_Animal::OnSafeZoneOverlap);
 		SafeZones[0]->OnActorEndOverlap.AddDynamic(this, &ASBS_Animal::OnSafeZoneEndOverlap);
 	}
+	if(bIsLeader)
+		SkeletalMesh->SetMaterial(0, YellowDuck);
 }
 
 // Called every frame
@@ -64,6 +66,8 @@ void ASBS_Animal::OnSafeZoneOverlap(AActor* OVerlappedActor, AActor* OtherActor)
 		if (GM)
 		{
 			GM->UpdateAnimalCount(1);  // 카운터 증가
+			UE_LOG(LogTemp, Warning, TEXT("Counter Up"));
+
 		}
 	}
 }
@@ -77,6 +81,8 @@ void ASBS_Animal::OnSafeZoneEndOverlap(AActor* OverlappedActor, AActor* OtherAct
 		if (GM)
 		{
 			GM->UpdateAnimalCount(-1);  // 카운터 감소
+			UE_LOG(LogTemp, Warning, TEXT("Counter Down"));
+
 		}
 	}
 }
