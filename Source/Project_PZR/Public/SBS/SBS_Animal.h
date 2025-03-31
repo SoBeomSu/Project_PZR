@@ -40,6 +40,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "FSM")
 	class USBS_AnimalFSM* AnimalFSM;
 
+	UPROPERTY(EditAnywhere)
+	bool bIsLeader = false;
+
+	bool bInSafeZone = false;
+
+	UFUNCTION()
+	void OnSafeZoneOverlap(AActor* OVerlappedActor, AActor* OtherActor);
+	UFUNCTION()
+    void OnSafeZoneEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
 	int Health = 100;
 
 	virtual bool  IsGrab() override { return true; };

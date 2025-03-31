@@ -169,7 +169,7 @@ void ASBS_Bomb::UpdateBombMaterial(int CorrectCount)
 			StaticMesh->SetMaterial(0, TwoGreen);
 			break;
 		case 3:
-			if( ThreeGreen)
+			if(ThreeGreen)
 			StaticMesh->SetMaterial(0, ThreeGreen);
 			break;
 		default:

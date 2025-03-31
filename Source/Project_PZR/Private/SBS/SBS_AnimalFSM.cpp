@@ -29,6 +29,17 @@ void USBS_AnimalFSM::BeginPlay()
 	GameMode = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
 	Animal = Cast<ASBS_Animal>(GetOwner());
 	AnimalAnim = Cast<USBS_AnimalAnim>(Animal->SkeletalMesh->GetAnimInstance());
+	TArray<AActor*> Animals;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASBS_Animal::StaticClass(), Animals);
+	for (AActor* Actor : Animals)
+	{
+		ASBS_Animal* OtherAnimal = Cast<ASBS_Animal>(Actor);
+		if (OtherAnimal && OtherAnimal->bIsLeader)
+		{
+			LeaderAnimal = OtherAnimal;
+			break;
+		}
+	}
 }
 
 
@@ -99,7 +110,11 @@ void USBS_AnimalFSM::MoveState()
 		//}
 		//else
 		//	AnimalDir = Animal-> GetActorForwardVector();
-
+		if (LeaderAnimal && LeaderAnimal != Animal && LeaderAnimal->bInSafeZone)
+		{
+			AnimalDir = (LeaderAnimal->GetActorLocation() - CurrentAnimalLocation).GetSafeNormal();
+			AnimalDir.Z = 0;  // 수평 이동만
+		}
 		CurrentTime += GetWorld()->DeltaTimeSeconds;
 		if (CurrentTime > 3)
 		{

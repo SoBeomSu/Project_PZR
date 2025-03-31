@@ -41,7 +41,9 @@ public:
 
 	void StartGame();
 
-
+	void UpdateAnimalCount(int Animalcount);
+	int AnimalInSafe;
+	const int RequireAnimal = 5;
 	void SetPasswordCorrect(bool bValue);
 	void SetSwitchCorrect(bool bValue);
 	void SetAnimalCorrect(bool bValue);

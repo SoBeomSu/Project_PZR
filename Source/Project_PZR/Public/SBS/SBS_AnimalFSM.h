@@ -41,6 +41,7 @@ public:
 	class USBS_AnimalAnim* AnimalAnim;
 	class ASBS_FirePit* Firepit;
 	class ASBS_GameMode* GameMode;
+	ASBS_Animal* LeaderAnimal = nullptr;
 
 	void SetState(ESBS_AnimalState Newstate)
 	{

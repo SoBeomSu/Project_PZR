@@ -27,6 +27,16 @@ void ASBS_GameMode::StartGame()
 //	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyActor::StaticClass(), FoundActors);
 }
 
+void ASBS_GameMode::UpdateAnimalCount(int Animalcount)
+{
+	AnimalInSafe +=Animalcount;
+	UE_LOG(LogTemp, Log, TEXT("AnimalCout %d"),AnimalInSafe);
+	if (AnimalInSafe >= RequireAnimal)
+	{
+		SetAnimalCorrect(true);
+	}
+}
+
 void ASBS_GameMode::SetPasswordCorrect(bool bValue)
 {
 	bPasswordCorrect = bValue;
