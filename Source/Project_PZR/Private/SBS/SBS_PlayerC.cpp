@@ -139,12 +139,46 @@ void ASBS_PlayerC::GrabEnd_R()
 
 void ASBS_PlayerC::GrabStart_L()
 {
-
+	//UE_LOG(LogTemp, Warning, TEXT("click success"));
+	//if (!VRCamera) return;
+	////이미 잡은 물체가 있다면
+	//if (GrabObj) return;
+	//
+	//// 카메라의 위치와 방향 가져오기
+	//FVector StartLocation = VRCamera->GetComponentLocation();
+	//FVector EndLocation = StartLocation + VRCamera->GetForwardVector() * 100.0f;
+	//
+	//FHitResult HitResult;
+	//FCollisionQueryParams QueryParams;
+	//QueryParams.AddIgnoredActor(this); // 자기 자신 무시
+	//bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel1, QueryParams);
+	//
+	//if (bHit)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Trae Hit"));
+	//
+	//	AActor* HitActor = HitResult.GetActor();
+	//	if (HitActor)
+	//	{
+	//		// IKVRObjectInterface를 가진 오브젝트와 상호작용 시작
+	//		IKVRObjectInterface* GrabbableObject = Cast<IKVRObjectInterface>(HitActor);
+	//		if (GrabbableObject && GrabbableObject->IsGrab())
+	//		{
+	//			// 그랩 로직 (이 인터페이스를 통해 실제 그랩 기능 호출)
+	//			GrabbableObject->StartGrab(LeftHand, false);
+	//			LGrabObj = GrabbableObject;
+	//			UE_LOG(LogTemp, Warning, TEXT("grab sucess"));
+	//		}
+	//	}
+	//}
 }
 
 void ASBS_PlayerC::GrabEnd_L()
 {
-
+	//if (!GrabObj) return;
+	//
+	//LGrabObj->StopGrab(LeftHand, true);
+	//LGrabObj = nullptr;
 }
 
 void ASBS_PlayerC::ButtonPressed_A()

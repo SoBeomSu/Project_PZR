@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "SBS_LightSwitch.h"
+#include "SBS_Bomb.h"
 #include "SBS_GameMode.generated.h"
 
 /**
@@ -19,19 +21,35 @@ public:
 	ASBS_GameMode();
 	virtual ~ASBS_GameMode() = default;
 
-	UFUNCTION(BlueprintPure,Category="Coins")
-	virtual int GetCoins() const;
-
-	UFUNCTION(BlueprintCallable,Category="Coins")
-	virtual void SetCoins(int NewCoins);
 	//TArray<A
 	UPROPERTY(EditAnywhere, BlueprintReadWrite);
 	bool bStartGame = false;
 	
 	bool Phase2 = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bGameOver = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bGameClear = false;
+
+	bool bPasswordCorrect = false;
+	bool bSwitchCorrect = false;
+	bool bAnimalCorrect = false;
+
+	TArray<ASBS_LightSwitch*> Switches;
+	TArray<bool> CorrectPattern = { true, false, true, false, false };
+	ASBS_Bomb* Bomb;
 
 	void StartGame();
+
+
+	void SetPasswordCorrect(bool bValue);
+	void SetSwitchCorrect(bool bValue);
+	void SetAnimalCorrect(bool bValue);
+
+	void UpdateGameState();
+	void Congraturation();
+
 	void GameOver();
-	void UpdateTimer();
-	void InsertCorrectAnswer();
+
+
 };

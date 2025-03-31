@@ -25,15 +25,6 @@ void ASBS_GameStartButton::BeginPlay()
 void ASBS_GameStartButton::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//if ((GameMode01->bStartGame)&&(!bworked))
-	//{
-	//	DelayTime+=DeltaTime;
-	//	if (DeltaTime > 2)
-	//	{
-	//		Lightswitch->SwitchOff();
-	//		bworked = true;
-	//	}
-	//}
 }
 
 void ASBS_GameStartButton::ButtonPressed()
@@ -42,6 +33,23 @@ void ASBS_GameStartButton::ButtonPressed()
 	if (GameMode01)
 	{
 		GameMode01->StartGame();
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(TimeHandler, this, &ASBS_GameStartButton::GoDown, 0.02, true);
+}
+
+void ASBS_GameStartButton::GoDown()
+{
+	float speed= 30;
+	float deltatime = 0.02;
+	FVector newloc = GetActorLocation() + FVector(0,0, -speed * deltatime);
+	if (newloc.Z > -200)
+	{
+		SetActorLocation(newloc);
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().ClearTimer(TimeHandler);
 	}
 }
 

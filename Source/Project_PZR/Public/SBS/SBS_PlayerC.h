@@ -83,6 +83,7 @@ public:
 	float MoveSpeedVal = 1;
 
 	class IKVRObjectInterface* GrabObj;
+	class IKVRObjectInterface* LGrabObj;
 	void GrabStart_R();
 	void GrabEnd_R();
 	void GrabStart_L();
