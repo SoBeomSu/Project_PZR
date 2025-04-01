@@ -63,8 +63,23 @@ public:
 
 	bool bIsScaling = false;
 	float ScaleTime = 0;
-	float ScaleDuration = 0.5;
+	UPROPERTY (EditAnywhere)
+	float ScaleDuration = 0.7;
+	UPROPERTY(EditAnywhere)
+	float Frequency = 10.0f;
+	UPROPERTY(EditAnywhere)
+	float Amplitude = 0.4f;  // ÃÊ±â ÁøÆø
+	UPROPERTY(EditAnywhere)
+	float Damping = 2.0f;    // °¨¼è ¼Óµµ
+	
+	
+	
+	
 	float MaxScale = 1.5;
+
+
+
+
 	bool bCrash;
 
 	FVector AnimalDir;

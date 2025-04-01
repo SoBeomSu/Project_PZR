@@ -40,7 +40,7 @@ public:
 	ASBS_LightSwitch* Lightswitch;
 	FTimerHandle TimeHandler;
 	float currenttime;
-	float DelayTime;
+	float DelayTime = 1;
 	bool bworked = false;
 	virtual bool  IsGrab() override { return true; };
 	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
