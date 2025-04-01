@@ -55,11 +55,30 @@ public:
 	void Burning();
 	void Dead();
 
-	void ChangeDir();
+	void ChangeDir(bool Crash);
 
 	float CurrentTime = 0;
-	float StayTime = 1;
+	float StayTime = 2;
 	float BurnTime = 1;
+
+	bool bIsScaling = false;
+	float ScaleTime = 0;
+	UPROPERTY (EditAnywhere)
+	float ScaleDuration = 0.7;
+	UPROPERTY(EditAnywhere)
+	float Frequency = 10.0f;
+	UPROPERTY(EditAnywhere)
+	float Amplitude = 0.4f;  // ÃÊ±â ÁøÆø
+	UPROPERTY(EditAnywhere)
+	float Damping = 2.0f;    // °¨¼è ¼Óµµ
+	
+	
+	
+	
+	float MaxScale = 1.5;
+
+
+
 
 	bool bCrash;
 

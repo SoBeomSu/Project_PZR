@@ -39,8 +39,8 @@ public:
 	ASBS_GameMode* GameMode01;
 	ASBS_LightSwitch* Lightswitch;
 	FTimerHandle TimeHandler;
-
-	float DelayTime;
+	float currenttime;
+	float DelayTime = 1;
 	bool bworked = false;
 	virtual bool  IsGrab() override { return true; };
 	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;

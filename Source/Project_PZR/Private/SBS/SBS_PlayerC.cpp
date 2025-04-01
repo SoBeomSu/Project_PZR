@@ -88,6 +88,7 @@ void ASBS_PlayerC::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		
 		InputSystem->BindAction(IA_R_Grip_Click, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_R); // 마우스 우클릭 + 오른쪽 트리거
 		InputSystem->BindAction(IA_R_Grip_Click, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_R);
+		InputSystem->BindAction(IA_R_Grip_Click, ETriggerEvent::Ongoing, this, &ASBS_PlayerC::Grabbing);
 
 		InputSystem->BindAction(IA_L_Grip_Click, ETriggerEvent::Started, this, &ASBS_PlayerC::GrabStart_L); //마우스 왼클릭 + 왼쪽 트리거
 		InputSystem->BindAction(IA_L_Grip_Click, ETriggerEvent::Completed, this, &ASBS_PlayerC::GrabEnd_L);
@@ -109,7 +110,7 @@ void ASBS_PlayerC::GrabStart_R()
 
 	// 카메라의 위치와 방향 가져오기
 	FVector StartLocation = RightHand->GetComponentLocation();
-	FVector EndLocation = StartLocation + RightHand->GetForwardVector() * 100.0f;
+	FVector EndLocation = StartLocation + RightHand->GetForwardVector() * 200.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
@@ -150,11 +151,11 @@ void ASBS_PlayerC::GrabStart_L()
 	UE_LOG(LogTemp, Warning, TEXT("click success"));
 	if (!VRCamera) return;
 	//이미 잡은 물체가 있다면
-	if (GrabObj) return;
+	if (LGrabObj) return;
 
 	// 카메라의 위치와 방향 가져오기
 	FVector StartLocation = LeftHand->GetComponentLocation();
-	FVector EndLocation = StartLocation + LeftHand->GetForwardVector() * 100.0f;
+	FVector EndLocation = StartLocation + LeftHand->GetForwardVector() * 200.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
@@ -183,9 +184,9 @@ void ASBS_PlayerC::GrabStart_L()
 
 void ASBS_PlayerC::GrabEnd_L()
 {
-	if (!GrabObj) return;
+	if (!LGrabObj) return;
 
-	LGrabObj->StopGrab(LeftHand, true);
+	LGrabObj->StopGrab(LeftHand, false);
 	LGrabObj = nullptr;
 }
 
@@ -197,6 +198,11 @@ void ASBS_PlayerC::ButtonPressed_A()
 void ASBS_PlayerC::ButtonPressed_X()
 {
 	ButtonPressed(EVRButton::Left_X_Button);
+}
+
+void ASBS_PlayerC::Grabbing()
+{
+	GrabObj->Grabbing(RightHand, true);
 }
 
 void ASBS_PlayerC::ButtonPressed(EVRButton VRButton)

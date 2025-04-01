@@ -53,7 +53,14 @@ public:
     void OnSafeZoneEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 	int Health = 100;
-
+	UPROPERTY(EditAnywhere, Category = "Grab")
+	float ThrowPower = 500;
+	FVector ThrowDirection;
+	//이전위치
+	FVector PrePos;
+	//이전회전
+	FQuat PreRot;
+	FQuat DeltaRotation;
 	virtual bool  IsGrab() override { return true; };
 	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
 	//손으로 오브젝트 잡기 종료

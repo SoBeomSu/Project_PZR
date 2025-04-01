@@ -56,18 +56,18 @@ void ASBS_Bomb::BeginPlay()
 	TArray<AActor*> AnimalArr;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASBS_Animal::StaticClass(), AnimalArr);
 
-	if (AnimalArr.Num() != 0)
-	{
-		int randomindex = FMath::RandRange(0, AnimalArr.Num()-1);
-		auto RandomAnimal = AnimalArr[randomindex];
-		if (RandomAnimal)
-		{
-			AttachToActor(RandomAnimal, FAttachmentTransformRules::KeepWorldTransform);
-
-			FVector Offset = RandomAnimal->GetActorForwardVector()* -50 + FVector(0,0,50);
-			SetActorLocation(RandomAnimal->GetActorLocation() + Offset);
-		}
-	}
+	//if (AnimalArr.Num() != 0)
+	//{
+	//	int randomindex = FMath::RandRange(0, AnimalArr.Num()-1);
+	//	auto RandomAnimal = AnimalArr[randomindex];
+	//	if (RandomAnimal)
+	//	{
+	//		AttachToActor(RandomAnimal, FAttachmentTransformRules::KeepWorldTransform);
+	//
+	//		FVector Offset = RandomAnimal->GetActorForwardVector()* -50 + FVector(0,0,50);
+	//		SetActorLocation(RandomAnimal->GetActorLocation() + Offset);
+	//	}
+	//}
 }
 
 // Called every frame
@@ -89,7 +89,7 @@ void ASBS_Bomb::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)
 	UBoxComponent* HitBox = Cast<UBoxComponent>(HitResult.GetComponent());
 	if (HitBox)
 	{
-		UE_LOG(LogTemp, Log, TEXT("***@@*@*@**@"));
+		//UE_LOG(LogTemp, Log, TEXT("keypad"));
 	}
 	if (HitBox && HitBox == EnterKey)
 	{

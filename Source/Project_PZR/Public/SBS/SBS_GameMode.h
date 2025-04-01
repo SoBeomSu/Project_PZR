@@ -30,28 +30,32 @@ public:
 	bool bGameOver = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bGameClear = false;
-
+	UPROPERTY(EditAnywhere)
 	bool bPasswordCorrect = false;
+	UPROPERTY(EditAnywhere)
 	bool bSwitchCorrect = false;
+	UPROPERTY(EditAnywhere)
 	bool bAnimalCorrect = false;
 
 	TArray<ASBS_LightSwitch*> Switches;
-	TArray<bool> CorrectPattern = { true, false, true, false, false };
+	TArray<bool> CorrectPattern = { true, false, true, false, false, true, false, true };
 	ASBS_Bomb* Bomb;
 
-	void StartGame();
 
 	void UpdateAnimalCount(int Animalcount);
 	int AnimalInSafe;
 	const int RequireAnimal = 5;
+
+
+	void UpdateGameState();
+
 	void SetPasswordCorrect(bool bValue);
 	void SetSwitchCorrect(bool bValue);
 	void SetAnimalCorrect(bool bValue);
 
-	void UpdateGameState();
-	void Congraturation();
-
+	void StartGame();
 	void GameOver();
+	void Congraturation();
 
 
 };

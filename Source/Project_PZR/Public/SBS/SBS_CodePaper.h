@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/TextRenderComponent.h"
+#include "KJW/KVRObjectInterface.h"
 #include "SBS_CodePaper.generated.h"
 
 UCLASS()
-class PROJECT_PZR_API ASBS_CodePaper : public AActor
+class PROJECT_PZR_API ASBS_CodePaper : public AActor, public IKVRObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -39,6 +40,10 @@ public:
     // 표시할 변수
     UPROPERTY(EditAnywhere, Category = "Text")
     int32 DisplayValue = 42;
+
+	virtual void StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
+	//손으로 오브젝트 잡기 종료
+	virtual void StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight) override;
 
 	void UpdateTextDisplay();
 };

@@ -55,7 +55,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Password;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString Answer = "3958";
+	FString Answer = "8109";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UMaterialInterface* OneGreen;

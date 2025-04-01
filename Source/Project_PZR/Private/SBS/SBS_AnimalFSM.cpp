@@ -63,6 +63,37 @@ void USBS_AnimalFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	//	ChangeDir();
 	//	bCrash = true;
 	//}
+	if (bIsScaling)
+	{
+		//ScaleTime += DeltaTime;
+		//float t = FMath::Clamp(ScaleTime / ScaleDuration, 0.0f, 1.0f); //진행도
+		//float ElasticValue = FMath::Pow(2.0f, -10.0f * (1.0f - t)) * FMath::Sin((t - 0.1f) * 2.0f * PI / 0.3f); // 크기 수식
+		//float ScaleFactor = MaxScale - (MaxScale - 1.0f) * ElasticValue; // 마지막 크기 ( 1.5 - (0.5* 수식))
+		//Animal->SetActorScale3D(FVector(ScaleFactor, ScaleFactor, ScaleFactor));
+		//UE_LOG(LogTemp, Log, TEXT("Scaling %s: t=%f, Scale=%f"), *Animal->GetName(), t, ScaleFactor);
+		//
+		//if (t >= 1.0f)
+		//{
+		//	bIsScaling = false;
+		//	ScaleTime = 0.0f;
+		//	Animal->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
+		//	UE_LOG(LogTemp, Log, TEXT("Scale finished for %s"), *Animal->GetName());
+		//
+		//}
+		ScaleTime += DeltaTime;
+		float t = ScaleTime;
+		float WaveValue = Amplitude * FMath::Exp(-Damping * t) * FMath::Sin(Frequency * t);
+		float ScaleFactor = 1.0f + WaveValue;  // 1.0 기준
+		Animal->SetActorScale3D(FVector(ScaleFactor, ScaleFactor, ScaleFactor));
+		
+
+		if (t >= ScaleDuration)
+		{
+			bIsScaling = false;
+			ScaleTime = 0.0f;
+			Animal->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
+		}
+	}
 }
 
 void USBS_AnimalFSM::Stay(float Deltatime)
@@ -81,7 +112,7 @@ void USBS_AnimalFSM::Stay(float Deltatime)
 
 void USBS_AnimalFSM::IdleState()
 {
-	//Animal->BoxComp->UPrimitiveComponent::SetSimulatePhysics(true);
+	//Animal->BoxComp->SetSimulatePhysics(true);
 	Animal->SkeletalMesh->SetVisibility(true);
 	CurrentTime += GetWorld()->DeltaTimeSeconds;
 	if (CurrentTime >= StayTime)
@@ -113,22 +144,30 @@ void USBS_AnimalFSM::MoveState()
 		if (LeaderAnimal && LeaderAnimal != Animal && LeaderAnimal->bInSafeZone)
 		{
 			AnimalDir = (LeaderAnimal->GetActorLocation() - CurrentAnimalLocation).GetSafeNormal();
-			AnimalDir.Z = 0;  // 수평 이동만
+			//AnimalDir.Z = 0;  // 수평 이동만
 		}
 		CurrentTime += GetWorld()->DeltaTimeSeconds;
 		if (CurrentTime > 3)
 		{
-			ChangeDir();
+			ChangeDir(false);
 			CurrentTime = 0;
 		}
 		FHitResult Hitresult;
 
 		bool bMoved = Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir*AnimalSpeed*GetWorld()->GetDeltaSeconds(), true, &Hitresult);
 
-		if (!bMoved&& Hitresult.bBlockingHit)
+		const float MinpenetrationDepth = 5;
+		// && Hitresult.PenetrationDepth>=MinpenetrationDepth
+		//Hitresult.GetActor()->GetName().Contains(TEXT("Floor"))
+		if (!bMoved && Hitresult.bBlockingHit && !(Hitresult.GetActor()->ActorHasTag(TEXT("Floor"))))
 		{
-			ChangeDir();
+
+			//UE_LOG(LogTemp, Log, TEXT("HitActor: %s"), *Hitresult.GetActor()->GetName());
+
+			ChangeDir(true);
+			//Animal->SetActorScale3D(FVector(MaxScale, MaxScale, MaxScale));
 			Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir * AnimalSpeed * GetWorld()->GetDeltaSeconds(), true, &Hitresult);
+
 		}
 
 		Animal->SetActorRotation(FRotator(0, AnimalDir.Rotation().Yaw, 0));
@@ -175,8 +214,13 @@ void USBS_AnimalFSM::Dead()
 	
 }
 
-void USBS_AnimalFSM::ChangeDir()
+void USBS_AnimalFSM::ChangeDir(bool Crash)
 {
 	AnimalDir = (FVector(FMath::RandRange(-1.0f, 1.0f), FMath::RandRange(-1.0f, 1.0f), 0)).GetSafeNormal();
 	bCrash = false;
+	if (Crash)
+	{
+		bIsScaling = true;
+		ScaleTime = 0;
+	}
 }

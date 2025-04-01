@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
+#include "MotionControllerComponent.h"
 
 // Sets default values
 ASBS_CodePaper::ASBS_CodePaper()
@@ -15,7 +16,7 @@ ASBS_CodePaper::ASBS_CodePaper()
 
 	RootComponent = BoxCollision;
     BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
-    BoxCollision->SetCollisionProfileName(TEXT("BlockAllDynamic"));
+    BoxCollision->SetCollisionProfileName(TEXT("GrapObject"));
 
     StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetupAttachment(BoxCollision);
@@ -37,6 +38,19 @@ void ASBS_CodePaper::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void ASBS_CodePaper::StartGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	BoxCollision->SetSimulatePhysics(false);
+	this->AttachToComponent(MontionComp, FAttachmentTransformRules::KeepWorldTransform);
+}
+
+void ASBS_CodePaper::StopGrab(class UMotionControllerComponent* MontionComp, bool IsRight)
+{
+	BoxCollision->SetSimulatePhysics(true);
+	this->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+}
+
 void ASBS_CodePaper::UpdateTextDisplay()
 {
 
