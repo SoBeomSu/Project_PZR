@@ -184,6 +184,7 @@ void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRigh
 		IsComplete = false;
 		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TempMirrorMeshComp->SetVisibility(false);
+		MovePos.Z += 10.0f;
 		SetActorLocation(MovePos);
 		SetActorRotation(TempMirrorMeshComp->GetComponentRotation());
 	}
@@ -224,13 +225,13 @@ void ALaserMirror::UpdateScale()
 {
 	float percent = MoveToHandTimer / MoveToHandTime;
 	//easeOutQuint
-	if (bEaseOutQuint)
-	{
-		percent = 1 - FMath::Pow(1 - percent, 5);
-	}
-
-	float newScale = FMath::Lerp(OrginScale, MiniScale, percent);
-
+	//if (bEaseOutQuint)
+	//{
+	//	percent = 1 - FMath::Pow(1 - percent, 5);
+	//}
+	//
+	
+	float newScale = KHelper::Lerp(OrginScale, MiniScale, percent, Easing);	
 
 	SetActorScale3D(FVector(newScale));
 }
@@ -339,6 +340,26 @@ void ALaserMirror::TempMirrorRot(FRotator AddRot)
 	//float AddAngle = 10.0f;
 
 
+}
+
+void ALaserMirror::TestMirror()
+{
+	GetWorldTimerManager().SetTimer(TestTimerHandle, this, &ThisClass::TestTimer, MoveToHandDeltatime, true);
+}
+
+void ALaserMirror::TestTimer()
+{
+		MoveToHandTimer += MoveToHandDeltatime;
+	if (MoveToHandTimer < MoveToHandTime)
+	{
+		
+		UpdateScale();
+
+	}
+	else
+	{
+		GetWorldTimerManager().ClearTimer(TestTimerHandle);
+	}
 }
 
 

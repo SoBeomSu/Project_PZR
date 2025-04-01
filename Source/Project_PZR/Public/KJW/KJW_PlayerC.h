@@ -75,4 +75,10 @@ public :
 	//잡은 물체를 회전 시키기 위한
 	void LRotGrabObj();
 	void RRotGrabObj();
+
+
+public:
+	UFUNCTION(Exec)
+	void TestMirror();
+
 };

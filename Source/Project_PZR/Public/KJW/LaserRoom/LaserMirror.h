@@ -99,4 +99,11 @@ public:
 	void MoveToPlace();
 	void DrawTempMirror();
 	void TempMirrorRot(FRotator AddRot);
+
+public:
+	void TestMirror();
+
+	void TestTimer();
+
+	FTimerHandle TestTimerHandle;
 };

@@ -9,7 +9,9 @@
 #include "InputMappingContext.h"
 #include "InputActionValue.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "KJW/KVRObjectInterface.h"
+#include "KJW/LaserRoom/LaserMirror.h"
 // Sets default values
 AKJW_PlayerC::AKJW_PlayerC()
 {
@@ -227,5 +229,21 @@ void AKJW_PlayerC::RRotGrabObj()
 	FRotator AddRightRot = FRotator(0.0f, 10.0f * 0.02f, 0.0f);
 	
 	GrabObj->RotObject(AddRightRot);
+}
+
+void AKJW_PlayerC::TestMirror()
+{
+	
+	ALaserMirror* LaserMirror = Cast<ALaserMirror>(UGameplayStatics::GetActorOfClass(GetWorld(), ALaserMirror::StaticClass()));
+
+	if (LaserMirror)
+	{
+		LaserMirror->TestMirror();
+		UE_LOG(LogTemp, Warning, TEXT("TestMirror() 실행됨!"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("LaserMirror 액터를 찾을 수 없음!"));
+	}
 }
 
