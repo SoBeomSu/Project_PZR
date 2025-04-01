@@ -284,7 +284,7 @@ void ALaserMirror::DrawTempMirror()
 	
 	// 카메라의 위치와 방향 가져오기
 	FVector StartLocation = HandComp->GetComponentLocation();
-	FVector EndLocation = StartLocation + HandComp->GetForwardVector() * 10000.0f;
+	FVector EndLocation = StartLocation + HandComp->GetForwardVector() * 1000.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;

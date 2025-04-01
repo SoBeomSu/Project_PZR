@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "KJW/KVRObjectInterface.h"
 #include "KJW/LaserRoom/LaserMirror.h"
+#include "KJW/LaserRoom/LDoor.h"
 // Sets default values
 AKJW_PlayerC::AKJW_PlayerC()
 {
@@ -244,6 +245,21 @@ void AKJW_PlayerC::TestMirror()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("LaserMirror 액터를 찾을 수 없음!"));
+	}
+}
+
+void AKJW_PlayerC::TestDoor()
+{
+	ALDoor* LaserMirror = Cast<ALDoor>(UGameplayStatics::GetActorOfClass(GetWorld(), ALDoor::StaticClass()));
+
+	if (LaserMirror)
+	{
+		LaserMirror->SetDoor(true);
+		UE_LOG(LogTemp, Warning, TEXT("TestDoor() 실행됨!"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("TestDoor 액터를 찾을 수 없음!"));
 	}
 }
 

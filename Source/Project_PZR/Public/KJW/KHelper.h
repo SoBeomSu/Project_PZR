@@ -20,7 +20,7 @@ UENUM(BlueprintType)
 enum class EEasing : uint8
 {
 	Linear ,
-	EaseOutQuint, //느리게 시작 → 점점 가속
+	EaseOutQuint, //초반에는 빠르게 증가하고, 후반부로 갈수록 점점 느려짐
 	EaseInQuint, //빠르게 시작 → 점점 감속
 	
 };

@@ -80,5 +80,7 @@ public :
 public:
 	UFUNCTION(Exec)
 	void TestMirror();
+	UFUNCTION(Exec)
+	void TestDoor();
 
 };
