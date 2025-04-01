@@ -36,6 +36,8 @@ public:
 	bool bSwitchCorrect = false;
 	UPROPERTY(EditAnywhere)
 	bool bAnimalCorrect = false;
+	UPROPERTY(EditAnywhere)
+	int CorrectCount = 0;
 
 	TArray<ASBS_LightSwitch*> Switches;
 	TArray<bool> CorrectPattern = { true, false, true, false, false, true, false, true };

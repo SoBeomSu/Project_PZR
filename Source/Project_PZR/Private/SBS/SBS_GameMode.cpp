@@ -85,7 +85,7 @@ void ASBS_GameMode::SetAnimalCorrect(bool bValue)
 
 void ASBS_GameMode::UpdateGameState()
 {	
-	int CorrectCount = 0;
+	CorrectCount = 0;
 	if(bPasswordCorrect) CorrectCount++;
 	if(bSwitchCorrect) CorrectCount++;
 	if(bAnimalCorrect) CorrectCount++;
