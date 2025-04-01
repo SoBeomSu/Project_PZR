@@ -110,7 +110,7 @@ void ASBS_PlayerC::GrabStart_R()
 
 	// 카메라의 위치와 방향 가져오기
 	FVector StartLocation = RightHand->GetComponentLocation();
-	FVector EndLocation = StartLocation + RightHand->GetForwardVector() * 100.0f;
+	FVector EndLocation = StartLocation + RightHand->GetForwardVector() * 200.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
@@ -155,7 +155,7 @@ void ASBS_PlayerC::GrabStart_L()
 
 	// 카메라의 위치와 방향 가져오기
 	FVector StartLocation = LeftHand->GetComponentLocation();
-	FVector EndLocation = StartLocation + LeftHand->GetForwardVector() * 100.0f;
+	FVector EndLocation = StartLocation + LeftHand->GetForwardVector() * 200.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
@@ -184,7 +184,7 @@ void ASBS_PlayerC::GrabStart_L()
 
 void ASBS_PlayerC::GrabEnd_L()
 {
-	if (!GrabObj) return;
+	if (!LGrabObj) return;
 
 	LGrabObj->StopGrab(LeftHand, false);
 	LGrabObj = nullptr;

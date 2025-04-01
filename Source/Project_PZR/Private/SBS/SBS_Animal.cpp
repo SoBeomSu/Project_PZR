@@ -41,6 +41,11 @@ void ASBS_Animal::BeginPlay()
 	}
 	if(bIsLeader)
 		SkeletalMesh->SetMaterial(0, YellowDuck);
+	if (bIsLeader)
+	{
+		ASBS_GameMode* GM = Cast<ASBS_GameMode>(GetWorld()->GetAuthGameMode());
+		GM->CorrectPattern = { true, false, true, false, false, true, false, true };
+	}
 }
 
 // Called every frame

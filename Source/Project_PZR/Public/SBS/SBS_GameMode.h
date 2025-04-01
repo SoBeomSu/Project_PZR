@@ -36,7 +36,7 @@ public:
 	bool bAnimalCorrect = false;
 
 	TArray<ASBS_LightSwitch*> Switches;
-	TArray<bool> CorrectPattern = { true, false, true, false, false };
+	TArray<bool> CorrectPattern = { true, false, true, false, false, true, false, true };
 	ASBS_Bomb* Bomb;
 
 	void StartGame();

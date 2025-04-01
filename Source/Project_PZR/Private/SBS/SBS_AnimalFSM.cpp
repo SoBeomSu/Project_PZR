@@ -81,7 +81,7 @@ void USBS_AnimalFSM::Stay(float Deltatime)
 
 void USBS_AnimalFSM::IdleState()
 {
-	Animal->BoxComp->SetSimulatePhysics(true);
+	//Animal->BoxComp->SetSimulatePhysics(true);
 	Animal->SkeletalMesh->SetVisibility(true);
 	CurrentTime += GetWorld()->DeltaTimeSeconds;
 	if (CurrentTime >= StayTime)
@@ -113,7 +113,7 @@ void USBS_AnimalFSM::MoveState()
 		if (LeaderAnimal && LeaderAnimal != Animal && LeaderAnimal->bInSafeZone)
 		{
 			AnimalDir = (LeaderAnimal->GetActorLocation() - CurrentAnimalLocation).GetSafeNormal();
-			AnimalDir.Z = 0;  // 수평 이동만
+			//AnimalDir.Z = 0;  // 수평 이동만
 		}
 		CurrentTime += GetWorld()->DeltaTimeSeconds;
 		if (CurrentTime > 3)
@@ -125,7 +125,10 @@ void USBS_AnimalFSM::MoveState()
 
 		bool bMoved = Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir*AnimalSpeed*GetWorld()->GetDeltaSeconds(), true, &Hitresult);
 
-		if (!bMoved && Hitresult.bBlockingHit && !(Hitresult.GetActor()->GetName().Contains(TEXT("Floor"))))
+		const float MinpenetrationDepth = 5;
+		// && Hitresult.PenetrationDepth>=MinpenetrationDepth
+		//Hitresult.GetActor()->GetName().Contains(TEXT("Floor"))
+		if (!bMoved && Hitresult.bBlockingHit && !(Hitresult.GetActor()->ActorHasTag(TEXT("Floor"))))
 		{
 
 			UE_LOG(LogTemp, Log, TEXT("HitActor: %s"), *Hitresult.GetActor()->GetName());

@@ -16,7 +16,7 @@ ASBS_CodePaper::ASBS_CodePaper()
 
 	RootComponent = BoxCollision;
     BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
-    BoxCollision->SetCollisionProfileName(TEXT("BlockAllDynamic"));
+    BoxCollision->SetCollisionProfileName(TEXT("GrapObject"));
 
     StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetupAttachment(BoxCollision);

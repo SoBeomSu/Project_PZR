@@ -58,7 +58,7 @@ public:
 	void ChangeDir();
 
 	float CurrentTime = 0;
-	float StayTime = 1;
+	float StayTime = 2;
 	float BurnTime = 1;
 
 	bool bCrash;

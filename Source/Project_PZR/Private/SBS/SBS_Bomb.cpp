@@ -89,7 +89,7 @@ void ASBS_Bomb::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)
 	UBoxComponent* HitBox = Cast<UBoxComponent>(HitResult.GetComponent());
 	if (HitBox)
 	{
-		UE_LOG(LogTemp, Log, TEXT("***@@*@*@**@"));
+		//UE_LOG(LogTemp, Log, TEXT("keypad"));
 	}
 	if (HitBox && HitBox == EnterKey)
 	{
