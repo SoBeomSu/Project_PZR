@@ -64,7 +64,7 @@ public:
 
 private:
 
-	class ALaserRoomGameMode* LaserGamemode;
+	class ALaserRoomGameMode* LRGM;
 	bool IsOpen = false;
 public:
 	//UI

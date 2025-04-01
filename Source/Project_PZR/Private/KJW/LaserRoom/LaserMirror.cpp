@@ -8,8 +8,7 @@
 
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
-
-
+#include "KJW/LaserRoom/LaserRoomGameMode.h"
 #include "KJW/LaserRoom/EndLaserPoint.h"
 // Sets default values
 ALaserMirror::ALaserMirror()
@@ -50,7 +49,9 @@ void ALaserMirror::BeginPlay()
 	TempMirroBoxComp->SetRelativeRotation(MirroBoxComp->GetRelativeRotation());
 	TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	TempMirroBoxComp->SetBoxExtent(MirroBoxComp->GetUnscaledBoxExtent());
-
+	
+	LRGM = Cast<ALaserRoomGameMode>(GetWorld()->GetAuthGameMode());
+	
 }
 
 // Called every frame
@@ -183,6 +184,7 @@ void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRigh
 		IsComplete = false;
 		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TempMirrorMeshComp->SetVisibility(false);
+		MovePos.Z += 10.0f;
 		SetActorLocation(MovePos);
 		SetActorRotation(TempMirrorMeshComp->GetComponentRotation());
 	}
@@ -198,7 +200,8 @@ void ALaserMirror::StopGrab(UMotionControllerComponent* MontionComp, bool IsRigh
 		GetWorldTimerManager().SetTimer(MoveToPlaceTimerHandle, this, &ThisClass::MoveToPlace, MoveToHandDeltatime, true);
 	}
 
-
+	
+	LRGM->PlayGameSound(EKGameSound::SWITCH);
 }
 
 void ALaserMirror::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)
@@ -222,13 +225,13 @@ void ALaserMirror::UpdateScale()
 {
 	float percent = MoveToHandTimer / MoveToHandTime;
 	//easeOutQuint
-	if (bEaseOutQuint)
-	{
-		percent = 1 - FMath::Pow(1 - percent, 5);
-	}
-
-	float newScale = FMath::Lerp(OrginScale, MiniScale, percent);
-
+	//if (bEaseOutQuint)
+	//{
+	//	percent = 1 - FMath::Pow(1 - percent, 5);
+	//}
+	//
+	
+	float newScale = KHelper::Lerp(OrginScale, MiniScale, percent, Easing);	
 
 	SetActorScale3D(FVector(newScale));
 }
@@ -278,9 +281,10 @@ void ALaserMirror::DrawTempMirror()
 {
 	if (!IsComplete) return;
 
+	
 	// 카메라의 위치와 방향 가져오기
 	FVector StartLocation = HandComp->GetComponentLocation();
-	FVector EndLocation = StartLocation + HandComp->GetForwardVector() * 10000.0f;
+	FVector EndLocation = StartLocation + HandComp->GetForwardVector() * 1000.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
@@ -293,30 +297,34 @@ void ALaserMirror::DrawTempMirror()
 
 	// 라인트레이스 실행
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, QueryParams);
-
+	AActor* HitActor = nullptr;
 	if (bHit)
 	{
-		AActor* HitActor = HitResult.GetActor();
-		if (HitActor)
-		{
-			EndLocation = HitResult.Location;
-		
-			TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-			TempMirrorMeshComp->SetVisibility(true);
-			TempMirrorMeshComp->SetWorldLocation(EndLocation);
-			MovePos = EndLocation;
-			MovePos.Z = 10.0f;
-		}
+		HitActor = HitResult.GetActor();
+	}
+
+	if (HitActor)
+	{
+		EndLocation = HitResult.Location;
+
+		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		TempMirrorMeshComp->SetVisibility(true);
+		MovePos = EndLocation;
+		MovePos.Z = 10.0f;
+		MovePos = MovePos.GridSnap(10.0f);
+		TempMirrorMeshComp->SetWorldLocation(MovePos);
 	}
 	else
 	{
 		TempMirroBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TempMirrorMeshComp->SetVisibility(false);
-		MovePos = GetActorLocation(); 
+		MovePos = GetActorLocation();
 		MovePos.Z = 10.0f;
 	}
 
+
 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red);
+
 	
 
 }
@@ -332,6 +340,26 @@ void ALaserMirror::TempMirrorRot(FRotator AddRot)
 	//float AddAngle = 10.0f;
 
 
+}
+
+void ALaserMirror::TestMirror()
+{
+	GetWorldTimerManager().SetTimer(TestTimerHandle, this, &ThisClass::TestTimer, MoveToHandDeltatime, true);
+}
+
+void ALaserMirror::TestTimer()
+{
+		MoveToHandTimer += MoveToHandDeltatime;
+	if (MoveToHandTimer < MoveToHandTime)
+	{
+		
+		UpdateScale();
+
+	}
+	else
+	{
+		GetWorldTimerManager().ClearTimer(TestTimerHandle);
+	}
 }
 
 

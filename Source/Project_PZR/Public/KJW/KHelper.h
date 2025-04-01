@@ -20,7 +20,7 @@ UENUM(BlueprintType)
 enum class EEasing : uint8
 {
 	Linear ,
-	EaseOutQuint, //느리게 시작 → 점점 가속
+	EaseOutQuint, //초반에는 빠르게 증가하고, 후반부로 갈수록 점점 느려짐
 	EaseInQuint, //빠르게 시작 → 점점 감속
 	
 };
@@ -53,28 +53,18 @@ public:
 	template <typename T>
 	static T Lerp(const T& A, const T& B, float Alpha , EEasing Easing = EEasing::Linear)
 	{
-	
 		//기본 Lerp 공식 
 		// linear 
 		//Lerp = A + (B - A ) * Alpha
-		
-		float x = Alpha;
+		//FMath::Lerp(LDoor_ClosePos, LDoor_OpenPos, percent);
+		float x = Alpha;// 0 ~ 1
 		switch (Easing)
 		{
-		case EEasing::Linear: 
-		{	
-			break;
-		}
-		case EEasing::EaseOutQuint://느리게 시작 → 점점 가속
-		{
-			x = 1 - FMath::Pow(1 - x, 5);
-			break;
-		}
-		case EEasing::EaseInQuint://빠르게 시작 → 점점 감속
-		{
-			x =  x * x * x * x * x;
-			break;
-		}
+		case EEasing::Linear: {	break;}
+		//느리게 시작 → 점점 가속
+		case EEasing::EaseOutQuint:{x = 1 - FMath::Pow(1 - x, 5);break;}
+		//빠르게 시작 → 점점 감속
+		case EEasing::EaseInQuint:{ x =  x * x * x * x * x; break; }
 		default:
 			break;
 		}

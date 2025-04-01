@@ -25,6 +25,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 public:
 	void StartRoom();
+	void EndRoom();
 	void OpenDoor(int32 Index);
 	void OpenDoor();
 	void CloseDoor(int32 Index);

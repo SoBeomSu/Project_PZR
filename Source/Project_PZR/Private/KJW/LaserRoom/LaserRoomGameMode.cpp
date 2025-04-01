@@ -7,11 +7,14 @@
 #include "KJW/LaserRoom/LRStatgeDisplay.h"
 #include "KJW/LaserRoom/LRoom.h"
 #include "KJW/StageObject.h"
+#include "Kismet/GameplayStatics.h"
 
 
 ALaserRoomGameMode::ALaserRoomGameMode()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	Sounds.Init(nullptr, 5);
 }
 
 void ALaserRoomGameMode::ChangeLaserGameState(EKGameState NewLaserGameState)
@@ -75,6 +78,7 @@ void ALaserRoomGameMode::BeginPlay()
 	}
 	
 	CurStage = 0;
+	UGameplayStatics::PlaySound2D(GetWorld(), BGMSound);
 	ChangeLaserGameState(EKGameState::START);
 	//GetWorld()->GetTimerManager().SetTimer(LaserGameStateTimerHandle,
 	//	FTimerDelegate::CreateLambda([this]()
@@ -215,4 +219,13 @@ void ALaserRoomGameMode::OpenDoor()
 		CurStage++;
 		
 	}
+}
+
+void ALaserRoomGameMode::PlayGameSound(EKGameSound GameSound)
+{
+	int32 index = (int32)GameSound;
+	USoundBase* SoundCue = Sounds[index];
+	if (!SoundCue) return;
+
+	UGameplayStatics::PlaySound2D(GetWorld(), SoundCue);
 }

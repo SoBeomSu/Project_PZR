@@ -67,10 +67,7 @@ void ALRoom::BeginPlay()
 	Super::BeginPlay();
 
 	LRGM = Cast<ALaserRoomGameMode>(GetWorld()->GetAuthGameMode());
-	if (LRGM)
-	{
-		
-	}
+	
 
 	Doors.Empty();
 	Doors.Add(Cast<ALDoor>(L_Door->GetChildActor()));
@@ -98,8 +95,17 @@ void ALRoom::StartRoom()
 	}
 }
 
+void ALRoom::EndRoom()
+{
+	for (IStageObject* interface : StageObject)
+	{
+		interface->End();
+	}
+}
+
 void ALRoom::OpenDoor(int32 Index)
 {
+	LRGM->PlayGameSound(EKGameSound::OPENDOOR);
 	Doors[Index]->SetDoor(true);
 }
 
@@ -121,12 +127,13 @@ void ALRoom::OpenDoor()
 void ALRoom::CloseDoor(int32 Index)
 {
 	if (Index < 0 || Index >= Doors.Num()) return;
-	
+	LRGM->PlayGameSound(EKGameSound::CLOASEDOOR);
 	Doors[Index]->SetDoor(false);
 }
 
 void ALRoom::CloseAllDoor()
 {
+	LRGM->PlayGameSound(EKGameSound::CLOASEDOOR);
 	for (ALDoor* door : Doors)
 	{
 		door->SetDoor(false);
@@ -154,6 +161,7 @@ void ALRoom::OverLapMainBoxComp(UPrimitiveComponent* OverlappedComponent, AActor
 		CloseAllDoor();
 	if (PrevRoom)
 	{
+		PrevRoom->EndRoom();
 		PrevRoom->DestroyObjecet();
 		PrevRoom = nullptr;
 	}

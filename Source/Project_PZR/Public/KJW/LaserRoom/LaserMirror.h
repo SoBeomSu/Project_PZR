@@ -67,7 +67,7 @@ private:
 	UPROPERTY()
 	TWeakObjectPtr<class AEndLaserPoint> EndLaserPoint;
 
-	
+	class ALaserRoomGameMode* LRGM;
 	
 public:
 	//거울을 집을때 기존 크기에서 0.1 사이즈 정도로 줄여지면서 손안으로 오겠끔
@@ -99,4 +99,11 @@ public:
 	void MoveToPlace();
 	void DrawTempMirror();
 	void TempMirrorRot(FRotator AddRot);
+
+public:
+	void TestMirror();
+
+	void TestTimer();
+
+	FTimerHandle TestTimerHandle;
 };

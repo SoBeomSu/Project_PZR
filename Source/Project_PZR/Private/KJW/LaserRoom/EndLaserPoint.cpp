@@ -38,10 +38,10 @@ void AEndLaserPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-	LaserGamemode = Cast<ALaserRoomGameMode>(GetWorld()->GetAuthGameMode());
-	if (LaserGamemode)
+	LRGM = Cast<ALaserRoomGameMode>(GetWorld()->GetAuthGameMode());
+	if (LRGM)
 	{
-		GoalCount = LaserGamemode->NeedLaser;
+		GoalCount = LRGM->NeedLaser;
 	}
 
 	if (UUserWidget* Widget = TextWidget->GetWidget())
@@ -70,7 +70,7 @@ void AEndLaserPoint::OnButtonPressed(FHitResult& HitResult, EVRButton VRButton)
 		if (num == 0)
 		{
 			IsOpen = true;
-			LaserGamemode->OpenDoor();
+			LRGM->OpenDoor();
 		}
 	}
 }
@@ -137,6 +137,7 @@ void AEndLaserPoint::SetGoalText()
 	if (num == 0)
 	{
 		Textboard->SetTextBlock(FText::FromString("Complete"));
+		LRGM->PlayGameSound(EKGameSound::CLEAR);
 	}
 	else
 	{
