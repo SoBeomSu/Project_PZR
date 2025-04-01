@@ -55,12 +55,16 @@ public:
 	void Burning();
 	void Dead();
 
-	void ChangeDir();
+	void ChangeDir(bool Crash);
 
 	float CurrentTime = 0;
 	float StayTime = 2;
 	float BurnTime = 1;
 
+	bool bIsScaling = false;
+	float ScaleTime = 0;
+	float ScaleDuration = 0.5;
+	float MaxScale = 1.5;
 	bool bCrash;
 
 	FVector AnimalDir;

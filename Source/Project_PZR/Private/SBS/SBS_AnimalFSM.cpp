@@ -63,6 +63,24 @@ void USBS_AnimalFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	//	ChangeDir();
 	//	bCrash = true;
 	//}
+	if (bIsScaling)
+	{
+		ScaleTime += DeltaTime;
+		float t = FMath::Clamp(ScaleTime / ScaleDuration, 0.0f, 1.0f); //진행도
+		float ElasticValue = FMath::Pow(2.0f, -10.0f * (1.0f - t)) * FMath::Sin((t - 0.1f) * 2.0f * PI / 0.3f); // 크기 수식
+		float ScaleFactor = MaxScale - (MaxScale - 1.0f) * ElasticValue; // 마지막 크기 ( 1.5 - (0.5* 수식))
+		Animal->SetActorScale3D(FVector(ScaleFactor, ScaleFactor, ScaleFactor));
+		UE_LOG(LogTemp, Log, TEXT("Scaling %s: t=%f, Scale=%f"), *Animal->GetName(), t, ScaleFactor);
+
+		if (t >= 1.0f)
+		{
+			bIsScaling = false;
+			ScaleTime = 0.0f;
+			Animal->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
+			UE_LOG(LogTemp, Log, TEXT("Scale finished for %s"), *Animal->GetName());
+		
+		}
+	}
 }
 
 void USBS_AnimalFSM::Stay(float Deltatime)
@@ -118,7 +136,7 @@ void USBS_AnimalFSM::MoveState()
 		CurrentTime += GetWorld()->DeltaTimeSeconds;
 		if (CurrentTime > 3)
 		{
-			ChangeDir();
+			ChangeDir(false);
 			CurrentTime = 0;
 		}
 		FHitResult Hitresult;
@@ -131,9 +149,10 @@ void USBS_AnimalFSM::MoveState()
 		if (!bMoved && Hitresult.bBlockingHit && !(Hitresult.GetActor()->ActorHasTag(TEXT("Floor"))))
 		{
 
-			UE_LOG(LogTemp, Log, TEXT("HitActor: %s"), *Hitresult.GetActor()->GetName());
+			//UE_LOG(LogTemp, Log, TEXT("HitActor: %s"), *Hitresult.GetActor()->GetName());
 
-			ChangeDir();
+			ChangeDir(true);
+			Animal->SetActorScale3D(FVector(MaxScale, MaxScale, MaxScale));
 			Animal->SetActorLocation(CurrentAnimalLocation + AnimalDir * AnimalSpeed * GetWorld()->GetDeltaSeconds(), true, &Hitresult);
 
 		}
@@ -182,8 +201,13 @@ void USBS_AnimalFSM::Dead()
 	
 }
 
-void USBS_AnimalFSM::ChangeDir()
+void USBS_AnimalFSM::ChangeDir(bool Crash)
 {
 	AnimalDir = (FVector(FMath::RandRange(-1.0f, 1.0f), FMath::RandRange(-1.0f, 1.0f), 0)).GetSafeNormal();
 	bCrash = false;
+	if (Crash)
+	{
+		bIsScaling = true;
+		ScaleTime = 0;
+	}
 }
